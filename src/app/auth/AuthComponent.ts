@@ -1,0 +1,134 @@
+
+import {Component} from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {initialAppsState} from "../state/AppState";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {ACCESSTOKEN_LINK} from "../Constante";
+import {AccessToken} from "../domain/model/AccessToken";
+import {Cookie} from "ng2-cookies";
+import {ActivatedRoute, Router} from "@angular/router";
+import {MyAction} from "../common/MyAction";
+import {appStore} from "../store/AppStore";
+import {SAVE_TOKEN} from "../actions/TokenAction";
+import {appActionCreator} from "../actions/Action";
+import {AuthService} from "./AuthService";
+//import {} '../../../node_modules/bootstrap/scss/bootstrap';
+@Component({
+  selector: 'auth',
+  templateUrl: './auth.html',
+  styleUrls: ['./auth.css']
+})
+
+export class AuthComponent{
+  titleAlert:string = 'This field is required';
+  rForm: FormGroup;
+  //post:any;                     // A property for our submitted form
+  //tenantId: string = '';
+  username:string = '';
+  password:string = '';
+  //headers: HttpHeaders;
+
+  constructor(private fb: FormBuilder, private http:HttpClient,  private _router: Router, private authService: AuthService ,private r:ActivatedRoute) {
+    this.rForm = fb.group({
+      //'tenantId' : [null, Validators.required],
+      'username' : [null, Validators.required],
+      'password' : [null, Validators.required],
+      //'description' : [null, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(500)])],
+      //'validate' : ''
+    });
+
+  }
+
+  addAuthenticate(post) {
+    //this.tenantId = post.tenantId;
+    this.username = post.username;
+    this.password = post.password;
+    console.log("submitting: ", this.username, this.password + " | " + initialAppsState.tenantState.tenant.getTenantId());
+
+    const body = {
+      scope: 'trusted',
+      grant_type: 'password',
+      password: this.password,
+      username: initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username,
+      client_id: 'dg-collaboration-angular4-client'
+    };
+
+    /*this.headers = new HttpHeaders();
+    this.headers = this.headers.set('Accept', 'application/json');
+    this.headers = this.headers.set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8');
+    this.headers = this.headers.set('Authorization', 'Basic '+btoa(body.client_id + ":" + "123456"));*/
+
+    //if (appStore.getState().tokenState === null){
+      console.log("ACCESSTOKEN_LINK in component", ACCESSTOKEN_LINK);
+    //console.log("headers in component", this.headers);
+
+    console.log("Body: " + JSON.stringify(body));
+    this.http.post(ACCESSTOKEN_LINK, body, {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+        .set('Authorization', 'Basic ' + btoa(body.client_id + ":" + "123456")),
+      params: new HttpParams().set('scope', 'trusted').set("grant_type", 'password').
+      set('password', this.password).
+      set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', 'dg-collaboration-angular4-client')
+    }).subscribe((data) => {
+
+      //console.log("dataaaaa", data);
+
+      let token: AccessToken = new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
+        data['expires_in'], data['scope'], (new Date().getTime()) + data['expires_in'] * 1000, this.username);
+
+      console.log("token", JSON.stringify(token));
+
+      let monAction: MyAction = appActionCreator(SAVE_TOKEN, token);
+      appStore.dispatch(monAction);
+
+      this.saveToken(token);
+
+      this.authService.login(this.username, this.password);
+
+      /*
+      {"access_token":"2a2fdb06-cfd8-413a-9dd9-76bed0e2db21",
+      "token_type":"bearer",
+      "refresh_token":"ff33cae5-3ef0-4c57-a3c1-298ba518a1ab","expires_in":43199,"scope":"trusted"}nkalla@nkalla-diaspo-gift:/opt/webstorm
+       */
+
+
+    }, (data) => {
+      console.log("Errorrrrrrr", data);
+    });
+  //}else {
+     // console.log("NKALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLa")
+     // this.authService.login(this.username, this.password);
+    //}
+
+  }
+
+  saveToken(token:AccessToken){
+
+    console.log("SAVE TOKEN IN COOKIES: " + JSON.stringify(token));
+    //this.cookieService.set("access_token", token.accessToken, token.receivedAt);
+    Cookie.set("access_token", token.accessToken);
+    Cookie.set("refresh_token", token.refreshToken);
+    Cookie.set("received_at_token", "" + token.receivedAt);
+    Cookie.set("expires_in_token", "" + token.expiresIn);
+    Cookie.set("scope_token", "" + token.scope);
+    Cookie.set("username_token", "" + token.username);
+
+    //this._router.navigate(['autorized']);
+  }
+
+  gotoSigUp(){
+    this._router.navigate(["../signup"], { relativeTo: this.r });
+  }
+
+}
+
+//curl -X POST
+// -vu dg-collaboration-angular4-client:123456
+// -H "Accept: application/json"
+// -d "password=/2E7b}z1&username=95BC5749-851D-44E5-95C3-0411B72F8B45_admin&grant_type=password&scope=trusted" http://localhost:8081/oauth/token
+
+
+//<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">
+
+
+//02r|:20?1Y

@@ -1,0 +1,74 @@
+<!--<div class="w3-card-4">
+  <div class="w3-display-container w3-text-white">
+    <img src="../../../../../assets/img/default-user.png" alt="Lights" style="width:100%">
+    <div class="w3-xlarge w3-display-bottomleft w3-padding"> {{user.getTenant().getName()}}</div>
+  </div>
+  <div class="w3-row">
+    <div class="w3-third w3-center">
+      <h3>{{user.getUsername()}}</h3>
+
+    </div>
+    <div class="w3-third w3-center">
+      <h3>{{user.getEmailAddress()}}</h3>
+    </div>
+    <div class="w3-third w3-center w3-margin-bottom">
+      <h3>{{user.getTenantId()}}</h3>
+    </div>
+  </div>
+</div>-->
+
+
+
+
+
+<div class="col-sm-4 col-xs-6">
+
+  <div class="panel panel-default">
+    <div class="panel-thumbnail">
+      <img src="../../../../../assets/img/default-user.png" class="img-responsive" width="100%">
+    </div>
+    <div class="panel-body">
+      <h3 class="lead">{{user.getUsername()}}</h3>
+      <p>{{user.getEmailAddress()}}</p>
+      <p>{{user.getTenantId()}}</p>
+
+      <a href="#" class="btn btn-info btn-sm pull-right"  data-toggle="modal" [attr.data-target]="'#'+user.getUsername()" >
+        <span class="glyphicon glyphicon-edit"></span> Edit
+      </a><br>
+      <!-- Modal -->
+      <div id="{{user.getUsername()}}" class="modal fade" role="dialog">
+        <div class="modal-dialog ">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">{{user.getUsername()}}</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+
+                <label class="checkbox-inline" *ngIf="user.getEnabled()">
+                  <input  type="checkbox" checked name="enablement" id="enabled1" (click)="toggleEnablement();"> Desable {{user.getUsername()}}</label>
+                <label class="checkbox-inline" *ngIf="!user.getEnabled()">
+                  <input  type="checkbox" name="enablement" id="enabled2" (click)="toggleEnablement();"> Enable {{user.getUsername()}}</label>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary btn-sm" (click)=" saveChanges();" data-dismiss="modal">Save changes</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <h3>{{user.getTenant().getName()}}</h3>
+      <p>
+        <img src="../../../../../assets/img/default-partener/partner.png" height="28px" width="28px">
+      </p>
+    </div>
+  </div>
+
+
+</div>

@@ -1,0 +1,33 @@
+<!--<div >
+  <img src="../../../../../assets/img/default-partener/partner.png" />
+
+  <h3>{{group.getName()}}</h3>
+
+  <h5>{{group.getDescription()}}</h5>
+  <p></p>
+
+  <div>
+
+    <input  class="button" value="Members" (click)="gotoMembers();">
+  </div>
+</div>-->
+
+
+<div class="col-md-4">
+  <div class="panel panel-default" id="{{group.getName()}}">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {{group.getName()}}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{group.getDescription()}}
+      <hr>
+      <a  class="btn-sm btn-primary "  (click)="gotoMembers();">Members</a>
+    </div>
+    <div class="panel-footer"></div>
+  </div>
+</div>
+
+
+
