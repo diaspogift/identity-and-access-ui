@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 
 import {initialAppsState} from "./state/AppState";
 import {AppStore, appStore} from "./store/AppStore";
-import {NavigationEnd, NavigationStart, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from "@angular/router";
 import {TenantService} from "./common/TenantService";
 import {Tenant} from "./domain/model/Tenant";
 import {initialTenantState} from "./state/TenantState";
@@ -18,16 +18,9 @@ import {MyAction} from "./common/MyAction";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-
-
   title = 'Diaspo Gift';
-  //tenantIdStream:Observable<string>;
   tenantId:string;
-  whatPage:string;
-  //path:string;
-
-
-  constructor(public tenantService: TenantService, public router: Router) {
+  constructor(/*public tenantService: TenantService,*/ public router: Router,private r:ActivatedRoute) {
 
 
 
@@ -59,22 +52,33 @@ export class AppComponent implements OnInit{
         console.log('NavigationStart:', event);
       }
     });*/
+    /*r.params.subscribe(params=>{
+
+      this.tenantId = params['tenantId'];
+      console.log("**********tenantId: " + this.tenantId);
+
+    });*/
 
   }
 
   ngOnInit(): void {
-    this.whatPage = window.location.hash.substring(1).split("?")[0];
+    /*this.whatPage = window.location.hash.substring(1).split("?")[0];
     let tntId = this.tenantService.getTenantId("tnt");
     console.log("on init appStore.getState().tenantState.tenant.getTenantId(); " + JSON.stringify(appStore));
     //tntId = tntId?tntId: appStore.getState().tenantState.tenant.getTenantId();
-    this.tenantId = tntId?tntId:DGTENANTID;
+    this.tenantId = tntId?tntId:DGTENANTID;*/
+   /* if (this.tenantId === null){
+      this.router.navigate(['/notautorized']);
+      return;
+    }
+
     initialTenantState.tenant = new Tenant(this.tenantId, "", "", false, []);
     initialAppsState.tenantState = initialTenantState;
-    this.checkToken();
+    this.checkToken();*/
   }
 
 
-  checkToken(){
+  /*checkToken(){
 
     console.log("cookiessssmmlmlkmlmksss", JSON.stringify(Cookie.getAll()));
     if (Cookie.check('access_token')){
@@ -102,7 +106,7 @@ export class AppComponent implements OnInit{
     }else{
       console.log("NoCookies");
     }
-  }
+  }*/
 }
 //http://localhost:8085/oauth/token   methode POST  secret: ManagingMembers@@2017
 //export let holeAppSore: AppStore= new AppStore(initialAppsState);

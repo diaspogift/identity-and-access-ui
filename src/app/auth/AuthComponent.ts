@@ -1,9 +1,9 @@
 
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {initialAppsState} from "../state/AppState";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {ACCESSTOKEN_LINK} from "../Constante";
+import {ACCESSTOKEN_LINK, CLIENT_APP_ID} from "../Constante";
 import {AccessToken} from "../domain/model/AccessToken";
 import {Cookie} from "ng2-cookies";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,21 +12,20 @@ import {appStore} from "../store/AppStore";
 import {SAVE_TOKEN} from "../actions/TokenAction";
 import {appActionCreator} from "../actions/Action";
 import {AuthService} from "./AuthService";
-//import {} '../../../node_modules/bootstrap/scss/bootstrap';
+import {initialTenantState} from "../state/TenantState";
+import {Tenant} from "../domain/model/Tenant";
 @Component({
   selector: 'auth',
   templateUrl: './auth.html',
   styleUrls: ['./auth.css']
 })
 
-export class AuthComponent{
+export class AuthComponent implements OnInit{
   titleAlert:string = 'This field is required';
   rForm: FormGroup;
-  //post:any;                     // A property for our submitted form
-  //tenantId: string = '';
   username:string = '';
   password:string = '';
-  //headers: HttpHeaders;
+  tenantId:string;
 
   constructor(private fb: FormBuilder, private http:HttpClient,  private _router: Router, private authService: AuthService ,private r:ActivatedRoute) {
     this.rForm = fb.group({
@@ -37,6 +36,60 @@ export class AuthComponent{
       //'validate' : ''
     });
 
+    r.params.subscribe(params=>{
+
+      this.tenantId = params['tenantId']?params['tenantId']:null;
+      console.log("***********tenantId: " + this.tenantId);
+
+    });
+
+  }
+
+  ngOnInit(): void {
+    /*this.whatPage = window.location.hash.substring(1).split("?")[0];
+    let tntId = this.tenantService.getTenantId("tnt");
+    console.log("on init appStore.getState().tenantState.tenant.getTenantId(); " + JSON.stringify(appStore));
+    //tntId = tntId?tntId: appStore.getState().tenantState.tenant.getTenantId();
+    this.tenantId = tntId?tntId:DGTENANTID;*/
+    if (this.tenantId === null){
+      this._router.navigate(['/notautorized']);
+      return;
+    }
+
+    initialTenantState.tenant = new Tenant(this.tenantId, "", "", false, []);
+    initialAppsState.tenantState = initialTenantState;
+    this.checkToken();
+  }
+
+
+  checkToken(){
+
+    console.log("cookiessssmmlmlkmlmksss", JSON.stringify(Cookie.getAll()));
+    if (Cookie.check('access_token')){
+
+
+      console.log("COKIESSSSSSSSSSSS", Cookie.check('access_token') + Cookie.get("access_token"));
+
+      let data  = Cookie.getAll();
+      let token : AccessToken = new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
+        data['expires_in_token'], data['scope_token'], data['received_at_token'], data['username_token']);
+      console.log("token from cookies: " + JSON.stringify(token));
+
+      console.log("token valide: " + token.isValide());
+
+      if (!token.isValide()){
+        Cookie.deleteAll();
+        let monAction:MyAction = appActionCreator(SAVE_TOKEN, null);
+        appStore.dispatch(monAction);
+
+      }else{
+        let monAction:MyAction = appActionCreator(SAVE_TOKEN, token);
+        appStore.dispatch(monAction);
+
+      }
+    }else{
+      console.log("NoCookies");
+    }
   }
 
   addAuthenticate(post) {
@@ -50,7 +103,7 @@ export class AuthComponent{
       grant_type: 'password',
       password: this.password,
       username: initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username,
-      client_id: 'dg-collaboration-angular4-client'
+      client_id: CLIENT_APP_ID
     };
 
     /*this.headers = new HttpHeaders();
@@ -68,7 +121,7 @@ export class AuthComponent{
         .set('Authorization', 'Basic ' + btoa(body.client_id + ":" + "123456")),
       params: new HttpParams().set('scope', 'trusted').set("grant_type", 'password').
       set('password', this.password).
-      set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', 'dg-collaboration-angular4-client')
+      set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', CLIENT_APP_ID)
     }).subscribe((data) => {
 
       //console.log("dataaaaa", data);
@@ -112,6 +165,7 @@ export class AuthComponent{
     Cookie.set("expires_in_token", "" + token.expiresIn);
     Cookie.set("scope_token", "" + token.scope);
     Cookie.set("username_token", "" + token.username);
+    Cookie.delete("logout");
 
     //this._router.navigate(['autorized']);
   }

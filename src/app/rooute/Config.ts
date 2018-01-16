@@ -10,6 +10,9 @@ import {ServiceComponent} from "../autorization/service/service/service.componen
 import {GroupComponent} from "../autorization/tenant/group/group.component";
 import {NewtenantComponent} from "../autorization/tenant/tenant/newtenant/newtenant.component";
 import {ChangePasswordComponent} from "../autorization/tenant/user/change-password/change-password.component";
+import {LogoutComponent} from "../autorization/tenant/user/logout/logout.component";
+import {NotautorizedComponent} from "../notautorized/notautorized.component";
+import {GroupMemberComponent} from "../autorization/tenant/group/group-menber/group-menber.component";
 
 export const childRoutes : Routes = [
   {path:'', redirectTo:'tenants', pathMatch:'full'},
@@ -21,14 +24,18 @@ export const childRoutes : Routes = [
   {path:'users/:id', component:UserComponent},
   {path:'newtenant', component:NewtenantComponent},
   {path:'changepassword', component:ChangePasswordComponent},
-
+  {path:'logout', component:LogoutComponent},
+  {path:'groupmembers', component:GroupMemberComponent},
+  {path:'groupmembers/:id', component:GroupMemberComponent}
+  //{path:'register/:registrationinvitation', component:RegisterUserComponent},
 ];
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
-  { path: 'auth', component: AuthComponent},
-  { path: 'signup', component: SignupComponent },
+  { path: 'auth/:tenantId', component: AuthComponent},
+  { path: 'signup/:tenantId/:registrationinvitationid', component: SignupComponent},
   { path: 'autorized', component: AutorizationComponent, canActivate: [AuthorizationGuard], children:childRoutes},
+  { path: 'notautorized', component: NotautorizedComponent},
   { path: '**', component: AuthComponent}
 ];
 

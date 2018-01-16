@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
       for (index=0; index < receivedData.length; index++){
         let links: any = receivedData[index]['_links'];
         let aUser: User = new User(receivedData[index]['tenantId'], receivedData[index]['username'],
-          receivedData[index]['emailAddress'], false);
+          receivedData[index]['emailAddress'], false, links); // links a revoir
         console.log(index + " - adding: " + JSON.stringify(aUser));
         this.users.push(aUser);
       }

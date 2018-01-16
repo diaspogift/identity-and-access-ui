@@ -29,7 +29,7 @@ export class AuthService {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
-      let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false);
+      let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false, null);
 
       let monAction:MyAction = appActionCreator(LOGIN_USER, user);
 

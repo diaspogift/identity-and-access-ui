@@ -1,0 +1,15 @@
+<div class="col-md-3">
+  <div class="panel panel-default" id="{{groupMember.getName()}}">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {{groupMember.getName()}}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{groupMember.getType()}}
+      <hr>
+      <a *ngIf="groupMember.getType() != 'User'" class="btn-sm btn-primary "  (click)="gotoMembers();">Members</a>
+    </div>
+    <div class="panel-footer"></div>
+  </div>
+</div>

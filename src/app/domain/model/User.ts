@@ -8,12 +8,14 @@ export class User{
   private username: string;
   private emailAddress: string;
   private enabled: boolean;
+  private links: any;
 
-  constructor( _tenantId: string, _username: string,  _emailAddress: string, _enabled: boolean){
+  constructor( _tenantId: string, _username: string,  _emailAddress: string, _enabled: boolean, _links: any){
     this.tenantId = _tenantId;
     this.username = _username;
     this.emailAddress = _emailAddress;
     this.enabled = _enabled;
+    this.links = _links;
   }
 
   getTenantId():string{

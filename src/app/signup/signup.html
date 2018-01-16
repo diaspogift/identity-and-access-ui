@@ -1,62 +1,121 @@
-<div class="container">
 
-  <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+<div class="container">
+  <div id="loginbox" style="margin-top:50px; " class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info" >
       <div class="panel-heading">
-        <div class="panel-title">Sign Up</div>
-        <!--<div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>-->
+        <div class="panel-title">Register to DiaspoGift System</div>
+        <!--<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>-->
       </div>
-      <div class="panel-body" >
-        <form id="signupform" class="form-horizontal" role="form">
 
-          <div id="signupalert" style="display:none" class="alert alert-danger">
-            <p>Error:</p>
-            <span></span>
-          </div>
-          <div class="form-group">
-            <label for="email" class="col-md-3 control-label">Email</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="email" placeholder="Email Address" id="email">
-            </div>
-          </div>
+      <div style="padding-top:30px" class="panel-body">
 
-          <div class="form-group">
-            <label for="firstname" class="col-md-3 control-label">First Name</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="firstname" placeholder="First Name" id="firstname">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="lastname" class="col-md-3 control-label">Last Name</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="lastname" placeholder="Last Name" id="lastname">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="password" class="col-md-3 control-label">Password</label>
-            <div class="col-md-9">
-              <input type="password" class="form-control" name="passwd" placeholder="Password" id="password">
+        <div *ngIf="!success && message!= ''" id="login-alert" class="alert alert-danger col-sm-12">{{message}}</div>
+        <div *ngIf="success && message!= ''" id="login-alert1" class="alert alert-success col-sm-12">{{message}}</div>
+
+        <form id="registeruser" class="form-horizontal" role="form" [formGroup]="rForm" (ngSubmit)="registerUser(rForm.value)">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="email" class="form-control" name="username" placeholder="Your Username must be an E-Mail address" id="username"
+                     formControlName="username">
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="icode" class="col-md-3 control-label">Invitation Code</label>
-            <div class="col-md-9">
-              <input type="text" class="form-control" name="icode" placeholder="" id="icode">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" placeholder="Your Password" id="password"
+                     formControlName="password">
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="passwordrep">Repeat Password</label>
+              <input type="password" class="form-control" name="passwordrep" placeholder="Repeat Your Password" id="passwordrep"
+                     formControlName="passwordrep">
+            </div>
+          </div>
+          <h5>This fields are optionals</h5>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" name="firstName" placeholder="Your First Name" id="firstName"
+                     formControlName="firstName">
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" name="lastName" placeholder="Your Last Name" id="lastName"
+                     formControlName="lastName">
+            </div>
+          </div>
+
+
+
+          <input type="hidden" class="form-control" name="primaryTelephone" placeholder="" id="primaryTelephone" #primaryTelephone
+                 formControlName="primaryTelephone"  value="669262656">
+          <input type="hidden" class="form-control" name="primaryCountryCode" placeholder="" id="primaryCountryCode"
+                 formControlName="primaryCountryCode" value="CM">
+          <input type="hidden" class="form-control" name="primaryDialingCountryCode" placeholder="" id="primaryDialingCountryCode"
+                 formControlName="primaryDialingCountryCode" value="00237">
+
+          <input type="hidden" class="form-control" name="secondaryTelephone" placeholder="" id="secondaryTelephone"
+                 formControlName="secondaryTelephone" value="691179154">
+          <input type="hidden" class="form-control" name="secondaryCountryCode" placeholder="" id="secondaryCountryCode"
+                 formControlName="secondaryCountryCode" value="CM">
+          <input type="hidden" class="form-control" name="secondaryDialingCountryCode" placeholder="" id="secondaryDialingCountryCode"
+                 formControlName="secondaryDialingCountryCode" value="00237">
+
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="addressStreetAddress">Street Address</label>
+              <input type="text" class="form-control" name="addressStreetAddress" placeholder="Street Address" id="addressStreetAddress"
+                     formControlName="addressStreetAddress">
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="addressCity">City</label>
+              <input type="text" class="form-control" name="addressCity" placeholder="City" id="addressCity"
+                     formControlName="addressCity">
+            </div>
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="addressStateProvince">Province</label>
+              <input type="text" class="form-control" name="addressStateProvince" placeholder="Province" id="addressStateProvince"
+                     formControlName="addressStateProvince">
+            </div>
+          </div>
+
+          <input type="hidden" class="form-control" name="addressPostalCode" placeholder="" id="addressPostalCode"
+                 formControlName="addressPostalCode" value="80209">
+
+
+          <input type="hidden" class="form-control" name="addressCountryCode" placeholder="" id="addressCountryCode"
+                 formControlName="addressCountryCode" value="CM">
+
+
+          <div style="margin-top:10px" class="form-group">
             <!-- Button -->
-            <div class="col-md-offset-3 col-md-9">
-              <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp; Sign Up</button>
-              <span style="margin-left:8px;"></span>
-              <span style="float:right; font-size: 85%; position: relative; top:-10px">all ready have account? <a class="center" (click)="gotoSignIn();"> Sign In here</a></span>
+
+            <div class="col-sm-12 controls">
+              <button type="submit" class="btn btn-primary">Register</button>
+
             </div>
           </div>
-
         </form>
       </div>
     </div>
   </div>
+
 </div>

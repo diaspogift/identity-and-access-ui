@@ -1,13 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {User} from "../../../../domain/model/User";
+import {User} from "../../../../../domain/model/User";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BASE_API_URL} from "../../../../Constante";
-import {appStore} from "../../../../store/AppStore";
-import {MyAction} from "../../../../common/MyAction";
-import {appActionCreator} from "../../../../actions/Action";
-import {CHANGE_TENANT_AVAILABILITY_STATUS} from "../../../../actions/TenantAction";
-import {CHANGE_USER_ENABLED} from "../../../../actions/UserAction";
+import {BASE_API_URL} from "../../../../../Constante";
+import {appStore} from "../../../../../store/AppStore";
+import {MyAction} from "../../../../../common/MyAction";
+import {appActionCreator} from "../../../../../actions/Action";
+import {CHANGE_USER_ENABLED} from "../../../../../actions/UserAction";
 
 @Component({
   selector: 'app-user-list-item',
@@ -72,6 +71,10 @@ export class UserListItemComponent implements OnInit {
     this.hasChanged = !this.hasChanged;
 
     console.log("toggling...........................");
+  }
+
+  transform(data:string):string{
+    return data.replace(/@|\./g,'');
   }
 
 }

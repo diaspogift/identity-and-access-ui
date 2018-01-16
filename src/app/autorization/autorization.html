@@ -31,6 +31,9 @@
       <li class="nav-item">
         <a class="nav-link"  [routerLink]="['groups']">Groups</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link"  [routerLink]="['groupmembers']">Group Members</a>
+      </li>
       <!--<li class="nav-item">
         <a class="nav-link"  [routerLink]="['registrationinvitation']">Invite People</a>
       </li>-->
@@ -49,7 +52,7 @@
           <li><a href="#">Something else here</a></li>
           <li role="separator" class="divider"></li>
           <li><a href="#">Separated link</a></li>
-          <li><a href="#"><i class="glyphicon glyphicon-off"></i>Logout</a></li>
+          <li><a class="nav-link"  [routerLink]="['logout']"> <i class="glyphicon glyphicon-off"></i> Logout</a></li>
         </ul>
       </li>
     </ul>
@@ -61,6 +64,7 @@
   <div class="col-md-10 col-md-offset-1">
     <button type="button" class="btn btn-sm btn-primary" (click)="gotoNewTenant();">New Partner</button>
     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmModal" >Invite People</button>
+    <!--<button type="button" class="btn btn-sm btn-primary" (click)="gotoRegister();">Register</button>-->
 
     <div id="confirmModal" class="modal fade" role="dialog">
       <div class="modal-dialog ">
@@ -168,7 +172,6 @@
                           <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Invite</button>
                         </div>
                       </div>
-
                     </form>
                   </div>
                 </div>

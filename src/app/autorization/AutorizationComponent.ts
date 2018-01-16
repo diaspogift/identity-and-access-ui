@@ -1,6 +1,6 @@
 
 
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router, RouterLink, Routes} from "@angular/router";
 import {childRoutes} from "../rooute/Config";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
@@ -17,7 +17,7 @@ import {NgbDatepickerConfig} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./autorization.css']
 })
 
-export class AutorizationComponent{
+export class AutorizationComponent implements OnInit{
   title: string = "AutorizationComponent";
   rFormRegistrationInvitation: FormGroup;
   description: string;
@@ -93,8 +93,8 @@ AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
 
       let sign = today.getTimezoneOffset() >= 0 ? '+':'';
 
-      let trailingZeroToday = (today.getMonth() + 1)<10? "0":"";
-      let trailingZerotomorow = (tomorow.getMonth() + 1)<10? "0":"";
+      let trailingZeroToday = (today.getMonth())<10? "0":"";
+      let trailingZerotomorow = (tomorow.getMonth())<10? "0":"";
 
       let trailingZeroToday1 = (today.getDate())<10? "0":"";
       let trailingZerotomorow1 = (tomorow.getDate())<10? "0":"";
@@ -110,10 +110,11 @@ AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
 
       let body = {
         description:this.description,
-        startingOn: today.getFullYear() + '-' + trailingZeroToday + (today.getMonth() + 1) + '-' + trailingZeroToday1 +  today.getDate().toLocaleString() + 'T' + trailingZeroTodayH +today.getHours() + ':' + trailingZeroTodayM+ today.getMinutes() + ':' +
+        startingOn: "2017" + '-' + trailingZeroToday + (today.getMonth()) + '-' + trailingZeroToday1 +  today.getDate().toLocaleString() + 'T' + trailingZeroTodayH +today.getHours() + ':' + trailingZeroTodayM+ today.getMinutes() + ':' +
         trailingZeroTodayS+today.getSeconds() + '.' + today.getMilliseconds() +  '+01:00[Africa/Douala]',
-        until:tomorow.getFullYear() + '-' + trailingZerotomorow  + (tomorow.getMonth() + 1) + '-' + trailingZerotomorow1 + tomorow.getDate().toLocaleString() + 'T' + trailingZerotomorowH + tomorow.getHours() + ':' + trailingZerotomorowM + tomorow.getMinutes() + ':' +
-        trailingZerotomorowS + tomorow.getSeconds()+ '.' + tomorow.getMilliseconds() +  '+01:00[Africa/Douala]'
+        until:tomorow.getFullYear() + '-' + trailingZerotomorow  + (tomorow.getMonth()) + '-' + trailingZerotomorow1 + tomorow.getDate().toLocaleString() + 'T' + trailingZerotomorowH + tomorow.getHours() + ':' + trailingZerotomorowM + tomorow.getMinutes() + ':' +
+        trailingZerotomorowS + tomorow.getSeconds()+ '.' + tomorow.getMilliseconds() +  '+01:00[Africa/Douala]',
+        email:form.email
       };
 
       console.log("BODYYYYYYYYYYYYYYYYY: " + JSON.stringify(body));
@@ -126,6 +127,7 @@ AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
 
         console.log("Response data: " + JSON.stringify(data));
         this.successMessage = 'Success: ' + JSON.stringify(data);
+        localStorage.setItem("registrationinvitation", JSON.stringify(data));
         /*let status = {"isActive":data['active']};
         //new User(data['tenantId'], data['username'], data['emailAddress']);
         //availability-status  CHANGE_TENANT_AVAILABILITY_STATUS
@@ -148,5 +150,15 @@ AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
 
   gotoNewTenant(){
     this.route.navigate(["../autorized/newtenant"], { relativeTo: this.r });
+  }
+
+  gotoRegister(){
+    this.route.navigate(["../autorized/register", '76DC6953-AD34-446E-91D0-92934E5DB6D4'], { relativeTo: this.r });
+  }
+
+  ngOnInit(): void {
+    if (appStore.getState().tenantsState.tenants == null || appStore.getState().tenantsState.tenants.length === 0){
+      console.log("\n\n\nmust request many thing");
+    }
   }
 }

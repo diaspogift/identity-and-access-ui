@@ -32,14 +32,20 @@ import { TenantListItemComponent } from './autorization/tenant/tenant/tenant-lis
 import { GroupComponent } from './autorization/tenant/group/group.component';
 import { GroupListItemComponent } from './autorization/tenant/group/group-list-item/group-list-item.component';
 import { NewtenantComponent } from './autorization/tenant/tenant/newtenant/newtenant.component';
-import { UserListItemComponent } from './autorization/tenant/user/user-list-item/user-list-item.component';
+import { UserListItemComponent } from './autorization/tenant/user/user/user-list-item/user-list-item.component';
 import { ChangePasswordComponent } from './autorization/tenant/user/change-password/change-password.component';
+import { LogoutComponent } from './autorization/tenant/user/logout/logout.component';
+import { NotautorizedComponent } from './notautorized/notautorized.component';
+import { GroupMemberComponent } from './autorization/tenant/group/group-menber/group-menber.component';
+import { GroupMemberListItemComponent } from './autorization/tenant/group/group-menber/group-member-list-item/group-member-list-item.component';
 //import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
 
 
 @NgModule({
   declarations: [
-    AppComponent, AuthComponent, AutorizationComponent, SignupComponent, TenantComponent, UserComponent, ServiceComponent, TenantListItemComponent, GroupComponent, GroupListItemComponent, NewtenantComponent, UserListItemComponent, ChangePasswordComponent
+    AppComponent, AuthComponent, AutorizationComponent, SignupComponent, TenantComponent, UserComponent, ServiceComponent,
+    TenantListItemComponent, GroupComponent, GroupListItemComponent, NewtenantComponent, UserListItemComponent,
+    ChangePasswordComponent, LogoutComponent, NotautorizedComponent, GroupMemberComponent, GroupMemberListItemComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Group} from "../../../../domain/model/Group";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-group-list-item',
@@ -12,7 +12,7 @@ export class GroupListItemComponent implements OnInit , OnChanges{
 
   @Input('group')group:Group;
 
-  constructor(private router: Router) {
+  constructor(private router: Router , private r:ActivatedRoute) {
 
 
   }
@@ -24,9 +24,9 @@ export class GroupListItemComponent implements OnInit , OnChanges{
   }
 
   gotoMembers(){
-
-    let prefix = this.group.getIsGroup()?"groups":"users";
-    this.router.navigate(['/autorized/' + prefix, this.group.getLinks()['groups']]);
+    this.router.navigate(['/autorized/groupmembers/', this.group.getLinks()['members']]);
+    //this.router.navigate(["../autorized/register", '76DC6953-AD34-446E-91D0-92934E5DB6D4'], { relativeTo: this.r });
   }
+
 
 }

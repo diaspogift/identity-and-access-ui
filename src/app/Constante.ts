@@ -2,10 +2,12 @@ const  HOST = "localhost";
 const  PROTOCOLE = "http://";
 const  PORT = "8081";
 const  AUTH_PATH = "/oauth/token";
+const  LOGOUT_PATH = "/oauth/revoke-token";
 const  API_PATH = "/api/v1/";
 const  CLIENT_ID = "sysadmin";
 const  SECRET = "ManagingMembers@@2017";
 export const ACCESSTOKEN_LINK = PROTOCOLE+HOST+":" + PORT+AUTH_PATH;
+export const LOGOUT_LINK = PROTOCOLE+HOST+":" + PORT+LOGOUT_PATH;
 //"http://localhost/v1/oauth/token?client_id=CLIENT_ID&client_secret=CLIENT_SECRET&grant_type=authorization_code&code=AUTHORIZATION_CODE&redirect_uri=CALLBACK_URL";
 
 export const ACCESSTOKEN = "4ca00fc8-d52c-4135-850d-28dc5e53f1dd";
@@ -13,6 +15,8 @@ export const ACCESSTOKEN = "4ca00fc8-d52c-4135-850d-28dc5e53f1dd";
 export const DGTENANTID = "FB06037B-B1B5-4C71-8C69-E630036B9DFF";
 
 export const BASE_API_URL = PROTOCOLE + HOST + ":" + PORT + "/api/v1/tenants/";
+
+export const  CLIENT_APP_ID = 'identity-and-access-ui';
 
 
 
@@ -32,6 +36,15 @@ curl -X GET -H "Accept: application/json" -H "Authorization: Bearer fcd70a34-231
 {"access_token":"d1511035-518e-4e47-b433-84ea99cda495","token_type":"bearer","refresh_token":"0e6da6c1-4ce0-443e-a664-05ec652277d1","expires_in":43199,"scope":"trusted"}
 
 curl -X GET -H "Accept: application/json" -H "Authorization: Bearer d1511035-518e-4e47-b433-84ea99cda495"  http://localhost:8081/api/v1/tenants/FB06037B-B1B5-4C71-8C69-E630036B9DFF/users/admin/autenticated-with/nj%28rM%3EYp1
+
+
+
+
+{
+  "description":"another test description",
+  "invitationId":"76DC6953-AD34-446E-91D0-92934E5DB6D4",
+  "startingOn":"2018-02-19T23:59:59+01:00[Africa/Douala]",
+  "until":"2019-02-27T23:59:59+01:00[Africa/Douala]"}
 
  */
 
