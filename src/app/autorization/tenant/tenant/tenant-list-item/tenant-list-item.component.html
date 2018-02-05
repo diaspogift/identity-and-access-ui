@@ -1,50 +1,71 @@
-<div class="col-md-4">
-<div class="panel panel-info" >
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      {{tenant.getName()}}
-    </h4> <h5 style="display: inline;">({{tenant.getTenantId()}})</h5>
-  </div>
-    <div class="panel-body">
-      {{tenant.getDescription()}}
-      <hr>
-      <a href="#" class="btn btn-info btn-sm pull-right"  data-toggle="modal" [attr.data-target]="'#'+tenant.getTenantId()" >
-        <span class="glyphicon glyphicon-edit"></span> Edit
-      </a><br>
-      <div *ngIf="tenant.getIsActive()">State: <span class="alert-success">OK</span></div>
-      <div *ngIf="!tenant.getIsActive()">State: <span class="alert-danger">KO</span></div>
-      <a  class="btn-sm btn-primary "  (click)="gotoGroups();">Groups</a> | <a  class="btn-sm btn-primary"  (click)="gotoUsers();">Users</a>
 
-      <!-- Modal -->
-      <div id="{{tenant.getTenantId()}}" class="modal fade" role="dialog">
-        <div class="modal-dialog ">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">{{tenant.getName()}}</h4>
-            </div>
-            <div class="modal-body">
-              <form>
-
-                <label class="checkbox-inline" *ngIf="tenant.getIsActive()">
-                  <input  type="checkbox" checked name="state" id="state1" (click)="toggleState();">  Desable</label>
-                <label class="checkbox-inline" *ngIf="!tenant.getIsActive()">
-                  <input  type="checkbox" name="state" id="state12" (click)="toggleState();"> Enable</label>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary btn-sm" (click)=" saveChanges();" data-dismiss="modal">Save changes</button>
-            </div>
+<div class="card card-outline-primary" type="info">
+  <!--<div class="card-header">-->
+    <div class="row">
+      <div class="col-11 mx-auto card-header {{tenant.getIsActive()? 'alert-success':'alert-danger'}}">
+        <div class="row">
+          <div class="col-2">
+            <img class="card-img-top user-img" src="../../../../../assets/img/default-user.png" alt="{{tenant.getName()}}">
           </div>
-
+          <div class="col-10" style="font-size: small">
+            <span>&#9733; <b>{{tenant.getName()}}</b>  &#9733;</span><br/>
+            {{tenant.getTenantId()}}
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  <div class="panel-footer"></div>
-</div>
+
+ <!-- </div>-->
+
+  <div class="row">
+    <div class="col-11 mx-auto">
+      <div class="card-block">
+        <p>{{tenant.getDescription()}}</p>
+        <hr>
+        <button  class="btn btn-sm btn-outline-info pull-right"  (click)="openEditModal(content)">
+          <span class="fa fa-edit"></span> Edit
+        </button>
+        <button   class="btn btn-sm btn-outline-info btn-link"  (click)="gotoGroups();">Groups</button>
+        <button   class="btn btn-sm btn-outline-info btn-link"  (click)="gotoUsers();">Users</button>
+        <button   class="btn btn-sm btn-outline-info btn-link"  (click)="gotoRoles();">Roles</button>
+
+        <ng-template  #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">{{tenant.getName()}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div *ngIf="loading">
+              <img src="../../../../../assets/img/loader/loader.gif" height="40" width="55"/>
+            </div>
+            <div *ngIf="success" class="alert-success">
+              {{message}}
+            </div>
+            <div *ngIf="failiure" class="alert-danger">
+              {{message}}
+
+          </div>
+            <form>
+              <label class="checkbox-inline" *ngIf="tenant.getIsActive()">Disable</label>
+              <input  type="checkbox" checked name="state" id="state1" (click)="toggleState();"
+                      *ngIf="tenant.getIsActive()" style="height: 18px; width: 18px;" class="pull-right">
+              <label class="checkbox-inline" *ngIf="!tenant.getIsActive()">Enable</label>
+              <input  type="checkbox" name="state" id="state12" (click)="toggleState();"
+                      style="height: 18px; width: 18px;" *ngIf="!tenant.getIsActive()" class="pull-right">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+            <button type="button" class="btn btn-info btn-sm" (click)="saveChanges(content);" data-dismiss="modal">Save changes</button>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+  <br/>
 </div>
 

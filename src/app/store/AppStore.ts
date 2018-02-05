@@ -43,7 +43,7 @@ export let appStore: AppStore= new AppStore(initialAppsState);
 appStore.subscribe(()=>{
   console.log("I get Token: " , JSON.stringify(appStore.getState().tokenState.token));
 });
-console.log("ECCOOOOOOOOOO" + JSON.stringify(appStore));
+//console.log("ECCOOOOOOOOOO" + JSON.stringify(appStore));
 //export let appStore: Store<AppState> = createStore<AppState>(initialAppsState);
 /*
 

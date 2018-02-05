@@ -1,3 +1,88 @@
+
+<ul class="list-group">
+  <li class="list-group-item ">
+    <!--<strong>{{groupMember.getName()}}</strong>&nbsp;&nbsp;&nbsp;<button *ngIf="groupMember.getType() != 'User'" class="btn-link" style="margin: -5px;"
+            (click)="emitGroupmembersLink(); emitNotGroupmembersLink(); emitGroupmemberName();">Members</button>
+    <span class="badge badge-info pull-right">
+      {{groupMember.getType()}}</span>-->
+
+    <strong>{{groupMember.getName()}}</strong>&nbsp;&nbsp;&nbsp;
+    <button class="btn-danger btn-link" style="margin: -5px;"
+            (click)="openConfirmRemovModal(content)">Remove</button>
+    <span class="badge badge-info pull-right">
+      {{groupMember.getType()}}</span>
+
+    <ng-template  #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h6 class="modal-title">Confirm remove the Member <strong>{{groupMember.getName()}}</strong></h6>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="createnewgroup" class="form-group-sm" role="form" [formGroup]="rFormRemoveMember"
+              (ngSubmit)="removeMember(rFormRemoveMember.value)">
+          <div *ngIf="failiure"  class="alert alert-danger">
+            <span>{{message}}</span>
+          </div>
+          <div *ngIf="success"  class="alert alert-success">
+            <span>{{message}}</span>
+          </div>
+
+
+            <div  class="col-md-3  mx-auto" *ngIf="loading">
+              <img src="../../../../assets/img/loader/loader1.gif">
+            </div>
+
+
+
+            <div  class="alert alert-danger">
+              Are you sure you want to remove <strong>{{groupMember.getName()}}</strong> from the group <strong>{{groupName}}</strong>
+            </div>
+
+
+          <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+              <button  type="submit" class="btn btn-sm btn-info"><span class="fa fa-remove"></span>Remove</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+      </div>
+    </ng-template>
+
+  </li>
+</ul>
+
+<!--<div class="card card-outline-primary" type="info" #addMemberTogroupFrom>
+  <div class="row">
+    <div class="col-11 mx-auto card-header">
+      <div class="row">
+        <div class="col-11 mx-auto" style="font-size: small">
+          <span>&#9733; <b>{{groupMember.getName()}}</b>  &#9733;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-11 mx-auto">
+      <div class="card-block">
+        {{groupMember.getType()}}
+        <hr>
+        <button *ngIf="groupMember.getType() != 'User'" class="btn-sm btn-outline-info"
+                (click)="emitGroupmembersLink(); emitNotGroupmembersLink(); emitGroupmemberName();">Members</button>
+        <br>
+
+      </div>
+    </div>
+  </div>
+  <br/>
+</div>-->
+<!--
 <div class="col-md-3">
   <div class="panel panel-default" id="{{groupMember.getName()}}">
     <div class="panel-heading">
@@ -13,3 +98,5 @@
     <div class="panel-footer"></div>
   </div>
 </div>
+-->
+

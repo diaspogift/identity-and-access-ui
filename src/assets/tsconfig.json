@@ -1,0 +1,66 @@
+{
+  "response":true,
+  "data":{
+    "address_components": [
+      {
+        "long_name":"Douala",
+        "short_name":"Douala",
+        "types":[
+          "locality","political"
+        ]
+      },
+      {
+        "long_name":"Wouri",
+        "short_name":"Wouri",
+        "types":[
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name":"Littoral",
+        "short_name":"Littoral",
+        "types":[
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name":"Cameroon",
+        "short_name":"CM",
+        "types":[
+          "country",
+          "political"
+        ]
+      }
+    ],
+    "adr_address":"<span class=\"locality\">Douala</span>, <span class=\"country-name\">Cameroon</span>",
+    "formatted_address":"Douala, Cameroon",
+    "geometry":{
+      "location":{
+        "lat":4.0510564,
+        "lng":9.767868700000008
+      },
+      "viewport":{
+        "south":3.9578412,
+        "west":9.664492600000017,
+        "north":4.1139663,
+        "east":9.819116699999995
+      }
+    },
+    "icon":"https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+    "id":"3218124778676e2bfd38f3d2b28e4e888d059310",
+    "name":"Douala",
+    "photos":[
+      {
+        "height":553,
+        "html_attributions":[
+          "<a href=\"https://maps.google.com/maps/contrib/113423425227162407686/photos\">True Franck</a>"
+        ],
+        "width":831
+      },
+      {
+        "height":1080,
+        "html_attributions":[
+          "<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"
+        ],"width":1440},{"height":533,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":800},{"height":683,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":1024},{"height":543,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":800},{"height":768,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":1024},{"height":600,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":800},{"height":523,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":700},{"height":900,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/107517888269401893244/photos\">Bidias Cariton</a>"],"width":1200},{"height":617,"html_attributions":["<a href=\"https://maps.google.com/maps/contrib/113423425227162407686/photos\">True Franck</a>"],"width":918}],"place_id":"ChIJbf7h4osSYRARi8SBR0Sh2pI","reference":"CmRbAAAAtwVMDYvQGGdWUMk2bAv4rRKQpELuyeHK50vfhBZX8u-2EhM9fR4E0iom2YJjceetUEITsUeO_YLEG2H3jmjaL383TDywnEgSu8YprJ95O8STwgMLo5DLro-C7f5Z0BQ_EhAoTD8_UeuiaftpuMskTxkEGhQR-0O0piqZ17JAE_khnpUp4TiwyA","scope":"GOOGLE","types":["locality","political"],"url":"https://maps.google.com/?q=Douala,+Cameroon&ftid=0x1061128be2e1fe6d:0x92daa1444781c48b","utc_offset":60,"vicinity":"Douala","html_attributions":[],"description":"Douala, Cameroon","active":false}}

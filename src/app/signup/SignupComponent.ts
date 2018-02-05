@@ -8,6 +8,7 @@ import {AuthService} from "../auth/AuthService";
 import {appStore} from "../store/AppStore";
 import {BASE_API_URL} from "../Constante";
 import {Cookie} from "ng2-cookies";
+import {parse} from "libphonenumber-js";
 
 @Component({
   selector: 'signup',
@@ -18,10 +19,23 @@ import {Cookie} from "ng2-cookies";
 export class SignupComponent {
 
   message:string;
+  success: boolean;
+  loading: boolean;
+  failiure: boolean;
   rForm: FormGroup;
   registrationinvitationid: string;
   tenantId: string;
   username:string;
+  addressStreetAddress: string;
+
+
+  mysetting: any = {
+    showCurrentLocation: false,
+    showSearchButton: false,
+    //currentLocIconUrl: 'https://cdn4.iconfinder.com/data/icons/proglyphs-traveling/512/Current_Location-512.png',
+  };
+  private addressCountryCode: any;
+  private addressStateProvince: any;
 
   constructor(private fb: FormBuilder,private httpClient:HttpClient, private route:Router, private r:ActivatedRoute,
               private authService: AuthService) {
@@ -32,22 +46,20 @@ export class SignupComponent {
       'firstName' : [null],
       'lastName' : [null],
       'primaryTelephone' : [null],
-      'primaryCountryCode' : [null],
-      'primaryDialingCountryCode' : [null],
+      //'primaryCountryCode' : [null],
+      //'primaryDialingCountryCode' : [null],
       'secondaryTelephone' : [null],
-      'secondaryCountryCode' : [null],
-      'secondaryDialingCountryCode' : [null],
-      'addressStreetAddress' : [null],
+      //'secondaryCountryCode' : [null],
+      //'secondaryDialingCountryCode' : [null],
+      //'addressStreetAddress' : [null],
       'addressCity' : [null],
-      'addressStateProvince' : [null],
+      //'addressStateProvince' : [null],
       'addressPostalCode' : [null],
       'addressCountryCode' : [null]
     });
 
     r.params.subscribe(params=>{
-
       console.log(params);
-
       this.registrationinvitationid = params['registrationinvitationid'];
       console.log("registrationinvitationid: " + this.registrationinvitationid);
       this.tenantId = params['tenantId'];
@@ -55,11 +67,48 @@ export class SignupComponent {
 
     });
 
+    this.message = '';
+    this.success = false;
+    this.loading = false;
+    this.failiure = false;
+  }
+
+
+
+  addressAutoCompleteCallback(selectedData:any) {
+    //do any necessery stuff.
+    console.log("addressAutoCompleteCallback: " + JSON.stringify(selectedData));
+    if (selectedData['response'] === true){
+      //this.inputError = true;
+      this.message = 'Valide Addresse';
+      let data: any = selectedData['data'];
+      this.addressStreetAddress = data['name'];
+
+      for (let i=0; i<data['address_components'].length; i++){
+        let country: any = data['address_components'][i];
+        if(country['types'][0] === 'country' && country['types'][1] === 'political'){
+          this.addressCountryCode = country['short_name'];
+          console.log("addressCountryCode: " + this.addressCountryCode);
+          //break;
+        }
+
+        if(country['types'][0] === 'administrative_area_level_1' && country['types'][1] === 'political'){
+          this.addressStateProvince = country['short_name'];
+          console.log("addressStateProvince: " + this.addressStateProvince);
+          this.rForm['addressStateProvince'] = this.addressStateProvince;
+          //break;
+        }
+      }
+
+    }else {
+      //this.inputError = true;
+      this.message = 'Invalide Addresse';
+    }
   }
 
 
   registerUser(form){
-    form.primaryTelephone = "669262656";
+    /*form.primaryTelephone = "669262656";
 
     form.primaryCountryCode = "CM";
 
@@ -73,9 +122,9 @@ export class SignupComponent {
 
     form.addressPostalCode = "80209";
 
-    form.addressCountryCode = "CM";
+    form.addressCountryCode = "CM";*/
 
-    console.log(JSON.stringify(form));
+    //console.log(JSON.stringify(form));
 
    /* let today:Date = new Date(2015, 1, 15, 23, 59, 59, 0);
 
@@ -105,6 +154,19 @@ export class SignupComponent {
 
     let regInv = JSON.parse(localStorage.getItem('registrationinvitation'));*/
 
+    let lookupPrimaryPhoneNumber = parse(form['primaryTelephone']);
+    let simplephonenum1 = lookupPrimaryPhoneNumber['phone'];
+    let index1 =  form.primaryTelephone.indexOf(simplephonenum1);
+
+    let lookupSecondaryPhoneNumber = parse(form['secondaryTelephone']);
+    let simplephonenum2 = lookupSecondaryPhoneNumber['phone'];
+    let index2 =  form.secondaryTelephone.indexOf(simplephonenum2);
+
+    console.log("lookupPrimaryPhoneNumber: " + JSON.stringify(lookupPrimaryPhoneNumber));
+    console.log("lookupSecondaryPhoneNumber: " + JSON.stringify(lookupSecondaryPhoneNumber));
+
+    console.log("\n\nform: " + JSON.stringify(form));
+
     let body = {
       tenantId:this.tenantId,
       invitationIdentifier: this.registrationinvitationid,//regInv['invitationId'],
@@ -120,15 +182,15 @@ export class SignupComponent {
       emailAddress: form.username,
       primaryTelephone: form.primaryTelephone,
       secondaryTelephone: form.secondaryTelephone,
-      primaryCountryCode: form.primaryCountryCode,
-      primaryDialingCountryCode: form.primaryDialingCountryCode,
-      secondaryCountryCode: form.secondaryCountryCode,
-      secondaryDialingCountryCode: form.secondaryDialingCountryCode,
-      addressStreetAddress: form.addressStreetAddress,
+      primaryCountryCode: lookupPrimaryPhoneNumber['country'],
+      primaryDialingCountryCode: form.primaryTelephone.substring(0, index1),
+      secondaryCountryCode: lookupSecondaryPhoneNumber['country'],
+      secondaryDialingCountryCode: form.secondaryTelephone.substring(0, index2),
+      addressStreetAddress: this.addressStreetAddress,
       addressCity: form.addressCity,
-      addressStateProvince: form.addressStateProvince,
+      addressStateProvince: this.addressStateProvince,
       addressPostalCode: form.addressPostalCode,
-      addressCountryCode: form.addressCountryCode
+      addressCountryCode: this.addressCountryCode
     };
 
     console.log("BODYYYYYYYYYYYYYYYYY: " + JSON.stringify(body));
@@ -136,12 +198,20 @@ export class SignupComponent {
       "/users/" + encodeURIComponent(form.username) + "/registrations";
     console.log("url ==== " + url);
 
+    this.success = false;
+    this.loading = true;
+    this.failiure = false;
+
     this.httpClient.post(url , body, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
     }).subscribe((data)=>{
 
       console.log("Response data: " + JSON.stringify(data));
+      this.success = true;
+      this.message = 'Signed up successfully...';
+      this.failiure = false;
       this.route.navigate(['/auth', this.tenantId]);
+
       //this.message = 'Success: ' + JSON.stringify(data);
       //localStorage.setItem("registrationinvitation", JSON.stringify(data));
       /*let status = {"isActive":data['active']};
@@ -156,10 +226,18 @@ export class SignupComponent {
 
       //this.router.navigate(['/autorized']);*/
     },(data) => {
-      console.log("Errorrrrrrr", data);
+      console.log("Errorrrrrrr", JSON.stringify(data));
+      this.success = false;
+      this.failiure = true;
+      this.message = 'Failed to signe up'; //+ JSON.stringify(data);
+      this.loading = false;
+    },()=>{
+      this.loading = false;
     });
 
   }
 
 
 }
+
+//console.log("DIDIERRRRRRRRRRRRRRR");

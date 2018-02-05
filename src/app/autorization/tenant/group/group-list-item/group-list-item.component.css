@@ -1,0 +1,6 @@
+input[type=checkbox] + label {
+  display: inline-block;
+  margin-left: 0.5em;
+  margin-right: 2em;
+  line-height: 1em;
+}

@@ -1,0 +1,88 @@
+
+<div class="container">
+  <div class="row">
+    <div style="margin-top:60px; border: red solid 0px;" class="col-md-8 col-sm-10 mx-auto">
+      <div class="card card-outline-primary">
+        <div class="card-header">
+          <h6 class="modal-title">{{groupName}}</h6>
+        </div>
+
+        <div class="row">
+          <div class="col-10 mx-auto">
+            <div style="padding-top:30px" class="card-block">
+
+              <div *ngIf="!success && message!= ''" id="login-alert" class="alert alert-danger col-sm-12">{{message}}</div>
+              <div *ngIf="success && message!= ''" id="login-alert1" class="alert alert-success col-sm-12">{{message}}</div>
+
+              <form id="addMemberTogroupFrom" class="form-group-sm" role="form" [formGroup]="rFormAddMembers"
+                    (ngSubmit)="addMembers(rFormAddMembers.value)" >
+                <div class="col-md-12" *ngIf="loading">
+                  <div class="row">
+                    <div class="col-2 mx-auto">
+                      <img src="../../../../../assets/img/loader/loader1.gif" width="20" height="30" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="alert alert-info" *ngIf="!(freeGroupMembers.length > 0)">
+                    <strong>No member to be added</strong>
+                </div>
+
+                <!--<div class="col-md-12" *ngIf="!loading">
+                  <div class="row">
+                    <div class="col-12 mx-auto">
+                      {{message}}
+                    </div>
+                  </div>
+                </div>-->
+
+
+                <div class="form-group" *ngFor="let a of freeGroupMembers">
+
+                  <div class="input-group">
+                    <label for="{{a['name']}}">
+                      <input type="checkbox" class="form-control" name="{{a['name']}}" placeholder="Description" id="{{a['name']}}"
+                             value="0" (click)="addToMembersToAdd($event)"
+                             style="height: 16px; width: 16px;">
+                      {{a['name']}} ({{a['type']}})
+                    </label>
+
+                  </div>
+                  <hr>
+
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group" *ngIf="freeGroupMembers.length > 0">
+                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!--<ng-template  #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{group.getName()}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="abandonne()">Close</button>
+  </div>
+</ng-template>-->

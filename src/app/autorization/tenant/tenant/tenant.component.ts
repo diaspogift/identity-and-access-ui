@@ -19,13 +19,20 @@ export class TenantComponent implements OnInit {
 
   constructor(private httpClient: HttpClient, private route: Router, private r:ActivatedRoute) {
     //this.tenants=[];
+    console.log("TenantComponent constructor");
   }
 
   ngOnInit() {
 
+    console.log("dans ngOnInit de TenantComponent");
+
+    let leToken : string = appStore.getState().tokenState.token.accessToken;
+
+    console.log("leTokenleTokenleToken: " + leToken);
+
     this.httpClient.get(BASE_API_URL, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
-        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+        .set('Authorization', 'Bearer '+ leToken)
     }).subscribe((data)=>{
 
       console.log("Tenants Tenants Tenants Tenants: " + JSON.stringify(data));
@@ -50,6 +57,11 @@ export class TenantComponent implements OnInit {
       appStore.dispatch(monAction);
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
     });
+  }
+
+
+  gotoNewTenant(){
+    this.route.navigate(["../../autorized/newtenant"], { relativeTo: this.r });
   }
 
 

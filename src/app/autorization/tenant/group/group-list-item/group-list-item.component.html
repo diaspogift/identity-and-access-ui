@@ -1,18 +1,97 @@
-<!--<div >
-  <img src="../../../../../assets/img/default-partener/partner.png" />
 
-  <h3>{{group.getName()}}</h3>
+<div class="card card-outline-primary" type="info" #addMemberTogroupFrom>
+  <!--<div class="card-header">-->
 
-  <h5>{{group.getDescription()}}</h5>
-  <p></p>
+    <div class="row">
+      <div class="col-11 mx-auto card-header">
+        <div class="row">
+          <div class="col-2">
+            <img class="card-img-top user-img" src="../../../../../assets/img/default-user.png" alt="{{group.getName()}}">
+          </div>
+          <div class="col-10" style="font-size: small">
+            <span>&#9733; <b>{{group.getName()}}</b>  &#9733;</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div>
+ <!-- </div>-->
 
-    <input  class="button" value="Members" (click)="gotoMembers();">
+  <div class="row">
+    <div class="col-11 mx-auto">
+      <div class="card-block">
+        {{group.getDescription()}}
+        <hr>
+        <button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoMembers();">Members</button>
+        <hr>
+        <button class="btn btn-sm btn-outline-info"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();">
+          <span class="fa fa-plus-circle"></span> Add Members
+        </button>
+        <br>
+
+        <ng-template  #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">{{group.getName()}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addMemberTogroupFrom" class="form-group-sm" role="form" [formGroup]="rFormAddMembers"
+                  (ngSubmit)="addMembers(rFormAddMembers.value)" >
+              <div class="col-md-12" *ngIf="loading">
+                <div class="row">
+                  <div class="col-2 mx-auto">
+                    <img src="../../../../../assets/img/loader/loader1.gif" width="20" height="30" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngIf="!loading">
+                <div class="row">
+                  <div class="col-12 mx-auto">
+                    {{message}}
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="form-group" *ngFor="let a of freeGroupMembers">
+
+                    <div class="input-group">
+                      <label for="{{a['name']}}">{{a['name']}} ({{a['type']}})</label>
+                      <input type="checkbox" class="form-control" name="{{a['name']}}" placeholder="Description" id="{{a['name']}}"
+                             value="0" (click)="addToMembersToAdd($event)"
+                             style="height: 16px; width: 16px;">
+                    </div>
+                <hr>
+
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <button type="submit" class="btn btn-info btn-sm">Save changes</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
   </div>
-</div>-->
+  <br/>
+</div>
 
 
+
+
+
+<!--
 <div class="col-md-4">
   <div class="panel panel-default" id="{{group.getName()}}">
     <div class="panel-heading">
@@ -24,10 +103,57 @@
       {{group.getDescription()}}
       <hr>
       <a  class="btn-sm btn-primary "  (click)="gotoMembers();">Members</a>
+      <a class="btn btn-primary btn-sm" data-toggle="modal"
+         [attr.data-target]="'#addmembers'+transform(group.getName())">
+        <span class="glyphicon glyphicon-plus"></span> Add Members
+      </a>
+      <br>
+      <div id="addmembers{{transform(group.getName())}}" class="modal fade" role="dialog">
+        <div class="modal-dialog ">
+          <div class="modal-content panel panel-info">
+            <div class="modal-header panel-heading">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title panel-title">{{group.getName()}}</h3>
+            </div>
+            <div class="modal-body panel-body">
+              <form id="addMemberTogroupFrom" class="form-group-sm" role="form" [formGroup]="rFormAddMembers"
+                    (ngSubmit)="addMembers(rFormAddMembers.value)" #addMemberTogroupFrom>
+
+
+                <ul class="list-group" >
+                  <li class="col-md-12 list-group-item" *ngFor="let a of freeGroupMembers">
+
+                    <div class="form-group">
+                      <div class="input-group">
+
+                        <input type="checkbox" class="form-control" name="{{a['name']}}" placeholder="Description" id="{{a['name']}}"
+                               value="0" onclick="this.value = (this.checked)?'1':'0';"
+                               style="height: 20px; width: 20px;">
+                        <label for="{{a['name']}}">{{a['name']}} << {{a['type']}}>></label>
+                      </div>
+                    </div>
+                  </li>
+              </ul>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
     <div class="panel-footer"></div>
   </div>
 </div>
-
+-->
 
 

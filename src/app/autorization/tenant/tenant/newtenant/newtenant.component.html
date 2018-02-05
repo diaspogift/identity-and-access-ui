@@ -1,167 +1,217 @@
 
 <div class="container">
-  <div id="loginbox" style="margin-top:50px; " class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-    <div class="panel panel-info" >
-      <div class="panel-heading">
-        <div class="panel-title">New Partner</div>
-        <!--<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>-->
-      </div>
+  <div class="row">
+    <div style="margin-top:60px; border: red solid 0px;" class="col-md-8 col-sm-10 mx-auto">
+      <div class="card card-outline-primary">
+        <div class="card-header">
+          New Partner
+        </div>
 
-      <div style="padding-top:30px" class="panel-body" >
+        <div class="row">
+          <div class="col-10 mx-auto">
+            <div style="padding-top:30px" class="card-block">
 
-        <div *ngIf="!success && message!= ''" id="login-alert" class="alert alert-danger col-sm-12">{{message}}</div>
-        <div *ngIf="success && message!= ''" id="login-alert1" class="alert alert-success col-sm-12">{{message}}</div>
-
-        <form id="newtenantform" class="form-horizontal" role="form" [formGroup]="rForm" (ngSubmit)="addNewTenant(rForm.value)">
-
-          <div class="form-group">
-            <label for="tenantName" class="col-md-3 control-label">Partner Name</label>
-            <div class="col-md-9">
-            <input id="tenantName" type="text" class="form-control" name="tenantName" value="" placeholder="Partner Name"
-                   formControlName="tenantName">
-          </div>
-          </div>
-
-            <div class="form-group">
-              <label for="tenantDescription" class="col-md-3 control-label">Description</label>
-              <div class="col-md-9">
-            <input id="tenantDescription" type="text" class="form-control" name="tenantDescription" value="" placeholder="Partner Description"
-                   formControlName="tenantDescription">
-          </div>
-            </div>
-
-              <div class="form-group">
-                <label for="administorFirstName" class="col-md-3 control-label">First Name</label>
-                <div class="col-md-9">
-            <input id="administorFirstName" type="text" class="form-control" name="administorFirstName" value="" placeholder="Partner Admin. First Name"
-                   formControlName="administorFirstName">
-          </div>
+              <div *ngIf="failure  && message!= ''" id="login-alert" class="alert alert-danger col-sm-12">{{message}}</div>
+              <div *ngIf="success && message!= ''" id="login-alert1" class="alert alert-success col-sm-12">{{message}}</div>
+              <div class="col-md-12" *ngIf="loading">
+                <div class="row">
+                  <div class="col-2 mx-auto">
+                    <img src="../../../../../assets/img/loader/loader1.gif" width="30" height="30" />
+                  </div>
+                </div>
               </div>
 
+              <form id="newtenantform" class="form-horizontal" role="form" [formGroup]="rForm" (ngSubmit)="addNewTenant(rForm.value)">
 
-          <div class="form-group">
-            <label for="administorLastName" class="col-md-3 control-label">Last Name</label>
-            <div class="col-md-9">
-            <input id="administorLastName" type="text" class="form-control" name="administorLastName" value="" placeholder="Partner Admin. Last Name"
-                   formControlName="administorLastName">
-          </div>
-          </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-6">
+                  <label for="tenantName" class="control-label">Partner Name</label>
+                  <div class="">
+                    <input id="tenantName" type="text" class="form-control" name="tenantName" value="" placeholder="Partner Name"
+                           formControlName="tenantName">
+                  </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="tenantDescription" class="control-label">Description</label>
+                      <div class="">
+                        <input id="tenantDescription" type="text" class="form-control" name="tenantDescription" value="" placeholder="Partner Description"
+                               formControlName="tenantDescription">
+                      </div>
+                    </div>
 
-          <div class="form-group">
-            <label for="emailAddress" class="col-md-3 control-label">E-Mail</label>
-            <div class="col-md-9">
-            <input id="emailAddress" type="email" class="form-control" name="emailAddress" value="" placeholder="Partner Admin. E-Mail"
-                   formControlName="emailAddress">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-6">
+                  <label for="administorFirstName" class="control-label">First Name</label>
+                  <div class="">
+                    <input id="administorFirstName" type="text" class="form-control" name="administorFirstName" value="" placeholder="Partner Admin. First Name"
+                           formControlName="administorFirstName">
+                  </div>
+
+                    </div>
+                    <div class="col-6">
+
+                    <label for="administorLastName" class="control-label">Last Name</label>
+                    <div class="">
+                      <input id="administorLastName" type="text" class="form-control" name="administorLastName" value="" placeholder="Partner Admin. Last Name"
+                             formControlName="administorLastName">
+                    </div>
+                  </div>
+                  </div>
+
+                </div>
+
+                <!--<int-phone-prefix [(ngModel)]="phoneNumber"></int-phone-prefix>-->
+
+                <div class="form-group">
+                  <label for="emailAddress" class="control-label">E-Mail</label>
+                  <div class="">
+                    <input id="emailAddress" type="email" class="form-control" name="emailAddress" value="" placeholder="Partner Admin. E-Mail"
+                           formControlName="emailAddress">
+                  </div>
+                </div>
+
+                <div class="form-group">
+
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="primaryTelephone" class="control-label">Primary Phone Number</label>
+                     <!-- <input type="tel" id="primaryTelephone">-->
+
+                      <div class="">
+                        <!--<input id="primaryTelephone" type="tel" class="form-control" name="primaryTelephone"
+                               placeholder="Partner Primary Phone"
+                               formControlName="primaryTelephone">-->
+
+                        <int-phone-prefix  id="primaryTelephone" #primaryTelephone
+                                          formControlName="primaryTelephone"
+                        ></int-phone-prefix><span>{{primaryCountryCode}}</span>
+
+                        <input id="primaryCountryCode" type="hidden" value="{{primaryCountryCode}}" class="form-control" name="primaryCountryCode" placeholder="Two Characters country code"
+                               formControlName="primaryCountryCode" maxlength="2">
+
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="secondaryTelephone" class="control-label">Secondary Phone Number</label>
+                      <div class="">
+                        <!--<input id="secondaryTelephone" type="tel" class="form-control" name="secondaryTelephone" placeholder="Partner Sedondary Phone"
+                               formControlName="secondaryTelephone">-->
+                        <int-phone-prefix [locale]="'en'" id="secondaryTelephone"
+                                          formControlName="secondaryTelephone"></int-phone-prefix><span>{{secondaryCountryCode}}</span>
+
+                        <input id="secondaryCountryCode" type="hidden" value="{{secondaryCountryCode}}" class="form-control" name="secondaryCountryCode" placeholder="Two characters Code"
+                               formControlName="secondaryCountryCode" maxlength="2">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--<div class="form-group">
+                  <label for="primaryCountryCode" class="control-label">Primary Country Code</label>
+                  <div class="">
+                    <input id="primaryCountryCode" type="text" class="form-control" name="primaryCountryCode" placeholder="Two Characters country code"
+                           formControlName="primaryCountryCode" maxlength="2">
+                  </div>
+                </div>-->
+
+
+                <!--<div class="form-group">
+                  <label for="primaryDialingCountryCode" class="control-label">Primary Dialing Code</label>
+                  <div class="">
+                    <input id="primaryDialingCountryCode" type="text" class="form-control" name="primaryDialingCountryCode" placeholder="Ex. 00237"
+                           formControlName="primaryDialingCountryCode" maxlength="4">
+                  </div>
+                </div>-->
+
+
+                <!--<div class="form-group">
+                  <label for="secondaryCountryCode" class="control-label">Secondary Country Code</label>
+                  <div class="">
+                    <input id="secondaryCountryCode" type="text" class="form-control" name="secondaryCountryCode" placeholder="Two characters Code"
+                           formControlName="secondaryCountryCode" maxlength="2">
+                  </div>
+                </div>-->
+
+                <!--<div class="form-group">
+                  <label for="secondaryDialingCountryCode" class="control-label">Secondary Dialing Code</label>
+                  <div class="">
+                    <input id="secondaryDialingCountryCode" type="text" class="form-control" name="secondaryDialingCountryCode" placeholder="Ex. 00237"
+                           formControlName="secondaryDialingCountryCode" maxlength="4">
+                  </div>
+                </div>-->
+
+
+                <div class="form-group">
+
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="addressStreetAddress" class="control-label">Street Address</label>
+                      <div class="">
+                        <ng4geo-autocomplete (componentCallback)="addressAutoCompleteCallback($event)" id="addressStreetAddress-autocomplete"
+                                             [userSettings]="mysetting"></ng4geo-autocomplete>
+                       <input id="addressStreetAddress" type="hidden" class="form-control"
+                              name="addressStreetAddress" placeholder="Street Address" value="{{addressStreetAddress}}"
+                               formControlName="addressStreetAddress" >
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="addressCity" class="control-label">City</label>
+                      <div class="">
+                        <input id="addressCity" type="text" class="form-control" name="addressCity" placeholder="City"
+                               formControlName="addressCity">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="row">
+                    <!--<div class="col-6">
+                      <label for="addressStateProvince" class="control-label">Province</label>
+                      <div class="">
+                        <input id="addressStateProvince" type="text" class="form-control" name="addressStateProvince" placeholder="Province"
+                               formControlName="addressStateProvince">
+                      </div>
+                    </div>-->
+                    <div class="col-6">
+                      <!--<label for="addressPostalCode" class="control-label">Postal Code</label>-->
+                      <div class="">
+                        <!--<input id="addressPostalCode" type="text" class="form-control" name="addressPostalCode" placeholder="Ex. 80209"
+                               formControlName="addressPostalCode">-->
+                        <input type="hidden" class="form-control" name="addressPostalCode" placeholder="" id="addressPostalCode"
+                               formControlName="addressPostalCode" [ngModel]="80209">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <!--<label for="addressCountryCode" class="control-label">Address Country Code</label>-->
+                  <div class="">
+                    <input id="addressCountryCode" type="hidden" class="form-control" name="addressCountryCode"
+                           placeholder="Country: Ex. CM"
+                           formControlName="addressCountryCode" maxlength="2">
+                  </div>
+                </div>
+
+
+                <div style="margin-top:10px" class="form-group">
+
+                  <div class="col-sm-12 controls">
+                    <button type="submit" class="btn btn-info">Add</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="primaryTelephone" class="col-md-3 control-label">Primary Phone Number</label>
-            <div class="col-md-9">
-            <input id="primaryTelephone" type="tel" class="form-control" name="primaryTelephone" value="" placeholder="Partner Primary Phone"
-                   formControlName="primaryTelephone">
-          </div>
-          </div>
-
-
-          <div class="form-group">
-            <label for="secondaryTelephone" class="col-md-3 control-label">Secondary Phone Number</label>
-            <div class="col-md-9">
-            <input id="secondaryTelephone" type="tel" class="form-control" name="secondaryTelephone" placeholder="Partner Sedondary Phone"
-                   formControlName="secondaryTelephone">
-          </div>
-          </div>
-
-
-          <div class="form-group">
-            <label for="primaryCountryCode" class="col-md-3 control-label">Primary Country Code</label>
-            <div class="col-md-9">
-              <input id="primaryCountryCode" type="text" class="form-control" name="primaryCountryCode" placeholder="Two Characters country code"
-                     formControlName="primaryCountryCode" maxlength="2">
-            </div>
-          </div>
-
-
-          <div class="form-group">
-            <label for="primaryDialingCountryCode" class="col-md-3 control-label">Primary Dialing Code</label>
-            <div class="col-md-9">
-              <input id="primaryDialingCountryCode" type="text" class="form-control" name="primaryDialingCountryCode" placeholder="Ex. 00237"
-                     formControlName="primaryDialingCountryCode" maxlength="4">
-            </div>
-          </div>
-
-
-          <div class="form-group">
-            <label for="secondaryCountryCode" class="col-md-3 control-label">Secondary Country Code</label>
-            <div class="col-md-9">
-              <input id="secondaryCountryCode" type="text" class="form-control" name="secondaryCountryCode" placeholder="Two characters Code"
-                     formControlName="secondaryCountryCode" maxlength="2">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="secondaryDialingCountryCode" class="col-md-3 control-label">Secondary Dialing Code</label>
-            <div class="col-md-9">
-              <input id="secondaryDialingCountryCode" type="text" class="form-control" name="secondaryDialingCountryCode" placeholder="Ex. 00237"
-                     formControlName="secondaryDialingCountryCode" maxlength="4">
-            </div>
-          </div>
-
-
-          <div class="form-group">
-            <label for="addressStreetAddress" class="col-md-3 control-label">Street Address</label>
-            <div class="col-md-9">
-              <input id="addressStreetAddress" type="text" class="form-control" name="addressStreetAddress" placeholder="Street Address"
-                     formControlName="addressStreetAddress" >
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="addressCity" class="col-md-3 control-label">City</label>
-            <div class="col-md-9">
-              <input id="addressCity" type="text" class="form-control" name="addressCity" placeholder="City"
-                     formControlName="addressCity">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="addressStateProvince" class="col-md-3 control-label">Province</label>
-            <div class="col-md-9">
-              <input id="addressStateProvince" type="text" class="form-control" name="addressStateProvince" placeholder="Province"
-                     formControlName="addressStateProvince">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="addressPostalCode" class="col-md-3 control-label">Postal Code</label>
-            <div class="col-md-9">
-              <input id="addressPostalCode" type="text" class="form-control" name="addressPostalCode" placeholder="Ex. 80209"
-                     formControlName="addressPostalCode">
-            </div>
-          </div>
-
-
-
-          <div class="form-group">
-            <label for="addressCountryCode" class="col-md-3 control-label">Address Country Code</label>
-            <div class="col-md-9">
-              <input id="addressCountryCode" type="text" class="form-control" name="addressCountryCode" placeholder="Country: Ex. CM"
-                     formControlName="addressCountryCode" maxlength="2">
-            </div>
-          </div>
-
-
-          <div style="margin-top:10px" class="form-group">
-            <!-- Button -->
-
-            <div class="col-sm-12 controls">
-              <button type="submit" class="btn btn-primary">Add</button>
-
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-
 </div>

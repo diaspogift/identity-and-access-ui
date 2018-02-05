@@ -1,3 +1,4 @@
+
 const  HOST = "localhost";
 const  PROTOCOLE = "http://";
 const  PORT = "8081";
@@ -16,9 +17,9 @@ export const DGTENANTID = "FB06037B-B1B5-4C71-8C69-E630036B9DFF";
 
 export const BASE_API_URL = PROTOCOLE + HOST + ":" + PORT + "/api/v1/tenants/";
 
-export const  CLIENT_APP_ID = 'identity-and-access-ui';
+export const CLIENT_APP_ID = 'identity-and-access-ui';
 
-
+export const DG_ADMINISTRATOR = 'DG_ADMINISTRATOR';
 
 /*
 

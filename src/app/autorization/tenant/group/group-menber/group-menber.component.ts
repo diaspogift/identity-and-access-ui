@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BASE_API_URL} from "../../../../Constante";
 import {appStore} from "../../../../store/AppStore";
+import {AuthService} from "../../../../auth/AuthService";
 
 @Component({
   selector: 'app-group-menber',
@@ -13,17 +14,21 @@ import {appStore} from "../../../../store/AppStore";
 export class GroupMemberComponent implements OnInit {
 
   url: string;
+  notmemberUrl: string;
   groupMembers: GroupMember[];
+  grpname:string;
 
-  constructor(private httpClient: HttpClient, private route: Router, private r:ActivatedRoute) {
+  constructor(private httpClient: HttpClient, private route: Router, private r:ActivatedRoute, private authService: AuthService) {
     r.params.subscribe(params=>{
       this.url = params['id']?params['id']:/*BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId() +"/groups/"*/'' ;
-      console.log("url url url: " + this.url);
+      this.notmemberUrl = params['notmemberUrl']?params['notmemberUrl']:'';
+      this.grpname = params['grpname']?params['grpname']:'';
+      console.log("url url url: " + this.url + "\n\nnotmemberUrl: " + this.notmemberUrl + "\n\n");
     });
   }
 
   ngOnInit() {
-    if (!(this.url === '')){
+    //if (!(this.url === '') && (this.notmemberUrl == '')){
       this.httpClient.get(this.url, {
         headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
           .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
@@ -45,7 +50,45 @@ export class GroupMemberComponent implements OnInit {
         console.log("Groups Members Groups Members Groups Members : "+ JSON.stringify(this.groupMembers));
         //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
       });
-    }
+    /*}else if (!(this.url === '') && !(this.groupName === '')){
+
+      this.route.navigate(['/autorized/addgroupmembers/', this.url, this.groupName]);
+
+    }*/
+
   }
 
+  gotoAddGroup() {
+    this.route.navigate(["/autorized/addgroupmembers" , this.notmemberUrl, this.grpname]);
+  }
+
+  getGroupMembersLinks(message: string) {
+    console.log("getGroupMembersLinks: " + message);
+    this.url = message;
+  }
+
+  getNotGroupMembersLinks(message: string) {
+    console.log("getNotGroupMembersLinks: " + message);
+    this.notmemberUrl = message;
+  }
+
+  getGroupMemberName(message: string) {
+    console.log("getGroupMemberName: " + message);
+    this.grpname = message;
+    this.ngOnInit();
+  }
+
+  refreshPage(message: string) {
+    console.log("getGroupMemberName: " + message);
+    //this.grpname = message;
+    this.ngOnInit();
+  }
+
+
+
+  canAddMembers():boolean{
+    let thisTenant = this.authService.extractTenantFromUrl(this.notmemberUrl);
+    let connectedTenant = appStore.getState().tenantState.tenant.getTenantId();
+    return thisTenant === connectedTenant;
+  }
 }

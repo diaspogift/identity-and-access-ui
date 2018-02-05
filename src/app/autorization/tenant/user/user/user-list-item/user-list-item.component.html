@@ -1,74 +1,369 @@
-<!--<div class="w3-card-4">
-  <div class="w3-display-container w3-text-white">
-    <img src="../../../../../assets/img/default-user.png" alt="Lights" style="width:100%">
-    <div class="w3-xlarge w3-display-bottomleft w3-padding"> {{user.getTenant().getName()}}</div>
+
+<div class="card card-outline-primary" type="info" >
+
+  <div class="row">
+    <div class="col-11 mx-auto card-header {{user.getEnabled()? 'alert-success':'alert-danger'}}">
+      <div class="row">
+        <div class="col-2">
+          <img class="card-img-top user-img" src="../../../../../../assets/img/default-user.png" alt="{{user.getUsername()}}">
+        </div>
+        <div class="col-10" style="font-size: small">
+          {{user.getTenantId()}}
+        </div>
+      </div>
+
+    </div>
   </div>
-  <div class="w3-row">
-    <div class="w3-third w3-center">
-      <h3>{{user.getUsername()}}</h3>
 
+  <!--
+  <div class="row">
+    <div class="col-10 mx-auto">
+      <div class="card-block">
+        <p></p>
+        <div *ngIf="user.getEnabled()" class="alert-success">State: <span >OK</span></div>
+        <div *ngIf="!user.getEnabled()" class="alert-danger">State: <span >KO</span></div>
+      </div>
     </div>
-    <div class="w3-third w3-center">
-      <h3>{{user.getEmailAddress()}}</h3>
-    </div>
-    <div class="w3-third w3-center w3-margin-bottom">
-      <h3>{{user.getTenantId()}}</h3>
+  </div>-->
+
+  <div class="row">
+    <div class="col-11 mx-auto">
+      <div class="card-block">
+        <br>
+        <span class="">Username: </span><span class="">{{user.getUsername()}}</span><br>
+        <span class="">E-Mail: </span><span class="">{{user.getEmailAddress()}}</span><br>
+        <span class="">First Name: </span><span class="">{{user.getFirstName()}}</span><br>
+        <span class="">Last Name: </span><span class="">{{user.getLastNane()}}</span>
+        <hr>
+      </div>
     </div>
   </div>
-</div>-->
+
+  <!--<ul class="list-group list-group-flush">
+    <li class="list-group-item "><span class="">Username: </span><span class="">{{user.getUsername()}}</span><br></li>
+    <li class="list-group-item "><span class="">E-Mail: </span><span class="">{{user.getEmailAddress()}}</span><br></li>
+    <li class="list-group-item "><span class="">First Name: </span><span class="">{{user.getFirstName()}}</span><br></li>
+    <li class="list-group-item "><span class="">Last Name: </span><span class="">{{user.getLastNane()}}</span><br></li>
+  </ul>-->
+  <div class="row">
+    <div class="col-11 mx-auto">
+  <div class="card-block">
+    <button class="btn btn-sm btn-outline-info pull-right" (click)="openModal(editContent)">
+      <span class="fa fa-edit"></span> Edit
+    </button>
+    <button class="btn btn-sm btn-outline-info" (click)="openDetailsModal(detailsContent)">
+      <span class="fa fa-info"></span> Details <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="20" height="30">
+    </button>
+    <ng-template  #editContent let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">{{user.getUsername()}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!--<div *ngIf="loading">
+          <img src="../../../../../assets/img/loader/loader.gif" height="40" width="55"/>
+        </div>-->
+        <div *ngIf="success" class="alert alert-success">
+          {{message}}
+
+        </div>
+        <div *ngIf="failiure" class="alert alert-danger">
+          {{message}}
+        </div>
+        <form id="registrationinvitation" class="form-group-sm" role="form" [formGroup]="rFormEnablement"
+              (ngSubmit)="changeEnablement(rFormEnablement.value)">
+
+
+          <div class="col-md-12" *ngIf="loading">
+            <div class="row">
+              <div class="col-2 mx-auto">
+                <img src="../../../../../assets/img/loader/loader1.gif" width="30" height="30" />
+              </div>
+            </div>
+          </div>
+          <div class="row" >
+            <div class="col-6">
+                <label  class="radio-inline">
+                  Enable  {{user.getUsername()}}  </label>
+              <input type="radio" checked name="enablement"  (click)="passtoEnablement();"
+                     class="form-control" style="height: 20px; width: 20px;" [checked]="user.getEnabled()">
+            </div>
+            <div class="col-6">
+                <label class="radio-inline">
+                  Disable {{user.getUsername()}}  </label>
+              <input type="radio" name="enablement"  (click)="disable = true; enable = false; user.setEnabled(enable);"
+                     class="form-control" style="height: 20px; width: 20px;" [checked]="!user.getEnabled()">
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="user.getEnabled()">
+            <div class="form-group">
+              <label for="from">From</label>
+              <div class="input-group"><input type="text" class="form-control" name="from"
+                                              placeholder="Start date" id="from"
+                                              formControlName="from"
+                                              [(ngModel)]="modelFrom" ngbDatepicker #from="ngbDatepicker"
+                                              (click)="from.toggle()"
+                                              (ngModelChange)="fromDateSeleted($event)">
+                <span class="input-group-addon" (click)="from.toggle()"><i
+                  class="fa fa-calendar"></i></span></div>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="user.getEnabled()">
+
+            <div class="form-group">
+              <label for="to">To</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="to" placeholder="End date"
+                                              id="to"
+                                              formControlName="to"
+                                              [(ngModel)]="modelTo" ngbDatepicker #to="ngbDatepicker"
+                                              (click)="to.toggle()" [disabled]="ngbDatepickerToEnable"
+                                              [minDate]="toDateNgbDateStruct"
+                                              >
+                <span class="input-group-addon" (click)="to.toggle()"><i class="fa fa-calendar"></i></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <button type="submit" class="btn btn-info btn-sm">Save changes</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+      </div>
+    </ng-template>
+
+    <ng-template  #detailsContent let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">{{user.getUsername()}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!--<div *ngIf="failiure" class="alert-danger">
+          {{message}}
+          <img src="../../../../../assets/img/loader/loader.gif" height="40" width="55"/>
+        </div>-->
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item  list-group-item-info">Personal Informations Details<br></li>
+          <li class="list-group-item ">Username: {{user.getUsername()}}</li>
+          <li class="list-group-item ">Tenant:{{user.getTenant().getName()}}</li>
+          <li class="list-group-item ">E-Mail: {{userDetails['emailAddress']?userDetails['emailAddress']:''}}</li>
+          <li class="list-group-item ">Phone Number 1:({{userDetails['primaryCountryDialingCode']?userDetails['primaryCountryDialingCode']:''}}) {{userDetails['primaryNumber']?userDetails['primaryNumber']:''}}</li>
+          <li class="list-group-item ">Phone Number 2: ({{userDetails['secondaryCountryDialingCode']?userDetails['secondaryCountryDialingCode']:''}}) {{userDetails['secondaryNumber']?userDetails['secondaryNumber']:''}}</li>
+          <li class="list-group-item ">Street: {{userDetails['streetAddress']?userDetails['streetAddress']:''}}</li>
+          <li class="list-group-item ">City: {{userDetails['city']?userDetails['city']:''}}</li>
+          <li class="list-group-item ">State/Province: {{userDetails['stateProvince']?userDetails['stateProvince']:''}}</li>
+          <li class="list-group-item ">Postal Code:{{userDetails['postalCode']?userDetails['postalCode']:''}}</li>
+          <li class="list-group-item ">Country: {{userDetails['countryCode']?userDetails['countryCode']:''}}</li>
+
+          <li class="list-group-item  list-group-item-info">Roles Details<br></li>
+
+          <li *ngFor="let role of roles" class="list-group-item ">
+            Role Name: {{role['roleName']}}<br>
+            authority: {{role['authority']}}<br>
+          </li>
+
+          <li class="list-group-item  list-group-item-info">Groups Details<br></li>
+
+          <li *ngFor="let group of groups" class="list-group-item ">
+            Group Name: {{group['name']}}<br>
+            Description: {{group['description']}}<br>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+
+      </div>
+    </ng-template>
+
+  </div>
+</div>
+</div>
+  <br>
+</div>
 
 
 
-
-
-<div class="col-sm-2">
+<!--<div class="col-sm-2">
 
   <div class="panel panel-default">
     <div class="panel-thumbnail ">
-      <img src="../../../../../../assets/img/default-user.png" class="img-responsive center" style="margin: auto;" width="75%">
+      <img src="../../../../../../assets/img/default-user.png" class="img-responsive center" style="margin: auto;"
+           width="75%">
     </div>
     <div class="panel-body">
-      <h5><strong>{{user.getUsername()}}</strong></h5>
-      <p>{{user.getEmailAddress()}}</p>
+
       <p>{{user.getTenantId()}}</p>
 
-      <a  class="btn btn-info btn-sm pull-right"  data-toggle="modal" [attr.data-target]="'#'+transform(user.getUsername())" >
+      <ul class="list-group">
+        <li class="list-group-item "><span class="">Username: </span><span class="">{{user.getUsername()}}</span><br></li>
+        <li class="list-group-item "><span class="">E-Mail: </span><span class="">{{user.getEmailAddress()}}</span><br></li>
+        <li class="list-group-item "><span class="">First Name: </span><span class="">{{user.getFirstName()}}</span><br></li>
+        <li class="list-group-item "><span class="">Last Name: </span><span class="">{{user.getLastNane()}}</span><br></li>
+      </ul>
+
+      <a class="btn btn-info btn-sm pull-right" data-toggle="modal"
+         [attr.data-target]="'#'+transform(user.getUsername())">
         <span class="glyphicon glyphicon-edit"></span> Edit
-      </a><br>
-      <!-- Modal -->
-      <div id="{{transform(user.getUsername())}}" class="modal fade" role="dialog">
+      </a>
+
+      <div *ngIf="user.getEnabled()">State: <span class="alert-success">OK</span></div>
+      <div *ngIf="!user.getEnabled()">State: <span class="alert-danger">KO</span></div>
+
+      <a class="btn btn-primary btn-sm" data-toggle="modal"
+         [attr.data-target]="'#details'+transform(user.getUsername())" (click)="getDetails()">
+        <span class="glyphicon glyphicon-edit"></span> Details
+      </a>
+      <br>-->
+      <!--<div id="{{transform(user.getUsername())}}" class="modal fade" role="dialog">
         <div class="modal-dialog ">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
+          <div class="modal-content panel panel-info">
+            <div class="modal-header panel-heading">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h6 class="modal-title">{{user.getUsername()}}</h6>
+              <h3 class="modal-title panel-title">{{user.getUsername()}}</h3>
             </div>
-            <div class="modal-body">
-              <form>
+            <div class="modal-body panel-body">
+              <form id="registrationinvitation" class="form-group-sm" role="form" [formGroup]="rFormEnablement"
+                    (ngSubmit)="changeEnablement(rFormEnablement.value)">
 
-                <label class="checkbox-inline" *ngIf="user.getEnabled()">
-                  <input  type="checkbox" checked name="enablement" id="enabled1" (click)="toggleEnablement();"> Desable {{user.getUsername()}}</label>
-                <label class="checkbox-inline" *ngIf="!user.getEnabled()">
-                  <input  type="checkbox" name="enablement" id="enabled2" (click)="toggleEnablement();"> Enable {{user.getUsername()}}</label>
+                <div class="col-md-12" *ngIf="user.getEnabled()">
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <label for="enabled1">  Desable {{user.getUsername()}}  </label>
+                      <input type="checkbox" checked name="enablement" id="enabled1" (click)="toggleEnablement();"
+                             class="form-control" style="height: 20px; width: 20px;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="!user.getEnabled()">
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <label for="enabled2">  Enable {{user.getUsername()}}  </label>
+                      <input type="checkbox" name="enablement" id="enabled2" (click)="toggleEnablement();"
+                             class="form-control" style="height: 20px; width: 20px;">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+
+                  <div class="form-group">
+                    <label for="from">From</label>
+                    <div class="input-group"><input type="text" class="form-control" name="from"
+                                                    placeholder="Start date" id="from"
+                                                    formControlName="from"
+                                                    [(ngModel)]="modelFrom" ngbDatepicker #from="ngbDatepicker"
+                                                    (click)="from.toggle()">
+                      <span class="input-group-addon" (click)="from.toggle()"><i
+                        class="glyphicon glyphicon-calendar"></i></span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+
+                  <div class="form-group">
+                    <label for="to">To</label>
+                    <div class="input-group"><input type="text" class="form-control" name="to" placeholder="End date"
+                                                    id="to"
+                                                    formControlName="to"
+                                                    [(ngModel)]="modelTo" ngbDatepicker #to="ngbDatepicker"
+                                                    (click)="to.toggle()">
+                      <span class="input-group-addon" (click)="to.toggle()"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                  </div>
+                </div>
+
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary btn-sm" (click)=" saveChanges();" data-dismiss="modal">Save changes</button>
             </div>
           </div>
 
         </div>
-      </div>
+      </div>-->
 
-      <h5>{{user.getTenant().getName()}}</h5>
+
+      <!--<div id="details{{transform(user.getUsername())}}" class="modal fade" role="dialog">
+        <div class="modal-dialog ">
+          <div class="modal-content panel panel-info">
+            <div class="modal-header panel-heading">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title panel-title">{{user.getUsername()}}</h3>
+            </div>
+            <div class="modal-body panel-body">
+              <ul class="list-group">
+                <li class="list-group-item active">Personal Informations Details<br></li>
+                <li class="list-group-item "><span class="pull-left">Username: </span><span class="pull-right">{{user.getUsername()}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Tenant: </span><span class="pull-right">{{user.getTenant().getName()}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">E-Mail: </span><span class="pull-right">{{userDetails['emailAddress']?userDetails['emailAddress']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Phone Number 1: </span>
+                  <span class="pull-right">({{userDetails['primaryCountryDialingCode']?userDetails['primaryCountryDialingCode']:''}}) {{userDetails['primaryNumber']?userDetails['primaryNumber']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Phone Number 2: </span>
+                  <span class="pull-right">({{userDetails['secondaryCountryDialingCode']?userDetails['secondaryCountryDialingCode']:''}}) {{userDetails['secondaryNumber']?userDetails['secondaryNumber']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Street: </span><span class="pull-right">{{userDetails['streetAddress']?userDetails['streetAddress']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">City: </span><span class="pull-right">{{userDetails['city']?userDetails['city']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">State/Province: </span><span class="pull-right">{{userDetails['stateProvince']?userDetails['stateProvince']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Postal Code: </span><span class="pull-right">{{userDetails['postalCode']?userDetails['postalCode']:''}}</span><br></li>
+                <li class="list-group-item "><span class="pull-left">Country: </span><span class="pull-right">{{userDetails['countryCode']?userDetails['countryCode']:''}}</span><br></li>
+
+              </ul>
+
+              <ul class="list-group" *ngIf="roles.length > 0">
+                <li class="list-group-item active">Roles Details<br></li>
+
+                <li *ngFor="let role of roles" class="list-group-item ">
+                  Role Name: {{role['roleName']}}<br>
+                  authority: {{role['authority']}}<br>
+                </li>
+
+              </ul>
+
+              <ul class="list-group" *ngIf="groups.length > 0">
+                <li class="list-group-item active">Groups Details<br></li>
+
+                <li *ngFor="let group of groups" class="list-group-item ">
+                  Group Name: {{group['name']}}<br>
+                  Description: {{group['description']}}<br>
+                </li>
+
+              </ul>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>-->
+
+      <!--<h5>{{user.getTenant().getName()}}</h5>
       <p>
         <img src="../../../../../../assets/img/default-partener/partner.png" height="28px" width="28px">
       </p>
     </div>
   </div>
 
-
-</div>
+</div>-->

@@ -19,10 +19,18 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/font-awesome/css/font-awesome.css",
+        "../node_modules/ngx-intl-tel-input/resource/intl-tel-input.css",
+        "../node_modules/intl-tel-input/build/css/intlTelInput.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js"
+        "../node_modules/systemjs/dist/system-production.js",
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/popper.js/dist/popper.min.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
+        "../node_modules/ng2-bs3-modal/bundles/ng2-bs3-modal.system.js",
+        "../node_modules/intl-tel-input/build/js/intlTelInput.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

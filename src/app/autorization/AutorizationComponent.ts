@@ -1,15 +1,25 @@
 
 
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router, RouterLink, Routes} from "@angular/router";
-import {childRoutes} from "../rooute/Config";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {BASE_API_URL} from "../Constante";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+
 import {appStore} from "../store/AppStore";
 import {AuthService} from "../auth/AuthService";
+import {Cookie} from "ng2-cookies";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {BASE_API_URL, DG_ADMINISTRATOR} from "../Constante";
+import {User} from "../domain/model/User";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NgbDatepickerConfig} from "@ng-bootstrap/ng-bootstrap";
-//import {INgxMyDpOptions} from "ngx-mydatepicker";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {BsModalComponent} from "ng2-bs3-modal";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {SAVE_TOKEN} from "../actions/TokenAction";
+import {MyAction} from "../common/MyAction";
+import {appActionCreator} from "../actions/Action";
+import {LOGIN_USER} from "../actions/UserAction";
+import {initialTenantState} from "../state/TenantState";
+import {Tenant} from "../domain/model/Tenant";
+import {initialAppsState} from "../state/AppState";
+
 
 @Component({
   selector: 'autorization',
@@ -17,148 +27,388 @@ import {NgbDatepickerConfig} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./autorization.css']
 })
 
-export class AutorizationComponent implements OnInit{
+export class AutorizationComponent implements OnInit, AfterViewInit{
+
   title: string = "AutorizationComponent";
-  rFormRegistrationInvitation: FormGroup;
-  description: string;
-  email: string;
-  startingOn: string;
-  until: string;
-  errorMessage: string;
-  successMessage: string;
+  cookies: any;
 
-  modelUntil: any;
-  modelStartingOn: any;
+  @ViewChild("tenants", {read: ElementRef}) tenants: ElementRef;
 
-  /*myOptions: INgxMyDpOptions = {
-    // other options...
-    dateFormat: 'dd.mm.yyyy',
-  };
-  model: any = {date: {year: 2018, month: 10, day: 9}};*/
+  @ViewChild("users", {read: ElementRef}) users: ElementRef;
 
-  //routerLins: Routes = childRoutes;
-  constructor(private fb: FormBuilder,private httpClient:HttpClient, private route:Router, private r:ActivatedRoute,
-              private authService: AuthService, config: NgbDatepickerConfig){
+  @ViewChild("services", {read: ElementRef}) services: ElementRef;
 
-    this.rFormRegistrationInvitation = fb.group({
+  @ViewChild("groups", {read: ElementRef}) groups: ElementRef;
+
+  @ViewChild("groupmembers", {read: ElementRef}) groupmembers: ElementRef;
+
+  @ViewChild("roles", {read: ElementRef}) roles: ElementRef;
+
+  modalReference: any;
+  message: string;
+  loading: boolean;
+
+  failiure: boolean;
+
+  success: boolean;
+
+
+
+  rForm: FormGroup;
+
+  currentpassword: string;
+  newpassword: string;
+  newpasswordrep: string;
+
+  errorMessage:string;
+  successMessage:string;
+
+
+  /**
+   * MODAL config
+   */
+
+  @ViewChild('modal')
+  modal: BsModalComponent;
+  items: string[] = ['item1', 'item2', 'item3'];
+  selected: string;
+  output: string;
+  //model: Person = new Person();
+
+  index: number = 0;
+  backdropOptions = [true, false, 'static'];
+  cssClass: string = '';
+
+  animation: boolean = true;
+  keyboard: boolean = true;
+  backdrop: string | boolean = true;
+  css: boolean = false;
+
+
+  closed() {
+    this.output = '(closed) ' + this.selected;
+  }
+
+  dismissed() {
+    this.output = '(dismissed)';
+  }
+
+  opened() {
+    this.output = '(opened)';
+  }
+
+ /* navigate() {
+    this.router.navigateByUrl('/hello');
+  }*/
+
+  open() {
+    this.modal.open();
+  }
+
+  /************** END MODAL CONFIG ***********************************************/
+
+
+  constructor(private modalService: NgbModal, private fb: FormBuilder,  private httpClient: HttpClient,private _authService: AuthService, private router: Router, private r: ActivatedRoute) {
+
+    //console.log("ET voila 1111111" + this.modal.animation);
+    this.cookies = Cookie.getAll();
+
+
+    console.log("canManageTenant: " + this._authService.canManageTenant());
+
+    //if (!this._authService.canManageTenant()) {
+    //  this.router.navigate(["../autorized/users"], {relativeTo: this.r});
+    //}else {
+
+    this.rForm = fb.group({
       //'tenantId' : [null, Validators.required],
-      'description' : [null, Validators.required],
-      'email' : [null, Validators.required],
-      'startingOn' : [null, Validators.required],
-      'until' : [null, Validators.required],
+      'currentpassword': [null, Validators.required],
+      'newpassword': [null, Validators.required],
+      'newpasswordrep': [null, Validators.required],
       //'description' : [null, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(500)])],
       //'validate' : ''
     });
 
+
     this.errorMessage = '';
     this.successMessage = '';
 
-  }
+    this.message = "";
+    this.loading = false;
 
-  createRegistrationInvitation(form){
+    this.failiure = false;
 
-    this.description = form.description;
-    this.email = form.email;
-    this.startingOn = form.startingOn;
-    this.until = form.until;
-
-    if(this.description === '' ||!this.authService.validateEmailAddress(this.email)){
-      this.errorMessage = 'Tous les les champ sont obligatoire et l\'E-Mail doit respecter le format: xxxxx@yyyyy.aaa';
-    return ;
-  }
+    this.success = false;
 
 
+    if (appStore.getState().tokenState == null || appStore.getState().userState.user == null
+    /*appStore.getState().tenantState.tenant == null || appStore.getState().tenantsState.tenants.length === 0*/) {
+      console.log("\n\n\nmust request many thing");
+
+      let jsonUser = Cookie.get('complete_user');
+      let jsonObjectUser = JSON.parse(jsonUser);
+
+      //let jsonUser = Cookie.get('complete_user');
+      //let jsonObjectUser = JSON.parse(jsonUser);
+
+      initialTenantState.tenant = new Tenant(jsonObjectUser['tenantId'], "", "", true, []);
+      initialAppsState.tenantState = initialTenantState;
+
+      if (this._authService.isLoggedIn()) {
+        /*
+            State Tenant
+         */
 
 
-      console.log(JSON.stringify(this.modelStartingOn));
-      console.log(JSON.stringify(this.modelUntil));
-      //return;
+        initialTenantState.tenant = new Tenant(jsonObjectUser['tenantId'], "", "", false, []);
+        initialAppsState.tenantState = initialTenantState;
 
-      /*
-      {"year":2018,"month":1,"day":19}
-AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
-       */
-      //"2007-12-03T10:15:30+01:00[Europe/Paris]"
-      //2018-01-02T12:48:48.579+01:00[Africa/Douala]
-      //console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP" + appStore.getState().tokenState.token.accessToken);
+        /*
+            State Token
+         */
 
-      let today:Date = new Date(this.startingOn['year'], this.startingOn['month'], this.startingOn['day'], 23, 59, 59, 0);
-
-      let tomorow: Date = new Date(this.until['year'], this.until['month'], this.until['day'], 23, 59, 59, 0);
-
-      if (today.getTime() >= tomorow.getTime()){
-        this.errorMessage = 'Date are bad';
-        return ;
-      }
-
-      let sign = today.getTimezoneOffset() >= 0 ? '+':'';
-
-      let trailingZeroToday = (today.getMonth())<10? "0":"";
-      let trailingZerotomorow = (tomorow.getMonth())<10? "0":"";
-
-      let trailingZeroToday1 = (today.getDate())<10? "0":"";
-      let trailingZerotomorow1 = (tomorow.getDate())<10? "0":"";
-
-      let trailingZeroTodayH = (today.getHours())<10? "0":"";
-      let trailingZerotomorowH = (tomorow.getHours())<10? "0":"";
-
-      let trailingZeroTodayM = (today.getMinutes())<10? "0":"";
-      let trailingZerotomorowM = (tomorow.getMinutes())<10? "0":"";
-
-      let trailingZeroTodayS = (today.getSeconds())<10? "0":"";
-      let trailingZerotomorowS = (tomorow.getSeconds())<10? "0":"";
-
-      let body = {
-        description:this.description,
-        startingOn: "2017" + '-' + trailingZeroToday + (today.getMonth()) + '-' + trailingZeroToday1 +  today.getDate().toLocaleString() + 'T' + trailingZeroTodayH +today.getHours() + ':' + trailingZeroTodayM+ today.getMinutes() + ':' +
-        trailingZeroTodayS+today.getSeconds() + '.' + today.getMilliseconds() +  '+01:00[Africa/Douala]',
-        until:tomorow.getFullYear() + '-' + trailingZerotomorow  + (tomorow.getMonth()) + '-' + trailingZerotomorow1 + tomorow.getDate().toLocaleString() + 'T' + trailingZerotomorowH + tomorow.getHours() + ':' + trailingZerotomorowM + tomorow.getMinutes() + ':' +
-        trailingZerotomorowS + tomorow.getSeconds()+ '.' + tomorow.getMilliseconds() +  '+01:00[Africa/Douala]',
-        email:form.email
-      };
-
-      console.log("BODYYYYYYYYYYYYYYYYY: " + JSON.stringify(body));
-
-      this.httpClient.post(BASE_API_URL + encodeURIComponent(appStore.getState().tenantState.tenant.getTenantId()) +
-        "/registration-invitations" , body, {
-        headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
-          .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
-      }).subscribe((data)=>{
-
-        console.log("Response data: " + JSON.stringify(data));
-        this.successMessage = 'Success: ' + JSON.stringify(data);
-        localStorage.setItem("registrationinvitation", JSON.stringify(data));
-        /*let status = {"isActive":data['active']};
-        //new User(data['tenantId'], data['username'], data['emailAddress']);
-        //availability-status  CHANGE_TENANT_AVAILABILITY_STATUS
-        let myNewTenant : Tenant = Object.assign({}, this.tenant, status);
-
-        let monAction:MyAction = appActionCreator(CHANGE_TENANT_AVAILABILITY_STATUS, myNewTenant);
-
-        console.log("tenant changed ----------- Tenant---------------> ", JSON.stringify(monAction));
+        let monAction: MyAction = appActionCreator(SAVE_TOKEN, this._authService.getCompleteToken());
         appStore.dispatch(monAction);
 
-        //this.router.navigate(['/autorized']);*/
-      });
+
+        /*
+            Save Login user in the state
+         */
 
 
+        let user: User = new User(jsonObjectUser['tenantId'], jsonObjectUser['username'], jsonObjectUser['emailAddress'],
+          false, null, jsonObjectUser['roles'], '', '');
+
+        console.log("USER Cookies-----: " + JSON.stringify(user));
+
+        let monAction1: MyAction = appActionCreator(LOGIN_USER, user);
+
+        console.log("users ----------- user---------------> ", JSON.stringify(monAction1));
+        appStore.dispatch(monAction1);
+
+        if (!this._authService.canManageTenant()) {
+          this.router.navigate(["../autorized/users"], {relativeTo: this.r});
+        }else{
+          this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
+        }
+
+
+
+      } else {
+        this.router.navigate(["../autorized/logout"], {relativeTo: this.r});
+      }
+
+    } else {
+      this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
+    }
   }
 
-  gotoTenants(){
-    this.route.navigate(["../autorized/tenants"], { relativeTo: this.r });
-  }
 
-  gotoNewTenant(){
-    this.route.navigate(["../autorized/newtenant"], { relativeTo: this.r });
-  }
+  ngAfterViewInit(): void {
+    this.router.events.subscribe((event) => {
+      //console.log("Subscribe Subscribe Subscribe: " + event);
+      if (event instanceof NavigationEnd) {
+        console.log('NavigationEnd:', event.url);
+        this.manageActiveLinkByUrl(event.url);
+      }
 
-  gotoRegister(){
-    this.route.navigate(["../autorized/register", '76DC6953-AD34-446E-91D0-92934E5DB6D4'], { relativeTo: this.r });
+    });
   }
 
   ngOnInit(): void {
-    if (appStore.getState().tenantsState.tenants == null || appStore.getState().tenantsState.tenants.length === 0){
-      console.log("\n\n\nmust request many thing");
-    }
+
   }
+
+  manageActiveLink(event: any){
+    //console.log("VIOLAAAAAAAAA" + event.target);
+    event.preventDefault();
+    //event.target.classList.remove('class1');
+    let parent: HTMLUListElement = event.target.parentNode.parentNode;
+    //console.log("PARENTTTTTT : " + parent);
+    let cibling = parent.children;//querySelector('li');
+   // console.log("cibling.length: " + cibling.length);
+    for (let i = 0; i<cibling.length; i++){
+      cibling[i].classList.remove('active');
+      console.log((i+1) + "- removing class on: " + cibling[i]);
+    }
+    event.target.parentNode.classList.add('active');
+
+    console.log("event.target.classList: " + event.target.classList);
+    //parent.classList.remove('active');
+
+  }
+
+  gotoLogout(event: any) {
+    event.preventDefault();
+    this.router.navigate(["../autorized/logout"], { relativeTo: this.r });
+  }
+  gotoHome(event: any) {
+    event.preventDefault();
+    this.router.navigate(["../autorized/tenants"], { relativeTo: this.r });
+  }
+
+  manageActiveLinkByUrl(url:string){
+    if (!(url.indexOf('/autorized/users') === -1)){
+      let parent = this.users.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.users.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.users.nativeElement.classList);
+    }
+    else if (!(url.indexOf('/autorized/tenants') === -1)){
+      let parent = this.tenants.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.tenants.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.tenants.nativeElement.classList);
+    }
+
+    else if (!(url.indexOf('/autorized/services') === -1)){
+      let parent = this.services.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.services.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.services.nativeElement.classList);
+    }
+
+    else if (!(url.indexOf('/autorized/groups') === -1)){
+      let parent = this.groups.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.groups.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.groups.nativeElement.classList);
+    }
+
+    else if (!(url.indexOf('/autorized/groupmembers') === -1)){
+      let parent = this.groupmembers.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.groupmembers.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.groupmembers.nativeElement.classList);
+    }
+    else if (!(url.indexOf('/autorized/roles') === -1)){
+      let parent = this.roles.nativeElement.parentNode;
+      let brothers = parent.children;
+      for (let i = 0; i<brothers.length; i++){
+        brothers[i].classList.remove('active');
+        console.log((i+1) + "- removing class on: " + brothers[i]);
+      }
+      this.roles.nativeElement.classList.add('active');
+      console.log("event.target.classList: " + this.roles.nativeElement.classList);
+    }
+
+  }
+
+  canManageTenant():boolean{
+    let theUser: User = appStore.getState().userState.user;
+    let b: boolean = false;
+    if (!(theUser === null)){
+      let roles: Array<string> = theUser.getRoles();
+
+      for (let role of roles){
+        if (role === DG_ADMINISTRATOR){
+          b = true;
+          break;
+        }
+      }
+    }
+    return b;
+  }
+
+  changePassword(post) {
+    //this.tenantId = post.tenantId;
+    this.message = '';
+    this.success = false;
+    this.failiure = false;
+    this.loading = true;
+
+    console.log(JSON.stringify(post));
+
+    this.currentpassword = post.currentpassword;
+    this.newpassword = post.newpassword;
+    this.newpasswordrep = post.newpasswordrep;
+
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (this.currentpassword==='' || this.newpassword==='' || this.newpassword !== this.newpasswordrep){
+      if (this.currentpassword == ''){
+        this.errorMessage = "Current password can not be empty";
+        return;
+      }
+      if (this.newpassword === ''){
+        this.errorMessage = "New password can not be empty";
+        return;
+      }
+
+      if (this.newpassword !== this.newpasswordrep){
+        this.errorMessage = "New Password an the repeated one are different";
+        return;
+      }
+
+    }
+
+    const body = {
+      currentPassword: this.currentpassword,
+      changedPassword: this.newpassword
+    };
+
+
+    console.log("Body: " + JSON.stringify(body));
+    let url: string = BASE_API_URL + encodeURIComponent(appStore.getState().tenantState.tenant.getTenantId()) +
+      "/users/" + appStore.getState().userState.user.getUsername() +  "/password";
+    console.log("url: " + url);
+    this.httpClient.post(url, body, {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
+        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+    }).subscribe((data) => {
+
+      console.log("data change password: " + JSON.stringify(data));
+      this.success = true;
+      this.message = 'Save successfully';
+
+      setTimeout(()=>{
+        this.abandonne();
+      },2500);
+    }, (data) => {
+      console.log("Errorrrrrrr", data);
+      this.failiure = true;
+      this.message = 'Failed: ' + JSON.stringify(data);
+    }, ()=>{
+      this.loading = false;
+    });
+
+  }
+
+  openChangePasswordUI(content){
+    this.modalReference = this.modalService.open(content);
+    this.modalReference.result.then((result) => {
+      console.log("Opening modal...");
+      //this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+
+  abandonne() {
+    this.modalReference.close();
+  }
+
 }
+

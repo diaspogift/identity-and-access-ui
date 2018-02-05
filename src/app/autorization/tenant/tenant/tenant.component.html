@@ -1,11 +1,12 @@
 
-
-<!--<div class="row ">
-  <button type="button" class="btn btn-sm btn-primary pull-right" style="margin-right: 20px;" (click)="gotoNewTenant();">New Partner</button>
-</div>-->
 <div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <app-tenant-list-item *ngFor="let tenant of tenants" [tenant]="tenant">
-    </app-tenant-list-item>
+  <div class="col-12">
+    <button type="button" class="btn btn-sm btn-info pull-right" (click)="gotoNewTenant();">New Partner</button>
   </div>
 </div>
+
+<div class="row">
+    <app-tenant-list-item *ngFor="let tenant of tenants" [tenant]="tenant" class="col-md-3 col-sm-12"></app-tenant-list-item>
+</div>
+
+

@@ -1,12 +1,214 @@
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <h3 style="display: inline; " class="pull-right">{{authService.cookies['username_token']}}</h3>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand " href="#" (click)="gotoHome($event);"><img src="../assets/diaspogift.png"  height="40"
+                                        width="40" style="margin-top: -20px;"/>IASPOGIFT</a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+          aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li *ngIf="canManageTenant()" class="nav-item active" #tenants>
+        <a class="nav-link"  [routerLink]="['tenants']" (click)="manageActiveLink($event);">Partner</a>
+      </li>
+      <li class="nav-item" #users>
+        <a class="nav-link"  [routerLink]="['users']" (click)="manageActiveLink($event);">Users</a>
+      </li>
+      <li class="nav-item" #services>
+        <a class="nav-link"  [routerLink]="['services']" (click)="manageActiveLink($event);">Services</a>
+      </li>
+      <li class="nav-item" #roles>
+        <a class="nav-link"  [routerLink]="['roles']" (click)="manageActiveLink($event);">Roles</a>
+      </li>
+      <li class="nav-item" #groups>
+        <a class="nav-link"  [routerLink]="['groups']" (click)="manageActiveLink($event);">Groups</a>
+      </li>
+      <li class="nav-item" #groupmembers>
+        <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link dropdown-toggle" id="dropdown01" ngbDropdownToggle>
+          <i class="fa fa-user"></i>
+          <span class="caret"></span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
+          <a class="dropdown-item" (click)="openChangePasswordUI(content)">Change Password</a>
+          <a class="dropdown-item"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</a>
+          <!--<a class="dropdown-item" href="#">Angular</a>
+          <a class="dropdown-item" href="#">React</a>-->
+          <a class="dropdown-item " (click)="gotoHome($event)">User: {{cookies['username_token']}}</a>
+        </div>
+      </li>
+    </ul>
+    <!--<form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>-->
   </div>
-</div>
+</nav>
+
+
+<!--<bs-modal #modal>
+  <bs-modal-header [showDismiss]="true">
+    <h4 class="modal-title">I'm a modal!</h4>
+  </bs-modal-header>
+  <bs-modal-body>
+    Hello World!
+  </bs-modal-body>
+  <bs-modal-footer [showDefaultButtons]="true"></bs-modal-footer>
+</bs-modal>-->
+
+<ng-template  #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Change Password</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div  class="col-md-12">
+      <form id="changepassword" class="form-group-sm" role="form" [formGroup]="rForm" (ngSubmit)="changePassword(rForm.value)">
+        <div *ngIf="failiure" id="changepasswordalerterror" class="alert alert-danger">
+          <span>{{message}}</span>
+        </div>
+        <div *ngIf="success" id="changepasswordalertsuccess"  class="alert alert-success">
+          <span>{{message}}</span>
+        </div>
+        <div class="col-md-10 col-md-offset-1">
+          <div class="form-group">
+            <label for="currentpassword">Current Password</label>
+            <input type="password" class="form-control" name="currentpassword" placeholder="Your actual Password" id="currentpassword"
+                   formControlName="currentpassword">
+
+          </div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-1">
+          <div class="form-group">
+            <label for="newpassword">New Password</label>
+            <input type="password" class="form-control" name="newpassword" placeholder="New Password" id="newpassword"
+                   formControlName="newpassword">
+          </div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-1">
+          <div class="form-group">
+            <label for="newpasswordrep">Repeat The New Password</label>
+            <input type="password" class="form-control" name="newpasswordrep" placeholder="Repeat the New Password" id="newpasswordrep"
+                   formControlName="newpasswordrep">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- Button -->
+          <div class="col-md-offset-3 col-md-9">
+            <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Change</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+  </div>
+</ng-template>
+<!--
+<div id="changepasswordModal" class="modal fade" role="dialog" #changepasswordModal>
+  <div class="modal-dialog ">
+    <div class="modal-content panel panel-info">
+      <div class="modal-header panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="panel-title">Change Password</div>
+      </div>
+      <div class="modal-body panel-body">
+        <form id="changepassword" class="form-group-sm" role="form" [formGroup]="rForm" (ngSubmit)="changePassword(rForm.value)">
+          <div *ngIf="errorMessage!= ''" id="changepasswordalerterror" class="alert alert-danger">
+            <p>Error:</p>
+            <span>{{errorMessage}}</span>
+          </div>
+          <div *ngIf="successMessage!= ''" id="changepasswordalertsuccess"  class="alert alert-success">
+            <p>Success:</p>
+            <span>{{successMessage}}</span>
+          </div>
+          <div class="col-md-10 col-md-offset-1">
+            <div class="form-group">
+              <label for="currentpassword">Current Password</label>
+              <input type="password" class="form-control" name="currentpassword" placeholder="Your actual Password" id="currentpassword"
+                     formControlName="currentpassword">
+
+            </div>
+          </div>
+
+          <div class="col-md-10 col-md-offset-1">
+            <div class="form-group">
+              <label for="newpassword">New Password</label>
+              <input type="password" class="form-control" name="newpassword" placeholder="New Password" id="newpassword"
+                     formControlName="newpassword">
+            </div>
+          </div>
+
+          <div class="col-md-10 col-md-offset-1">
+            <div class="form-group">
+              <label for="newpasswordrep">Repeat The New Password</label>
+              <input type="password" class="form-control" name="newpasswordrep" placeholder="Repeat the New Password" id="newpasswordrep"
+                     formControlName="newpasswordrep">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+              <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Change</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>-->
+
+<router-outlet></router-outlet>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<h3  class="pull-right">User: {{cookies['username_token']}}</h3>
+
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
 <nav class="navbar navbar-default">
-  <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
       <span class="sr-only">Toggle navigation</span>
@@ -14,181 +216,108 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a href="#" class="navbar-brand">DiaspoDift</a>
+    <a  [routerLink]="['users']"  class="navbar-brand nav-link" >
+      <img src="../assets/diaspogift.png"  height="30" width="30" style="margin-top: -20px;"/><span style="font-size: 1.5em; margin-left: 40px;">DiaspoGift</span>
+    </a>
   </div>
-  <!-- Collection of nav links and other content for toggling -->
   <div id="navbarCollapse" class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link"  (click)="gotoTenants()" >Partner</a>
+      <li *ngIf="canManageTenant()" class="nav-item active" #tenants>
+        <a class="nav-link"  [routerLink]="['tenants']" (click)="manageActiveLink($event);">Partner</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link"  [routerLink]="['users']">Users</a>
+      <li class="nav-item" #users>
+        <a class="nav-link"  [routerLink]="['users']" (click)="manageActiveLink($event);">Users</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link"  [routerLink]="['services']">Services</a>
+      <li class="nav-item" #services>
+        <a class="nav-link"  [routerLink]="['services']" (click)="manageActiveLink($event);">Services</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link"  [routerLink]="['groups']">Groups</a>
+      <li class="nav-item" #groups>
+        <a class="nav-link"  [routerLink]="['groups']" (click)="manageActiveLink($event);">Groups</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link"  [routerLink]="['groupmembers']">Group Members</a>
+      <li class="nav-item" #groupmembers>
+        <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
       </li>
-      <!--<li class="nav-item">
-        <a class="nav-link"  [routerLink]="['registrationinvitation']">Invite People</a>
-      </li>-->
     </ul>
     <ul class="nav navbar-nav navbar-right">
 
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-          <i class="glyphicon glyphicon-cog"></i>
-          <span class="caret"></span></a>
+          &nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-cog"></i>
+          <span class="caret"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
         <ul class="dropdown-menu">
           <li>
-            <a class="nav-link"  [routerLink]="['changepassword']">Change Password</a>
+            <a type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#changepasswordModal">Change Password</a>
           </li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
           <li role="separator" class="divider"></li>
-          <li><a href="#">Separated link</a></li>
           <li><a class="nav-link"  [routerLink]="['logout']"> <i class="glyphicon glyphicon-off"></i> Logout</a></li>
         </ul>
       </li>
     </ul>
   </div>
 </nav>
-  </div>
-</div>
-<div class="row ">
-  <div class="col-md-10 col-md-offset-1">
-    <button type="button" class="btn btn-sm btn-primary" (click)="gotoNewTenant();">New Partner</button>
-    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmModal" >Invite People</button>
-    <!--<button type="button" class="btn btn-sm btn-primary" (click)="gotoRegister();">Register</button>-->
 
-    <div id="confirmModal" class="modal fade" role="dialog">
+    <div id="changepasswordModal" class="modal fade" role="dialog" #changepasswordModal>
       <div class="modal-dialog ">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
+        <div class="modal-content panel panel-info">
+          <div class="modal-header panel-heading">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-
+            <div class="panel-title">Change Password</div>
           </div>
-          <div class="modal-body">
-            <div class="container">
-              <div  class="col-md-12">
-                <div class="panel panel-info">
-                  <div class="panel-heading">
-                    <div class="panel-title">Create Registration invitation</div>
-                  </div>
-                  <div class="panel-body" >
-                    <form id="registrationinvitation" class="form-group-sm" role="form" [formGroup]="rFormRegistrationInvitation"
-                          (ngSubmit)="createRegistrationInvitation(rFormRegistrationInvitation.value)">
-                      <div *ngIf="errorMessage!= ''" id="registrationinvitationalerterror" style="display:none" class="alert alert-danger">
-                        <p>Error:</p>
-                        <span>{{errorMessage}}</span>
-                      </div>
-                      <div *ngIf="successMessage!= ''" id="registrationinvitationalertsuccess" style="display:none" class="alert alert-success">
-                        <p>Success:</p>
-                        <span>{{successMessage}}</span>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="description">Description</label>
-                          <input type="text" class="form-control" name="description" placeholder="Description" id="description"
-                                 formControlName="description">
+          <div class="modal-body panel-body">
+            <form id="changepassword" class="form-group-sm" role="form" [formGroup]="rForm" (ngSubmit)="changePassword(rForm.value)">
+              <div *ngIf="errorMessage!= ''" id="changepasswordalerterror" class="alert alert-danger">
+                <p>Error:</p>
+                <span>{{errorMessage}}</span>
+              </div>
+              <div *ngIf="successMessage!= ''" id="changepasswordalertsuccess"  class="alert alert-success">
+                <p>Success:</p>
+                <span>{{successMessage}}</span>
+              </div>
+              <div class="col-md-10 col-md-offset-1">
+                <div class="form-group">
+                  <label for="currentpassword">Current Password</label>
+                  <input type="password" class="form-control" name="currentpassword" placeholder="Your actual Password" id="currentpassword"
+                         formControlName="currentpassword">
 
-                        </div>
-                      </div>
-
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="email">E-Mail</label>
-                          <input type="email" class="form-control" name="email" placeholder="The entended user E-Mail" id="email"
-                                 formControlName="email">
-                        </div>
-                      </div>
-
-                      <div class="col-md-12">
-
-                        <!--<div class="input-group">
-                          <input class="form-control" style="float:none" placeholder="Select a date" ngx-mydatepicker
-                                 name="mydate"
-                                 [(ngModel)]="model" [options]="myOptions" #dp="ngx-mydatepicker"
-                                 (dateChanged)="onDateChanged($event)"/>
-
-                          <span class="input-group-btn">
-                              <button type="button" class="btn btn-default" (click)="dp.clearDate()">
-                                  <i class="glyphicon glyphicon-remove"></i>
-                              </button>
-                              <button type="button" class="btn btn-default" (click)="dp.toggleCalendar()">
-                                  <i class="glyphicon glyphicon-calendar"></i>
-                              </button>
-                          </span>
-                        </div> ngx-mydatepicker [(ngModel)]="model" [options]="myOptions" #dp="ngx-mydatepicker"
-                                 (dateChanged)="onDateChanged($event)"-->
-
-                        <div class="form-group">
-                          <label for="startingOn">Starting On</label>
-                          <div class="input-group"><input type="text" class="form-control" name="startingOn" placeholder="Start date" id="startingOn"
-                                 formControlName="startingOn"
-                                 [(ngModel)]="modelStartingOn" ngbDatepicker #startingOn="ngbDatepicker" (click)="startingOn.toggle()">
-                            <span class="input-group-addon" (click)="startingOn.toggle()"><i class="glyphicon glyphicon-calendar"></i></span></div>
-                        </div>
-                      </div>
-
-                      <div class="col-md-12">
-
-                        <!--<div class="input-group">
-                          <input class="form-control" style="float:none" placeholder="Select a date" ngx-mydatepicker
-                                 name="mydate"
-                                 [(ngModel)]="model" [options]="myOptions" #dp="ngx-mydatepicker"
-                                 (dateChanged)="onDateChanged($event)"/>
-
-                          <span class="input-group-btn">
-                              <button type="button" class="btn btn-default" (click)="dp.clearDate()">
-                                  <i class="glyphicon glyphicon-remove"></i>
-                              </button>
-                              <button type="button" class="btn btn-default" (click)="dp.toggleCalendar()">
-                                  <i class="glyphicon glyphicon-calendar"></i>
-                              </button>
-                          </span>
-                        </div> ngx-mydatepicker [(ngModel)]="model" [options]="myOptions" #dp="ngx-mydatepicker"
-                                 (dateChanged)="onDateChanged($event)"-->
-
-                        <div class="form-group">
-                          <label for="until">Until</label>
-                          <div class="input-group"><input type="text" class="form-control" name="until" placeholder="End date" id="until"
-                                 formControlName="until"
-                                 [(ngModel)]="modelUntil" ngbDatepicker #until="ngbDatepicker" (click)="until.toggle()">
-                            <span class="input-group-addon" (click)="until.toggle()"><i class="glyphicon glyphicon-calendar"></i></span></div>
-                        </div>
-                      </div>
-
-                      <div class="form-group">
-                        <!-- Button -->
-                        <div class="col-md-offset-3 col-md-9">
-                          <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Invite</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
                 </div>
               </div>
-            </div>
+
+              <div class="col-md-10 col-md-offset-1">
+                <div class="form-group">
+                  <label for="newpassword">New Password</label>
+                  <input type="password" class="form-control" name="newpassword" placeholder="New Password" id="newpassword"
+                         formControlName="newpassword">
+                </div>
+              </div>
+
+              <div class="col-md-10 col-md-offset-1">
+                <div class="form-group">
+                  <label for="newpasswordrep">Repeat The New Password</label>
+                  <input type="password" class="form-control" name="newpasswordrep" placeholder="Repeat the New Password" id="newpasswordrep"
+                         formControlName="newpasswordrep">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                  <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Change</button>
+                </div>
+              </div>
+
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-             </div>
+          </div>
         </div>
 
       </div>
     </div>
+
   </div>
+
 </div>
+ <router-outlet></router-outlet>
 
-  <router-outlet></router-outlet>
-
-
+-->
 

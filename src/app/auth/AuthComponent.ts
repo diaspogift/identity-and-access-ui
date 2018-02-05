@@ -21,7 +21,7 @@ import {Tenant} from "../domain/model/Tenant";
 })
 
 export class AuthComponent implements OnInit{
-  titleAlert:string = 'This field is required';
+  //titleAlert:string = 'This field is required';
   rForm: FormGroup;
   username:string = '';
   password:string = '';
@@ -37,10 +37,7 @@ export class AuthComponent implements OnInit{
     });
 
     r.params.subscribe(params=>{
-
       this.tenantId = params['tenantId']?params['tenantId']:null;
-      console.log("***********tenantId: " + this.tenantId);
-
     });
 
   }
@@ -55,7 +52,6 @@ export class AuthComponent implements OnInit{
       this._router.navigate(['/notautorized']);
       return;
     }
-
     initialTenantState.tenant = new Tenant(this.tenantId, "", "", false, []);
     initialAppsState.tenantState = initialTenantState;
     this.checkToken();
@@ -85,7 +81,6 @@ export class AuthComponent implements OnInit{
       }else{
         let monAction:MyAction = appActionCreator(SAVE_TOKEN, token);
         appStore.dispatch(monAction);
-
       }
     }else{
       console.log("NoCookies");
@@ -106,14 +101,7 @@ export class AuthComponent implements OnInit{
       client_id: CLIENT_APP_ID
     };
 
-    /*this.headers = new HttpHeaders();
-    this.headers = this.headers.set('Accept', 'application/json');
-    this.headers = this.headers.set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8');
-    this.headers = this.headers.set('Authorization', 'Basic '+btoa(body.client_id + ":" + "123456"));*/
-
-    //if (appStore.getState().tokenState === null){
-      console.log("ACCESSTOKEN_LINK in component", ACCESSTOKEN_LINK);
-    //console.log("headers in component", this.headers);
+    console.log("ACCESSTOKEN_LINK in component", ACCESSTOKEN_LINK);
 
     console.log("Body: " + JSON.stringify(body));
     this.http.post(ACCESSTOKEN_LINK, body, {
@@ -123,8 +111,6 @@ export class AuthComponent implements OnInit{
       set('password', this.password).
       set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', CLIENT_APP_ID)
     }).subscribe((data) => {
-
-      //console.log("dataaaaa", data);
 
       let token: AccessToken = new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
         data['expires_in'], data['scope'], (new Date().getTime()) + data['expires_in'] * 1000, this.username);
@@ -138,20 +124,50 @@ export class AuthComponent implements OnInit{
 
       this.authService.login(this.username, this.password);
 
-      /*
-      {"access_token":"2a2fdb06-cfd8-413a-9dd9-76bed0e2db21",
-      "token_type":"bearer",
-      "refresh_token":"ff33cae5-3ef0-4c57-a3c1-298ba518a1ab","expires_in":43199,"scope":"trusted"}nkalla@nkalla-diaspo-gift:/opt/webstorm
-       */
-
-
     }, (data) => {
-      console.log("Errorrrrrrr", data);
+      console.log("Errorrrrrrr0000", data);
+
+      if (Cookie.check('access_token')){
+        let refresh_token = Cookie.get('refresh_token');
+        this.http.post(ACCESSTOKEN_LINK, {refresh_token:refresh_token, grant_type:'refresh_token'}, {
+          headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+            .set('Authorization', 'Basic ' + btoa(body.client_id + ":" + "123456")),
+          params: new HttpParams().set('scope', 'trusted').set("grant_type", 'refresh_token').
+          set('password', this.password).
+          set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', CLIENT_APP_ID)
+        }).subscribe((data1) => {
+
+          //console.log("dataaaaa", data);
+
+          let token: AccessToken = new AccessToken(data1['access_token'], data1['token_type'], data1['refresh_token'],
+            data1['expires_in'], data1['scope'], (new Date().getTime()) + data1['expires_in'] * 1000, this.username);
+
+          console.log("token", JSON.stringify(token));
+
+          let monAction: MyAction = appActionCreator(SAVE_TOKEN, token);
+          appStore.dispatch(monAction);
+
+          this.saveToken(token);
+
+          this.authService.login(this.username, this.password);
+
+          /*
+          {"access_token":"2a2fdb06-cfd8-413a-9dd9-76bed0e2db21",
+          "token_type":"bearer",
+          "refresh_token":"ff33cae5-3ef0-4c57-a3c1-298ba518a1ab","expires_in":43199,"scope":"trusted"}nkalla@nkalla-diaspo-gift:/opt/webstorm
+           */
+
+
+        }, (data1) => {
+          console.log("Errorrrrrrr1111111111", JSON.stringify(data1));
+
+         });
+      }
+
+
+
     });
-  //}else {
-     // console.log("NKALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLa")
-     // this.authService.login(this.username, this.password);
-    //}
+
 
   }
 
@@ -167,7 +183,6 @@ export class AuthComponent implements OnInit{
     Cookie.set("username_token", "" + token.username);
     Cookie.delete("logout");
 
-    //this._router.navigate(['autorized']);
   }
 
   gotoSigUp(){

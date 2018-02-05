@@ -1,0 +1,334 @@
+
+<div class="card card-outline-primary" type="info" #addMemberTogroupFrom>
+  <!--<div class="card-header">-->
+
+  <div class="row">
+    <div class="col-11 mx-auto card-header">
+      <div class="row">
+        <div class="col-2">
+          <img class="card-img-top user-img" src="../../../../../../assets/img/default-user.png" alt="{{role.getName()}}">
+        </div>
+        <div class="col-10" style="font-size: small">
+          <span>&#9733; <b>{{role.getName()}}</b>  &#9733;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- </div>-->
+
+  <div class="row">
+    <div class="col-11 mx-auto">
+      <div class="card-block">
+        {{role.getDescription()}}<br /><!--{{role.getLinks()['self']}}-->
+        <hr>
+        <button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;|
+        &nbsp;<button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoUsers(modalUser);">Users</button>
+        <hr />
+        <button class="btn btn-sm btn-outline-info"  (click)="gotoGroupToadd(content);" *ngIf="canAddGroups();">
+          <span class="fa fa-plus-circle"></span> Add Groups
+        </button>
+        <button class="btn btn-sm btn-outline-info"  (click)="gotoUserToadd(contentAddUser);" *ngIf="canAddGroups();">
+          <span class="fa fa-plus-circle"></span> Add Users
+        </button>
+        <br>
+
+
+        <ng-template  #modalGroup let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Group(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="removegroup" class="form-group-sm" role="form" [formGroup]="rFormRemoveGroup"
+                  (ngSubmit)="removeGroups(rFormAddGroup.value)">
+              <div *ngIf="failiure"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../assets/img/loader/loader1.gif">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(groups.length > 0)">No group plays the role <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <ul class="list-group" *ngIf="groups.length>0">
+                <li class="list-group-item">
+                  <span class="badge pull-right badge-info">
+                    <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
+                  </span>
+                </li>
+              </ul>
+
+              <div class="col-md-12" *ngFor="let group of groups">
+                <div class="form-group">
+                  <label for="{{group.getName()+'_'}}" class="checkbox-inline">{{group.getName()}}&nbsp;&nbsp;</label>
+                  <input type="checkbox"  name="{{group.getName() + '_'}}"  id="{{group.getName()+'_'}}"
+                         (click)="toggleCheckedGroups(group.getName());" style="height: 18px; width: 18px;"
+                  *ngIf="modify" class="pull-right">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="groups.length>0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+        <ng-template  #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Group(s) Not In <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+
+            <form id="addgroups" class="form-group-sm" role="form" [formGroup]="rFormAddGroup"
+                  (ngSubmit)="addGroups(rFormAddGroup.value)">
+              <div *ngIf="failiure"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../assets/img/loader/loader1.gif">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(groupNotPlayingThisRole.length > 0)">No group to add to the role  <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngFor="let group of groupNotPlayingThisRole">
+                <div class="form-group">
+                  <label for="{{group.getName()}}" class="checkbox-inline">{{group.getName()}}</label>
+                  <input type="checkbox"  name="{{group.getName()}}"  id="{{group.getName()}}"
+                         (click)="toggleChecked(group.getName());" style="height: 18px; width: 18px;" class="pull-right">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="groupNotPlayingThisRole.length > 0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groupNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+        <ng-template  #contentAddUser let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Users(s) Not In Playing <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form id="addusers" class="form-group-sm" role="form" [formGroup]="rFormAddUser"
+                  (ngSubmit)="addUsers(rFormAddUser.value)">
+              <div *ngIf="failiure"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../assets/img/loader/loader1.gif">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(userNotPlayingThisRole.length > 0)">No users to add to role <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngFor="let user of userNotPlayingThisRole">
+                <div class="form-group">
+                  <label for="{{user.getUsername() + '_'}}" class="checkbox-inline">{{user.getFirstName() + "  " + user.getLastNane()}}</label>
+                  <input type="checkbox"  name="{{user.getUsername() + '_'}}"  id="{{user.getUsername() + '_'}}"
+                         (click)="toggleCheckedUserNotPlaying(user.getUsername());" style="height: 18px; width: 18px;" class="pull-right">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="userNotPlayingThisRole.length > 0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(userNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+        <ng-template  #modalUser let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Users(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form id="removeuser" class="form-group-sm" role="form" [formGroup]="rFormRemoveUser"
+                  (ngSubmit)="removeUsers(rFormRemoveUser.value)">
+              <div *ngIf="failiure"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../assets/img/loader/loader1.gif">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(users.length > 0)">No users plays the role <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <ul class="list-group list-group-flush" *ngIf="users.length>0">
+                <li class="list-group-item">
+                  <span class="badge pull-right badge-info">
+                    <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
+                  </span>
+                </li>
+              </ul>
+
+              <div class="col-md-12" *ngFor="let u of users">
+                <div class="form-group">
+                  <label for="{{u.getUsername()}}" class="checkbox-inline ">{{u.getUsername()}}</label>
+                  <input type="checkbox"  name="{{u.getUsername()}}"  id="{{u.getUsername()}}"
+                         (click)="toggleCheckedUser(u.getUsername());" style="height: 18px; width: 18px;" *ngIf="modify"
+                  class="pull-right">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="users.length > 0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(users)"><i class="fa fa-remove"></i>Remove</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+  <br/>
+</div>
+
+
+
+
+
+<!--
+<div class="col-md-4">
+  <div class="panel panel-default" id="{{group.getName()}}">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        {{group.getName()}}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{group.getDescription()}}
+      <hr>
+      <a  class="btn-sm btn-primary "  (click)="gotoMembers();">Members</a>
+      <a class="btn btn-primary btn-sm" data-toggle="modal"
+         [attr.data-target]="'#addmembers'+transform(group.getName())">
+        <span class="glyphicon glyphicon-plus"></span> Add Members
+      </a>
+      <br>
+      <div id="addmembers{{transform(group.getName())}}" class="modal fade" role="dialog">
+        <div class="modal-dialog ">
+          <div class="modal-content panel panel-info">
+            <div class="modal-header panel-heading">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title panel-title">{{group.getName()}}</h3>
+            </div>
+            <div class="modal-body panel-body">
+              <form id="addMemberTogroupFrom" class="form-group-sm" role="form" [formGroup]="rFormAddMembers"
+                    (ngSubmit)="addMembers(rFormAddMembers.value)" #addMemberTogroupFrom>
+
+
+                <ul class="list-group" >
+                  <li class="col-md-12 list-group-item" *ngFor="let a of freeGroupMembers">
+
+                    <div class="form-group">
+                      <div class="input-group">
+
+                        <input type="checkbox" class="form-control" name="{{a['name']}}" placeholder="Description" id="{{a['name']}}"
+                               value="0" onclick="this.value = (this.checked)?'1':'0';"
+                               style="height: 20px; width: 20px;">
+                        <label for="{{a['name']}}">{{a['name']}} << {{a['type']}}>></label>
+                      </div>
+                    </div>
+                  </li>
+              </ul>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer"></div>
+  </div>
+</div>
+-->
+
+

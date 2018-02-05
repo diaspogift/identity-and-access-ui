@@ -8,14 +8,21 @@ export class User{
   private username: string;
   private emailAddress: string;
   private enabled: boolean;
+  private firstName: string;
+  private lastName: string;
   private links: any;
+  private roles: string[];
 
-  constructor( _tenantId: string, _username: string,  _emailAddress: string, _enabled: boolean, _links: any){
+  constructor( _tenantId: string, _username: string,  _emailAddress: string, _enabled: boolean, _links: any, _roles: string[],
+               _firstName:string, _lastName:string){
     this.tenantId = _tenantId;
     this.username = _username;
     this.emailAddress = _emailAddress;
     this.enabled = _enabled;
     this.links = _links;
+    this.roles = _roles;
+    this.firstName = _firstName;
+    this.lastName = _lastName;
   }
 
   getTenantId():string{
@@ -47,6 +54,37 @@ export class User{
     return this.enabled;
   }
 
+  getRoles():string[]{
+    return this.roles;
+  }
+
+  setRoles(aRoles: string[]){
+    this.roles = aRoles;
+  }
+
+  getFirstName():string{
+    return this.firstName;
+  }
+
+  getLastNane():string{
+    return this.lastName;
+  }
+
+  setFirstName(_firstName:string):void{
+    this.firstName = _firstName;
+  }
+
+  setLastName(lastName:string):void{
+    this.lastName = lastName;
+  }
+
+  getLinks():any{
+    return this.links;
+  }
+
+  setLinks(links: any):void{
+    this.links = links;
+  }
   getTenant():Tenant{
     let tenants:Tenant[] = appStore.getState().tenantsState.tenants;
     console.log("tenants: " + JSON.stringify(tenants));
@@ -56,15 +94,8 @@ export class User{
         return tenant;
       }
     }
-    return null;
+    return appStore.getState().tenantState.tenant;
   }
 }
 
 
-/*
-{
-  "tenantId": "5BB1C93E-99A2-4521-859B-370E186254CF",
-  "username": "admin",
-  "emailAddress": "didier2@gmail.com"
-}
- */

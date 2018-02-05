@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {tokenNotExpired} from "angular2-jwt";
 import {appStore} from "../store/AppStore";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {BASE_API_URL} from "../Constante";
+import {BASE_API_URL, DG_ADMINISTRATOR} from "../Constante";
 import {User} from "../domain/model/User";
 import {MyAction} from "../common/MyAction";
 import {appActionCreator} from "../actions/Action";
@@ -29,14 +29,23 @@ export class AuthService {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
-      let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false, null);
+
+      console.log("User Representation: " + JSON.stringify(data));
+
+      let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false, null, data['roles'], '', '');
+
+      Cookie.set("complete_user", JSON.stringify(user));
 
       let monAction:MyAction = appActionCreator(LOGIN_USER, user);
+
+      console.log("USER Cookies:" + JSON.stringify(user));
 
       console.log("users ----------- user---------------> ", JSON.stringify(monAction));
       appStore.dispatch(monAction);
 
       this.router.navigate(['/autorized']);
+    }, (data)=>{
+
     });
   }
 
@@ -53,12 +62,32 @@ export class AuthService {
 
   isLoggedIn() : boolean{
     let check: boolean = this.checkCookieToken();
-    return (appStore.getState().userState.user !== null &&
+    let booleen: boolean = (appStore.getState().userState.user !== null &&
       appStore.getState().userState.user.getTenantId().length === 36 &&
       appStore.getState().userState.user.getUsername().length > 0 &&
       this.validateEmailAddress(appStore.getState().userState.user.getEmailAddress()) &&
       appStore.getState().tokenState.token != null &&
-      this.isValideToken()) || (check);
+      this.isValideToken());
+    console.log("prima parte: " + booleen);
+    console.log("seconda parte: " + check);
+    return booleen || (check);
+  }
+
+
+  canManageTenant():boolean{
+    let theUser: User = appStore.getState().userState.user;
+    let b: boolean = false;
+    if (!(theUser === null)){
+      let roles: Array<string> = theUser.getRoles();
+
+      for (let role of roles){
+        if (role === DG_ADMINISTRATOR){
+          b = true;
+          break;
+        }
+      }
+    }
+    return b  ;
   }
 
   isValideToken():boolean{
@@ -77,14 +106,25 @@ export class AuthService {
     return tokenNotExpired(token);
   }
 
+
+    getCompleteToken():AccessToken{
+      let data  = Cookie.getAll();
+      return new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
+        data['expires_in_token'], data['scope_token'], data['received_at_token'], data['username_token']);
+    }
+
   checkCookieToken(): boolean{
     if (Cookie.check('access_token')){
       let data  = Cookie.getAll();
+      console.log("cookies data: " + JSON.stringify(data));
       this.cookies = data;
       let token : AccessToken = new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
         data['expires_in_token'], data['scope_token'], data['received_at_token'], data['username_token']);
 
-      return token.isValide();
+      console.log("cookies data: " + JSON.stringify(data));
+      let booleen: boolean = token.isValide();
+      console.log("checkCookieToken: " + booleen);
+      return booleen;
       /*if (!token.isValide()){
         Cookie.deleteAll();
         let monAction:MyAction = appActionCreator(SAVE_TOKEN, null);
@@ -101,6 +141,12 @@ export class AuthService {
     }
   }
 
+
+  extractTenantFromUrl(url:string):string{
+    let demiUrl : string = url.substring(BASE_API_URL.length);
+    return demiUrl.split("\/")[0];
+
+  }
 
 }
 

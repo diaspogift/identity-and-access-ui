@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import {AuthComponent} from "./auth/AuthComponent";
@@ -22,6 +22,8 @@ import {AuthService} from "./auth/AuthService";
 import {AuthorizationGuard, CanManageService, CanManageTenant, CanManageUser} from "./guards/authorization.guard";
 import {TenantService} from "./common/TenantService";
 
+//import * as $ from 'jquery';
+
 
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from "ng2-cookies";
@@ -38,6 +40,20 @@ import { LogoutComponent } from './autorization/tenant/user/logout/logout.compon
 import { NotautorizedComponent } from './notautorized/notautorized.component';
 import { GroupMemberComponent } from './autorization/tenant/group/group-menber/group-menber.component';
 import { GroupMemberListItemComponent } from './autorization/tenant/group/group-menber/group-member-list-item/group-member-list-item.component';
+import {BsModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
+import { AddGroupMembersComponent } from './autorization/tenant/group/group-menber/add-group-members/add-group-members.component';
+import {InternationalPhoneModule} from "ng4-intl-phone";
+import {Ng4GeoautocompleteModule} from "ng4-geoautocomplete";
+import {NgxPhoneSelectModule} from "ngx-phone-select";
+import {BsDropdownModule} from "ngx-bootstrap";
+import { RoleComponent } from './autorization/tenant/role/role/role.component';
+import { RoleListItemComponent } from './autorization/tenant/role/role/role-list-item/role-list-item.component';
+//import * as $ from 'jquery';
+//import {BsModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
+
+
+//import {BsModalModule} from "ng2-bs3-modal";
+//import {BsModalModule} from "ng2-bs3-modal";
 //import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
 
 
@@ -45,7 +61,10 @@ import { GroupMemberListItemComponent } from './autorization/tenant/group/group-
   declarations: [
     AppComponent, AuthComponent, AutorizationComponent, SignupComponent, TenantComponent, UserComponent, ServiceComponent,
     TenantListItemComponent, GroupComponent, GroupListItemComponent, NewtenantComponent, UserListItemComponent,
-    ChangePasswordComponent, LogoutComponent, NotautorizedComponent, GroupMemberComponent, GroupMemberListItemComponent
+    ChangePasswordComponent, LogoutComponent, NotautorizedComponent, GroupMemberComponent, GroupMemberListItemComponent,
+    AddGroupMembersComponent,
+    RoleComponent,
+    RoleListItemComponent
   ],
   imports: [
     BrowserModule,
@@ -56,13 +75,19 @@ import { GroupMemberListItemComponent } from './autorization/tenant/group/group-
     ReactiveFormsModule,  // Add this!
     BrowserAnimationsModule,
     NgbModule.forRoot(),
-    //NgxMyDatePickerModule.forRoot()
+    BsModalModule,
+    InternationalPhoneModule,
+    Ng4GeoautocompleteModule.forRoot(),
+    NgxPhoneSelectModule,
+    BsDropdownModule.forRoot()
+
   ],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: AuthService, useClass: AuthService }, { provide: AuthorizationGuard, useClass: AuthorizationGuard },
     {provide:TenantService, useClass: TenantService},{provide:CanManageTenant, useClass: CanManageTenant},
     {provide:CanManageUser, useClass: CanManageUser},{provide:CanManageService, useClass: CanManageService},
+    {provide:NgbActiveModal, useClass:NgbActiveModal},
     CookieService
   ],
   bootstrap: [AppComponent]

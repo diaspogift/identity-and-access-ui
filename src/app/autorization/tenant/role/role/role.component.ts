@@ -1,59 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import {Group} from "../../../domain/model/Group";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {appStore} from "../../../store/AppStore";
-import {ActivatedRoute} from "@angular/router";
-import {BASE_API_URL} from "../../../Constante";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../../auth/AuthService";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {AuthService} from "../../../../auth/AuthService";
+import {Group} from "../../../../domain/model/Group";
+import {Role} from "../../../../domain/model/Role";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ActivatedRoute} from "@angular/router";
+import {BASE_API_URL} from "../../../../Constante";
+import {appStore} from "../../../../store/AppStore";
 
 @Component({
-  selector: 'app-group',
-  templateUrl: './group.component.html',
-  styleUrls: ['./group.component.css']
+  selector: 'app-role',
+  templateUrl: './role.component.html',
+  styleUrls: ['./role.component.css']
 })
-export class GroupComponent implements OnInit {
+export class RoleComponent implements OnInit {
 
   tenant: any;
   tenantUrl: string;
 
-  groups:Group[];
+  roles:Role[];
   url: string;
 
-  rFormNewGroup: FormGroup;
+  rFormNewRole: FormGroup;
   description: string;
   name: string;
-  errorMessage: string;
-  successMessage: string;
   modalReference: any;
   message: string;
   loading: boolean;
   failiure: boolean;
   success: boolean;
+  supportsNesting: boolean;
+
 
   constructor(private modalService: NgbModal, private fb: FormBuilder,private httpClient: HttpClient, private route: ActivatedRoute, private r:ActivatedRoute, private authService: AuthService) {
     route.params.subscribe(params=>{
-      this.url = params['id']?params['id']:BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId() +"/groups";
+      this.url = params['id']?params['id']:BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId() +"/roles";
       this.tenantUrl = BASE_API_URL + this.authService.extractTenantFromUrl(this.url);
       console.log("url url url: " + this.url);
     });
 
-    this.rFormNewGroup = fb.group({
+    this.rFormNewRole = fb.group({
       //'tenantId' : [null, Validators.required],
       'description' : [null, Validators.required],
       'name' : [null, Validators.required],
+      'supportsNesting': [null, Validators.required]
       //'description' : [null, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(500)])],
       //'validate' : ''
     });
 
-    this.errorMessage = '';
-    this.successMessage = '';
     this.message = '';
 
     this.loading = false;
     this.success = false;
     this.failiure = false;
+    this.supportsNesting = true;
     this.tenant = {name:''};
 
   }
@@ -65,23 +66,22 @@ export class GroupComponent implements OnInit {
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
 
-      console.log("Groups Groups Groups Groups: " + JSON.stringify(data));
-      let receivedData = data['groups'];
+      console.log("Roles Roles Roles Roles: " + JSON.stringify(data));
+      let receivedData = data['roles'];
       let index: number;
-      this.groups = [];
+      this.roles = [];
       console.log("LENGTH LENGTH LENGTH: " + receivedData.length);
       for (index=0; index < receivedData.length; index++){
         let links: any = receivedData[index]['_links'];
-        let aGroup: Group = new Group(receivedData[index]['name'],
+        let aRole: Role = new Role(receivedData[index]['name'],
           receivedData[index]['description'], false,{
-            self:links['self']['href'], members:links['members']['href'],
-            notMembers:links['notMembers']['href']
-          });
-        console.log(index + " - adding: " + JSON.stringify(aGroup));
-        this.groups.push(aGroup);
+            self:links['self']['href']
+        });
+        console.log(index + " - adding: " + JSON.stringify(aRole));
+        this.roles.push(aRole);
       }
 
-      console.log("Groups Groups Groups Groups: " + JSON.stringify(this.groups));
+      console.log("Roles Roles Roles Roles: " + JSON.stringify(this.roles));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
 
       this.httpClient.get(this.tenantUrl, {
@@ -104,7 +104,12 @@ export class GroupComponent implements OnInit {
   }
 
 
-  createGroup(form){
+  toggleSupportsNesting(){
+    this.supportsNesting = !this.supportsNesting;
+  }
+
+
+  createRoles(form){
 
     this.description = form.description;
     this.name = form.name;
@@ -117,7 +122,8 @@ export class GroupComponent implements OnInit {
 
     let body = {
       description:this.description,
-      name: this.name
+      name: this.name,
+      supportsNesting:this.supportsNesting
     };
 
     this.httpClient.post(this.url , body, {
@@ -126,7 +132,7 @@ export class GroupComponent implements OnInit {
     }).subscribe((data)=>{
 
       console.log("Response data for Create Group: " + JSON.stringify(data));
-      this.successMessage = 'Success: ' + JSON.stringify(data);
+      this.message = 'Success: ' + JSON.stringify(data);
 
       this.success = true;
       this.failiure = false;
@@ -139,13 +145,13 @@ export class GroupComponent implements OnInit {
 
 
     }, (data) => {
-      this.errorMessage = "An error occured: " + data;
+      //this.errorMessage = "An error occured: " + data;
       this.failiure = true;
       this.success =false;
       this.message = "An error occured: " + JSON.stringify(data);
     }, ()=>{
       if (this.failiure == false){
-        this.message = "Groupe created successfully";
+        this.message = "Role created successfully";
       }
       this.loading = false;
     });
@@ -155,7 +161,7 @@ export class GroupComponent implements OnInit {
     this.modalReference.close();
   }
 
-  openAddGroup(content) {
+  openAddRole(content) {
     this.modalReference = this.modalService.open(content);
     this.modalReference.result.then((result) => {
       console.log("Opening modal...");
@@ -165,9 +171,10 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  canCreateGroup():boolean{
+  canCreateRole():boolean{
     let thisTenant = this.authService.extractTenantFromUrl(this.url);
     let connectedTenant = appStore.getState().tenantState.tenant.getTenantId();
     return thisTenant === connectedTenant;
   }
+
 }

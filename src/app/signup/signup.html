@@ -1,10 +1,202 @@
 
 <div class="container">
+  <div class="row">
+    <div style="margin-top:25px; border: red solid 0px;" class="col-md-8 col-sm-10 mx-auto">
+      <div class="card card-outline-primary">
+        <div class="card-header">
+
+          <div class="row">
+            <div class="col-10 mx-auto">
+              <img class="" src="../../assets/dg.png"  alt="DIASPGIFT">
+              <h2><span class="center-block">Register to DiaspoGift System</span></h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-10 mx-auto">
+            <div style="padding-top:30px" class="card-block">
+
+              <div class="col-md-12" *ngIf="loading">
+                <div class="row">
+                  <div class="col-2 mx-auto">
+                    <img src="../../assets/img/loader/loader1.gif" width="30" height="30" />
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="failiure && message!= ''" id="login-alert" class="alert alert-danger col-sm-12">{{message}}</div>
+              <div *ngIf="success && message!= ''" id="login-alert1" class="alert alert-success col-sm-12">{{message}}</div>
+
+              <form id="registeruser" class="form-horizontal" role="form" [formGroup]="rForm" (ngSubmit)="registerUser(rForm.value)">
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="email" class="form-control" name="username" placeholder="Your Username must be an E-Mail address" id="username"
+                           formControlName="username">
+                  </div>
+                </div>
+
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Your Password" id="password"
+                           formControlName="password">
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="passwordrep">Repeat Password</label>
+                    <input type="password" class="form-control" name="passwordrep" placeholder="Repeat Your Password" id="passwordrep"
+                           formControlName="passwordrep">
+                  </div>
+                </div>
+                <hr />
+                <h5>This fields are optionals</h5>
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-6">
+                  <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" name="firstName" placeholder="Your First Name" id="firstName"
+                           formControlName="firstName">
+                  </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" name="lastName" placeholder="Your Last Name" id="lastName"
+                               formControlName="lastName">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="primaryTelephone" class="control-label">Primary Phone Number</label>
+                      <!-- <input type="tel" id="primaryTelephone">-->
+
+                      <div class="">
+                        <!--<input id="primaryTelephone" type="tel" class="form-control" name="primaryTelephone"
+                               placeholder="Partner Primary Phone"
+                               formControlName="primaryTelephone">-->
+
+                        <int-phone-prefix  id="primaryTelephone" #primaryTelephone
+                                           formControlName="primaryTelephone"
+                        ></int-phone-prefix>
+
+                        <!--<input id="primaryCountryCode" type="hidden" value="" class="form-control" name="primaryCountryCode" placeholder="Two Characters country code"
+                               formControlName="primaryCountryCode" maxlength="2">-->
+
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="secondaryTelephone" class="control-label">Secondary Phone Number</label>
+                      <div class="">
+                        <!--<input id="secondaryTelephone" type="tel" class="form-control" name="secondaryTelephone" placeholder="Partner Sedondary Phone"
+                               formControlName="secondaryTelephone">-->
+                        <int-phone-prefix [locale]="'en'" id="secondaryTelephone"
+                                          formControlName="secondaryTelephone"></int-phone-prefix>
+
+                        <!--<input id="secondaryCountryCode" type="hidden" class="form-control" name="secondaryCountryCode" placeholder="Two characters Code"
+                               formControlName="secondaryCountryCode" maxlength="2">-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <!--<input type="hidden" class="form-control" name="primaryTelephone" placeholder="" id="primaryTelephone" #primaryTelephone
+                       formControlName="primaryTelephone"  value="669262656">
+                <input type="hidden" class="form-control" name="primaryCountryCode" placeholder="" id="primaryCountryCode"
+                       formControlName="primaryCountryCode" value="CM">
+                <input type="hidden" class="form-control" name="primaryDialingCountryCode" placeholder="" id="primaryDialingCountryCode"
+                       formControlName="primaryDialingCountryCode" value="00237">
+
+                <input type="hidden" class="form-control" name="secondaryTelephone" placeholder="" id="secondaryTelephone"
+                       formControlName="secondaryTelephone" value="691179154">
+                <input type="hidden" class="form-control" name="secondaryCountryCode" placeholder="" id="secondaryCountryCode"
+                       formControlName="secondaryCountryCode" value="CM">
+                <input type="hidden" class="form-control" name="secondaryDialingCountryCode" placeholder="" id="secondaryDialingCountryCode"
+                       formControlName="secondaryDialingCountryCode" value="00237">-->
+
+
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                      <div class="form-group">
+                        <label for="addressStreetAddress">Street Address</label>
+                        <div class="">
+                          <ng4geo-autocomplete (componentCallback)="addressAutoCompleteCallback($event)" id="addressStreetAddress"
+                                               [userSettings]="mysetting"></ng4geo-autocomplete>
+                          <!--<input id="addressStreetAddress" type="hidden" class="form-control"
+                                 name="addressStreetAddress" placeholder="Street Address"
+                                 formControlName="addressStreetAddress" >-->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                      <div class="form-group">
+                        <label for="addressCity">City</label>
+                        <input type="text" class="form-control"  placeholder="City" id="addressCity"
+                               formControlName="addressCity">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+
+
+
+                <!--<div class="col-md-12">
+                  <div class="form-group">
+                    <label for="addressStateProvince">Province</label>
+                    <input type="text" class="form-control" name="addressStateProvince" placeholder="Province" id="addressStateProvince"
+                       formControlName="addressStateProvince">
+                  </div>
+                </div>-->
+
+                <input type="hidden" class="form-control" name="addressPostalCode" placeholder="" id="addressPostalCode"
+                       formControlName="addressPostalCode" [ngModel]="80209" >
+
+
+                <input type="hidden" class="form-control" name="addressCountryCode" placeholder="" id="addressCountryCode"
+                       formControlName="addressCountryCode" value="CM">
+
+
+                <div style="margin-top:10px" class="form-group">
+
+                  <div class="col-sm-12 controls">
+                    <button type="submit" class="btn btn-info btn-sm">Register</button>
+
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div class="container">
   <div id="loginbox" style="margin-top:50px; " class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info" >
       <div class="panel-heading">
         <div class="panel-title">Register to DiaspoGift System</div>
-        <!--<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>-->
       </div>
 
       <div style="padding-top:30px" class="panel-body">
@@ -106,7 +298,6 @@
 
 
           <div style="margin-top:10px" class="form-group">
-            <!-- Button -->
 
             <div class="col-sm-12 controls">
               <button type="submit" class="btn btn-primary">Register</button>
@@ -119,3 +310,4 @@
   </div>
 
 </div>
+-->

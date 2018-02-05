@@ -1,9 +1,197 @@
 
 <div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <app-user-list-item *ngFor="let entry of users" [user]="entry">
-
-    </app-user-list-item>
+  <div class="col-12" >
+    <h4 class="pull-left"><span class="">{{tenant['name']}}</span></h4>
   </div>
 </div>
 
+<div class="row">
+  <div class="col-12" *ngIf="canInvite()">
+    <button type="button" class="btn btn-sm btn-info pull-right"
+            (click)="openInvitePeople(content)" >Invite People</button>
+    <ng-template  #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Create Registration invitation</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div  class="col-md-12">
+          <form id="registrationinvitation" class="form-group-sm" role="form" [formGroup]="rFormRegistrationInvitation"
+                (ngSubmit)="createRegistrationInvitation(rFormRegistrationInvitation.value)">
+
+            <div class="col-md-12" *ngIf="loading">
+              <div class="row">
+                <div class="col-2 mx-auto">
+                  <img src="../../../../../assets/img/loader/loader1.gif" width="30" height="30" />
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="failiure && message!= ''"  class="alert alert-danger col-sm-12">{{message}}</div>
+            <div *ngIf="success && message!= ''"   class="alert alert-success col-sm-12">{{message}}</div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" name="description" placeholder="Description" id="description"
+                       formControlName="description">
+
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="email" class="form-control" name="email" placeholder="The entended user E-Mail" id="email"
+                       formControlName="email">
+              </div>
+            </div>
+
+            <div class="col-md-12">
+
+              <div class="form-group">
+                <label for="startingOn">Starting On</label>
+                <div class="input-group"><input type="text" class="form-control" name="startingOn" placeholder="Start date" id="startingOn"
+                                                formControlName="startingOn"
+                                                [(ngModel)]="modelStartingOn" ngbDatepicker #startingOn="ngbDatepicker" (click)="startingOn.toggle()">
+                  <span class="input-group-addon" (click)="startingOn.toggle()"><i class="fa fa-calendar"></i></span></div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+
+
+              <div class="form-group">
+                <label for="until">Until</label>
+                <div class="input-group"><input type="text" class="form-control" name="until" placeholder="End date" id="until"
+                                                formControlName="until"
+                                                [(ngModel)]="modelUntil" ngbDatepicker #until="ngbDatepicker" (click)="until.toggle()">
+                  <span class="input-group-addon" (click)="until.toggle()"><i class="fa fa-calendar"></i></span></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-md-offset-3 col-md-9">
+                <button  type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Invite</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-sm" (click)="abandonne()">Close</button>
+      </div>
+    </ng-template>
+
+  </div>
+  <div class="col-12">
+    <!--<div class="alert alert-success alert-dismissable" *ngIf="success&&(!(message===''))" id="thisalert">
+      <span class="close" data-dismiss="alert" aria-label="close">&times;</span>
+      {{message}}
+    </div>-->
+
+    <div *ngIf="success&&(!(message===''))">
+      <p *ngFor="let alert of alerts">
+        <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+      </p>
+    </div>
+
+
+    <!--<p  #alert>
+      <ngb-alert   (close)="closeAlert(alert)">
+        {{message}}
+      </ngb-alert>
+    </p>-->
+
+  </div>
+</div>
+
+
+
+   <!-- <div id="registrationInvitationmModal" class="modal fade" role="dialog" #registrationInvitationmModal>
+      <div class="modal-dialog ">
+        <div class="modal-content panel panel-info">
+          <div class="modal-header panel-heading">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="panel-title">Create Registration invitation</div>
+          </div>
+          <div class="modal-body panel-body">
+            <div  class="col-md-12">
+              <form id="registrationinvitation" class="form-group-sm" role="form" [formGroup]="rFormRegistrationInvitation"
+                    (ngSubmit)="createRegistrationInvitation(rFormRegistrationInvitation.value)">
+                <div *ngIf="errorMessage!= ''" id="registrationinvitationalerterror" style="display:none" class="alert alert-danger">
+                  <p>Error:</p>
+                  <span>{{errorMessage}}</span>
+                </div>
+                <div *ngIf="successMessage!= ''" id="registrationinvitationalertsuccess" style="display:none" class="alert alert-success">
+                  <p>Success:</p>
+                  <span>{{successMessage}}</span>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" name="description" placeholder="Description" id="description"
+                           formControlName="description">
+
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <input type="email" class="form-control" name="email" placeholder="The entended user E-Mail" id="email"
+                           formControlName="email">
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+
+                  <div class="form-group">
+                    <label for="startingOn">Starting On</label>
+                    <div class="input-group"><input type="text" class="form-control" name="startingOn" placeholder="Start date" id="startingOn"
+                                                    formControlName="startingOn"
+                                                    [(ngModel)]="modelStartingOn" ngbDatepicker #startingOn="ngbDatepicker" (click)="startingOn.toggle()">
+                      <span class="input-group-addon" (click)="startingOn.toggle()"><i class="glyphicon glyphicon-calendar"></i></span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+
+
+                  <div class="form-group">
+                    <label for="until">Until</label>
+                    <div class="input-group"><input type="text" class="form-control" name="until" placeholder="End date" id="until"
+                                                    formControlName="until"
+                                                    [(ngModel)]="modelUntil" ngbDatepicker #until="ngbDatepicker" (click)="until.toggle()">
+                      <span class="input-group-addon" (click)="until.toggle()"><i class="glyphicon glyphicon-calendar"></i></span></div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-md-offset-3 col-md-9">
+                    <button  type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Invite</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>-->
+
+<div class="row">
+  <app-user-list-item *ngFor="let entry of users"
+                      [user]="entry"
+                      (refreshListUser)="refresh($event)"
+                      [usersLink]="url"
+                      class="col-md-3 col-sm-6"></app-user-list-item>
+</div>
