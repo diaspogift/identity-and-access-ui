@@ -389,13 +389,17 @@ export class UserListItemComponent implements OnInit {
   }
 
   fromDateSeleted(event) {
-    this.ngbDatepickerToEnable=false;
-    //let selectedFromDate = new Date(this.from['year'], this.from['month'], this.from['day'], 23, 59, 59, 0);
-    this.toDateNgbDateStruct = {
-      year:event['year'],
-      month: event['month'],
-      day:event['day'] + 1
-    };
+
+    if(!(event === null) && !(typeof event === 'undefined')){
+      this.ngbDatepickerToEnable=false;
+      //let selectedFromDate = new Date(this.from['year'], this.from['month'], this.from['day'], 23, 59, 59, 0);
+      this.toDateNgbDateStruct = {
+        year:event['year'],
+        month: event['month'],
+        day:event['day'] + 1
+      };
+
+    }
 
     console.log("ngbDatepickerToEnable: " + this.ngbDatepickerToEnable +
       "\n\n" + "this.toDateNgbDateStruct: " + JSON.stringify(this.toDateNgbDateStruct));

@@ -88,13 +88,13 @@
                 <label  class="radio-inline">
                   Enable  {{user.getUsername()}}  </label>
               <input type="radio" checked name="enablement"  (click)="passtoEnablement();"
-                     class="form-control" style="height: 20px; width: 20px;" [checked]="user.getEnabled()">
+                     style="height: 20px; width: 20px;" [checked]="user.getEnabled()">
             </div>
             <div class="col-6">
                 <label class="radio-inline">
                   Disable {{user.getUsername()}}  </label>
               <input type="radio" name="enablement"  (click)="disable = true; enable = false; user.setEnabled(enable);"
-                     class="form-control" style="height: 20px; width: 20px;" [checked]="!user.getEnabled()">
+                      style="height: 20px; width: 20px;" [checked]="!user.getEnabled()">
             </div>
           </div>
 
