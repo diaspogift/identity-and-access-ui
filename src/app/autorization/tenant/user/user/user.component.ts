@@ -68,7 +68,9 @@ export class UserComponent implements OnInit , AfterViewInit{
   constructor(private modalService: NgbModal, private fb: FormBuilder, private httpClient: HttpClient, private route: Router, private r:ActivatedRoute, private authService: AuthService) {
     r.params.subscribe(params=>{
 
-      console.log("appStore.getState().tenantState.tenant.getTenantId(): user === " + JSON.stringify(appStore.getState().tenantState.tenant))
+      console.log("appStore.getState().tenantState.tenant.getTenantId(): user === " + JSON.stringify(appStore.getState().tenantState.tenant));
+
+      console.log("\n\n\nstate state state: " + JSON.stringify(appStore.getState()) + "\n\n\n");
 
       this.url = params['id']?params['id']:BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId() +"/users";
 

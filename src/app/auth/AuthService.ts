@@ -12,6 +12,8 @@ import {Router} from "@angular/router";
 import {Cookie} from "ng2-cookies";
 import {AccessToken} from "../domain/model/AccessToken";
 import {SAVE_TOKEN} from "../actions/TokenAction";
+import {Tenant} from "../domain/model/Tenant";
+import {LOAD_TENANT} from "../actions/TenantsAction";
 
 @Injectable()
 export class AuthService {
@@ -30,20 +32,38 @@ export class AuthService {
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
 
-      console.log("User Representation: " + JSON.stringify(data));
 
-      let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false, null, data['roles'], '', '');
+      this.httpClient.get(BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId(), {
+        headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+          .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+      }).subscribe((donnee)=>{
+        console.log("Tenant Tenant Tenant Tenant: " + JSON.stringify(donnee));
 
-      Cookie.set("complete_user", JSON.stringify(user));
+        let tnt: Tenant = new Tenant(donnee["tenantId"], donnee["name"], donnee["description"],
+          donnee["active"], donnee["links"]);
+        //appStore.getState().tenantState.tenant
+        let mmyAction:MyAction = appActionCreator(LOAD_TENANT, tnt);
+        appStore.dispatch(mmyAction);
+        console.log("after asignement tenant: " + JSON.stringify(appStore.getState().tenantState.tenant));
 
-      let monAction:MyAction = appActionCreator(LOGIN_USER, user);
 
-      console.log("USER Cookies:" + JSON.stringify(user));
+        console.log("User Representation: " + JSON.stringify(data));
 
-      console.log("users ----------- user---------------> ", JSON.stringify(monAction));
-      appStore.dispatch(monAction);
+        let user: User = new User(data['tenantId'], data['username'], data['emailAddress'], false, null, data['roles'], '', '');
 
-      this.router.navigate(['/autorized']);
+        Cookie.set("complete_user", JSON.stringify(user));
+
+        let monAction:MyAction = appActionCreator(LOGIN_USER, user);
+
+        console.log("USER Cookies:" + JSON.stringify(user));
+
+        console.log("users ----------- user---------------> ", JSON.stringify(monAction));
+        appStore.dispatch(monAction);
+
+        this.router.navigate(['/autorized']);
+
+      });
+
     }, (data)=>{
 
     });
@@ -79,7 +99,6 @@ export class AuthService {
     let b: boolean = false;
     if (!(theUser === null)){
       let roles: Array<string> = theUser.getRoles();
-
       for (let role of roles){
         if (role === DG_ADMINISTRATOR){
           b = true;

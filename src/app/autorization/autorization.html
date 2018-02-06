@@ -32,11 +32,11 @@
           <span class="caret"></span>
         </a>
         <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
-          <a class="dropdown-item" (click)="openChangePasswordUI(content)">Change Password</a>
-          <a class="dropdown-item"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</a>
+          <a class="dropdown-item btn-link" (click)="openChangePasswordUI(content)">Change Password</a>
+          <a class="dropdown-item btn-link"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</a>
           <!--<a class="dropdown-item" href="#">Angular</a>
           <a class="dropdown-item" href="#">React</a>-->
-          <a class="dropdown-item " (click)="gotoHome($event)">User: {{cookies['username_token']}}</a>
+          <a class="dropdown-item btn-link" (click)="gotoHome($event)">User: {{cookies['username_token']}} </a>
         </div>
       </li>
     </ul>

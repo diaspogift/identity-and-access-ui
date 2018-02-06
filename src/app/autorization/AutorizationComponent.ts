@@ -19,6 +19,7 @@ import {LOGIN_USER} from "../actions/UserAction";
 import {initialTenantState} from "../state/TenantState";
 import {Tenant} from "../domain/model/Tenant";
 import {initialAppsState} from "../state/AppState";
+import {LOAD_TENANT} from "../actions/TenantsAction";
 
 
 @Component({
@@ -62,6 +63,9 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
 
   errorMessage:string;
   successMessage:string;
+
+  user: User;
+  tenant: Tenant;
 
 
   /**
@@ -108,7 +112,8 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
   /************** END MODAL CONFIG ***********************************************/
 
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder,  private httpClient: HttpClient,private _authService: AuthService, private router: Router, private r: ActivatedRoute) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder,  private httpClient: HttpClient,
+              private _authService: AuthService, private router: Router, private r: ActivatedRoute) {
 
     //console.log("ET voila 1111111" + this.modal.animation);
     this.cookies = Cookie.getAll();
@@ -159,7 +164,6 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
             State Tenant
          */
 
-
         initialTenantState.tenant = new Tenant(jsonObjectUser['tenantId'], "", "", false, []);
         initialAppsState.tenantState = initialTenantState;
 
@@ -183,12 +187,17 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
 
         let monAction1: MyAction = appActionCreator(LOGIN_USER, user);
 
-        console.log("users ----------- user---------------> ", JSON.stringify(monAction1));
+        console.log("users ----------- user---------------> ", JSON.stringify(monAction1)
+        + "\n\n\nthis._authService.canManageTenant(): " + this._authService.canManageTenant() + "\n\n\n");
         appStore.dispatch(monAction1);
 
+
+
         if (!this._authService.canManageTenant()) {
+          //this.manageActiveLinkByUrl("../autorized/users");
           this.router.navigate(["../autorized/users"], {relativeTo: this.r});
         }else{
+          //this.manageActiveLinkByUrl("../autorized/tenants");
           this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
         }
 
@@ -199,23 +208,50 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
       }
 
     } else {
-      this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
+
+      console.log("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss");
+      //this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
+
+      if (!this._authService.canManageTenant()) {
+        //this.manageActiveLinkByUrl("../autorized/users");
+        this.router.navigate(["../autorized/users"], {relativeTo: this.r});
+      }else{
+        //this.manageActiveLinkByUrl("../autorized/tenants");
+        this.router.navigate(["../autorized/tenants"], {relativeTo: this.r});
+      }
     }
+
+    this.user = appStore.getState().userState.user;
+    console.log("\n\n\nappStore.getState().tenantState.tenant: " + JSON.stringify(appStore.getState().tenantState.tenant) + "\n\n\n");
+    this.tenant = appStore.getState().tenantState.tenant;
   }
 
 
   ngAfterViewInit(): void {
     this.router.events.subscribe((event) => {
-      //console.log("Subscribe Subscribe Subscribe: " + event);
+      console.log("Subscribe Subscribe Subscribe: " + event);
       if (event instanceof NavigationEnd) {
         console.log('NavigationEnd:', event.url);
         this.manageActiveLinkByUrl(event.url);
       }
 
     });
+
+
   }
 
   ngOnInit(): void {
+
+    /*this.httpClient.get(BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId(), {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+    }).subscribe((data)=>{
+      console.log("Tenant Tenant Tenant Tenant: " + JSON.stringify(data));
+
+      appStore.getState().tenantState.tenant = Object.assign({}, appStore.getState().tenantState.tenant, data);
+      console.log("after asignement tenant: " + JSON.stringify(appStore.getState().tenantState.tenant));
+
+    });*/
 
   }
 
