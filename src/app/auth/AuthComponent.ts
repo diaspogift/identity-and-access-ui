@@ -26,6 +26,10 @@ export class AuthComponent implements OnInit{
   username:string = '';
   password:string = '';
   tenantId:string;
+  failiure: boolean;
+  success: boolean;
+  loading: boolean;
+  message: string;
 
   constructor(private fb: FormBuilder, private http:HttpClient,  private _router: Router, private authService: AuthService ,private r:ActivatedRoute) {
     this.rForm = fb.group({
@@ -39,6 +43,10 @@ export class AuthComponent implements OnInit{
     r.params.subscribe(params=>{
       this.tenantId = params['tenantId']?params['tenantId']:null;
     });
+    this.failiure = false;
+    this.success = false;
+    this.loading = false;
+    this.message = '';
 
   }
 
@@ -77,7 +85,6 @@ export class AuthComponent implements OnInit{
         Cookie.deleteAll();
         let monAction:MyAction = appActionCreator(SAVE_TOKEN, null);
         appStore.dispatch(monAction);
-
       }else{
         let monAction:MyAction = appActionCreator(SAVE_TOKEN, token);
         appStore.dispatch(monAction);
@@ -101,9 +108,13 @@ export class AuthComponent implements OnInit{
       client_id: CLIENT_APP_ID
     };
 
-    console.log("ACCESSTOKEN_LINK in component", ACCESSTOKEN_LINK);
+    //console.log("ACCESSTOKEN_LINK in component", ACCESSTOKEN_LINK);
 
-    console.log("Body: " + JSON.stringify(body));
+    //console.log("Body: " + JSON.stringify(body));
+    this.failiure = false;
+    this.loading = true;
+    this.failiure = false;
+    this.success = false;
     this.http.post(ACCESSTOKEN_LINK, body, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Basic ' + btoa(body.client_id + ":" + "123456")),
@@ -112,6 +123,9 @@ export class AuthComponent implements OnInit{
       set('username', initialAppsState.tenantState.tenant.getTenantId() + '_' + this.username).set('client_id', CLIENT_APP_ID)
     }).subscribe((data) => {
 
+      this.success = true;
+      this.failiure = false;
+      this.message = 'Success';
       let token: AccessToken = new AccessToken(data['access_token'], data['token_type'], data['refresh_token'],
         data['expires_in'], data['scope'], (new Date().getTime()) + data['expires_in'] * 1000, this.username);
 
@@ -127,6 +141,10 @@ export class AuthComponent implements OnInit{
     }, (data) => {
       console.log("Errorrrrrrr0000", data);
 
+      this.failiure = false;
+      this.loading = true;
+      this.failiure = false;
+      this.success = false;
       if (Cookie.check('access_token')){
         let refresh_token = Cookie.get('refresh_token');
         this.http.post(ACCESSTOKEN_LINK, {refresh_token:refresh_token, grant_type:'refresh_token'}, {
@@ -138,6 +156,9 @@ export class AuthComponent implements OnInit{
         }).subscribe((data1) => {
 
           //console.log("dataaaaa", data);
+          this.success = true;
+          this.failiure = false;
+          this.message = 'Success';
 
           let token: AccessToken = new AccessToken(data1['access_token'], data1['token_type'], data1['refresh_token'],
             data1['expires_in'], data1['scope'], (new Date().getTime()) + data1['expires_in'] * 1000, this.username);
@@ -160,12 +181,19 @@ export class AuthComponent implements OnInit{
 
         }, (data1) => {
           console.log("Errorrrrrrr1111111111", JSON.stringify(data1));
-
-         });
+          this.loading = false;
+          this.failiure = true;
+          this.success = false;
+          this.message = 'Fail to authenticate: username or password incorrect' ;
+         }, ()=>{
+          this.loading = false;
+        });
       }
 
 
 
+    }, ()=>{
+      this.loading = false;
     });
 
 

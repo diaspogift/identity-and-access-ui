@@ -61,11 +61,17 @@ export class RoleComponent implements OnInit {
 
   ngOnInit() {
 
+    this.failiure = false;
+    this.loading = true;
+    this.success = false;
     this.httpClient.get(this.url, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
 
+      this.success = true;
+      this.failiure = false;
+      this.message = 'Success';
       console.log("Roles Roles Roles Roles: " + JSON.stringify(data));
       let receivedData = data['roles'];
       let index: number;
@@ -84,12 +90,22 @@ export class RoleComponent implements OnInit {
       console.log("Roles Roles Roles Roles: " + JSON.stringify(this.roles));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
 
+      this.failiure = false;
+      this.loading = true;
+      this.success = false;
+
       this.httpClient.get(this.tenantUrl, {
         headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
           .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
       }).subscribe((donnees)=>{
 
+
         this.tenant = donnees;
+
+        this.success = true;
+        this.failiure = false;
+        this.message = 'Success';
+
         /*
         {
   "tenantId": "DECAC906-0EBE-48A7-8D0A-8674A6FFDDBB",
@@ -99,7 +115,25 @@ export class RoleComponent implements OnInit {
 }
          */
 
+      },(error)=>{
+
+        this.loading = false;
+        this.failiure = true;
+        this.success = false;
+        this.message = 'Error occured';
+
+      },()=>{
+        setTimeout(()=>{
+          this.loading = false;
+        }, 0);
       });
+    },(data)=>{
+      this.loading = false;
+      this.failiure = true;
+      this.success = false;
+      this.message = 'Error occured';
+    }, ()=>{
+
     });
   }
 

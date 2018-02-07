@@ -17,8 +17,17 @@ export class TenantComponent implements OnInit {
 
   tenants:Tenant[];
 
+  failiure: boolean;
+  success: boolean;
+  loading: boolean;
+  message: string;
+
+
   constructor(private httpClient: HttpClient, private route: Router, private r:ActivatedRoute) {
-    //this.tenants=[];
+    this.failiure = false;
+    this.success = false;
+    this.loading = false;
+    this.message = '';
     console.log("TenantComponent constructor");
   }
 
@@ -30,11 +39,19 @@ export class TenantComponent implements OnInit {
 
     console.log("leTokenleTokenleToken: " + leToken);
 
+    this.failiure = false;
+    this.loading = true;
+    this.failiure = false;
+    this.success = false;
+
     this.httpClient.get(BASE_API_URL, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ leToken)
     }).subscribe((data)=>{
 
+      this.success = true;
+      this.failiure = false;
+      this.message = 'Success';
       console.log("Tenants Tenants Tenants Tenants: " + JSON.stringify(data));
       let receivedData = data['tenants'];
       let index: number;
@@ -56,6 +73,18 @@ export class TenantComponent implements OnInit {
       let monAction:MyAction = appActionCreator(LOAD_TENANT, this.tenants);
       appStore.dispatch(monAction);
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.failiure = true;
+      this.success = false;
+      this.message = 'Fail to retrive partners' ;
+
+    }, ()=>{
+      setTimeout(()=>{
+        this.loading = false;
+      }, 0);
+
+
     });
   }
 

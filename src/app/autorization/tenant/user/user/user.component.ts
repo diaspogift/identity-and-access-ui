@@ -107,10 +107,18 @@ export class UserComponent implements OnInit , AfterViewInit{
 
   ngOnInit() {
 
+    this.failiure = false;
+    this.loading = true;
+    this.success = false;
+
     this.httpClient.get(this.url, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
+
+      this.success = true;
+      this.failiure = false;
+      this.message = 'Success';
 
       console.log("Users  Users Users Users: " + JSON.stringify(data));
       let receivedData = data['users'];
@@ -134,6 +142,9 @@ export class UserComponent implements OnInit , AfterViewInit{
         appStore.dispatch(monAction);
       }
 
+      this.failiure = false;
+      this.loading = true;
+      this.success = false;
 
       this.httpClient.get(this.tenantUrl, {
         headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
@@ -141,6 +152,11 @@ export class UserComponent implements OnInit , AfterViewInit{
       }).subscribe((donnees)=>{
 
         this.tenant = donnees;
+
+        this.success = true;
+        this.failiure = false;
+        this.message = 'Success';
+
         /*
         {
   "tenantId": "DECAC906-0EBE-48A7-8D0A-8674A6FFDDBB",
@@ -150,7 +166,25 @@ export class UserComponent implements OnInit , AfterViewInit{
 }
          */
 
+      },(error)=>{
+
+        this.loading = false;
+        this.failiure = true;
+        this.success = false;
+        this.message = 'Error occured';
+
+      },()=>{
+        setTimeout(()=>{
+          this.loading = false;
+        }, 0);
       });
+
+    },(data)=>{
+      this.loading = false;
+      this.failiure = true;
+      this.success = false;
+      this.message = 'Error occured';
+    }, ()=>{
 
     });
   }
