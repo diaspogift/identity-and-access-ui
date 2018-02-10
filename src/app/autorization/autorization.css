@@ -26,7 +26,7 @@
 #cssmenu {
   margin: auto;
   width: 100%;
-  border-bottom: 3px solid #ff813a;
+  border-bottom: 1px solid #846a29;
   font-family: Raleway, sans-serif;
   line-height: 1;
   margin-bottom: 5px;
@@ -59,18 +59,20 @@
   /*font-size: small;*/
   font-weight: 400;
   text-decoration: none;
-  color: #ff813a;
+  color: #111;
   -webkit-transition: all .2s ease;
   -moz-transition: all .2s ease;
   -ms-transition: all .2s ease;
   -o-transition: all .2s ease;
   transition: all .2s ease;
   margin-right: -4pt;
+
 }
 #cssmenu > ul > li.active > a,
 #cssmenu > ul > li:hover > a,
 #cssmenu > ul > li > a:hover {
-  color: #ffffff;
+  color: #111;
+
 }
 #cssmenu > ul > li > a:after {
   position: absolute;
@@ -92,9 +94,13 @@
   -moz-transform-origin: bottom;
   transform: perspective(5pt) rotateX(2deg);
   transform-origin: bottom;
+
 }
 #cssmenu > ul > li.active > a:after,
 #cssmenu > ul > li:hover > a:after,
 #cssmenu > ul > li > a:hover:after {
-  background: #ff813a;
+  background: #f0c14b;
+  border-top: 1px solid #846a29;
+  border-left: 1px solid #846a29;
+  border-right: 1px solid #846a29;
 }

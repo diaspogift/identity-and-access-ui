@@ -8,7 +8,7 @@
           <img class="card-img-top user-img" src="../../../../../../assets/img/default-user.png" alt="{{user.getUsername()}}">
         </div>
         <div class="col-10" style="font-size: small">
-          {{user.getTenantId()}}
+          <span>&#9733; <b>{{user.getUsername()}}</b>  &#9733;</span>
         </div>
       </div>
 
@@ -29,7 +29,7 @@
   <div class="row">
     <div class="col-11 mx-auto">
       <div class="card-block">
-        <br>
+        <hr>
         <span class="">Username: </span><span class="">{{user.getUsername()}}</span><br>
         <span class="">E-Mail: </span><span class="">{{user.getEmailAddress()}}</span><br>
         <span class="">First Name: </span><span class="">{{user.getFirstName()}}</span><br>
@@ -52,7 +52,7 @@
       <span class="fa fa-edit"></span> Edit
     </button>
     <button class="btn btn-sm btn-link" (click)="openDetailsModal(detailsContent)">
-       Details
+       <strong>Details</strong>
     </button> <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="30" height="25">
     <ng-template  #editContent let-c="close" let-d="dismiss">
       <div class="modal-header">

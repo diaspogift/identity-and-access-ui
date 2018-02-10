@@ -9,7 +9,6 @@
           </div>
           <div class="col-10" style="font-size: small">
             <span>&#9733; <b>{{tenant.getName()}}</b>  &#9733;</span><br/>
-            {{tenant.getTenantId()}}
           </div>
         </div>
 
@@ -21,15 +20,15 @@
   <div class="row">
     <div class="col-11 mx-auto">
       <div class="card-block">
-        <br>
+        <hr>
         <p>{{tenant.getDescription()}}</p>
         <hr>
         <button  class="btn btn-sm btn-outline-info pull-right"  (click)="openEditModal(content)">
           <span class="fa fa-edit"></span> Edit
         </button>
-        <button   class="btn btn-sm  btn-link"  (click)="gotoGroups();">Groups</button>
-        <button   class="btn btn-sm  btn-link"  (click)="gotoUsers();">Users</button>
-        <button   class="btn btn-sm  btn-link"  (click)="gotoRoles();">Roles</button>
+        <button   class="btn btn-sm  btn-link"  (click)="gotoGroups();"><strong>Groups</strong></button>
+        <button   class="btn btn-sm  btn-link"  (click)="gotoUsers();"><strong>Users</strong></button>
+        <button   class="btn btn-sm  btn-link"  (click)="gotoRoles();"><strong>Roles</strong></button>
 
         <ng-template  #content let-c="close" let-d="dismiss">
           <div class="modal-header">

@@ -20,10 +20,10 @@
   <div class="row">
     <div class="col-11 mx-auto">
       <div class="card-block">
-        <br />
+        <hr />
         {{role.getDescription()}}
         <hr>
-        <button  class="btn btn-sm  btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;|
+        <button  class="btn btn-sm  btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;
         &nbsp;<button  class="btn btn-sm  btn-link"  (click)="gotoUsers(modalUser);">Users</button>
         <div class="dropdown" ngbDropdown style="display: inline;">
           <button class="btn btn-sm btn-info btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
@@ -59,7 +59,7 @@
 
         <ng-template  #modalGroup let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Group(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">Group(s) Playing the role: <strong>{{role.getName()}}</strong></h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -88,9 +88,7 @@
               <ul class="list-group" *ngIf="groups.length>0">
                 <li class="list-group-item">
 
-                  <span class="badge pull-right badge-info">
-                    Modify: <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
-                  </span>
+                  Modify: <input type="checkbox" [checked]="modify" (change)="resetGroups()" class="pull-right" />
                 </li>
               </ul>
 
@@ -105,15 +103,13 @@
               </div>
 
               <div class="form-group" *ngIf="groups.length>0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>&nbsp;
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
                 </div>
               </div>
             </form>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
           </div>
         </ng-template>
 
@@ -223,7 +219,7 @@
 
         <ng-template  #modalUser let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Users(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">User(s) Playing the role: <strong>{{role.getName()}}</strong></h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -254,9 +250,9 @@
               <ul class="list-group list-group-flush" *ngIf="users.length>0">
                 <li class="list-group-item">
 
-                  <span class="badge pull-right badge-info">
-                     Modify:  <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
-                  </span>
+
+                     Modify:  <input type="checkbox" [checked]="modify" (change)="resetUsers()" class="pull-right" />
+
                 </li>
               </ul>
 
@@ -271,15 +267,16 @@
               </div>
 
               <div class="form-group" *ngIf="users.length > 0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(users)"><i class="fa fa-remove"></i>Remove</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button> &nbsp;
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" [disabled]="noChechedUsers(users)"
+                  style="margin-right: 10px;">
+                    <i class="fa fa-remove"></i>Remove</button>
+
                 </div>
               </div>
             </form>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
           </div>
         </ng-template>
 

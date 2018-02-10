@@ -118,6 +118,7 @@ export class RoleListItemComponent implements OnInit {
     this.message = '';
 
 
+    this.modify = false;
     this.httpClient.post(this.role.getLinks()['self'] + '/groups'  , {'groups':groupsChecked}, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
@@ -180,6 +181,7 @@ export class RoleListItemComponent implements OnInit {
     this.failiure = false;
     this.message = '';
 
+    this.modify = false;
 
     this.httpClient.post(this.role.getLinks()['self'] + '/users'  , {'users':userChecked}, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
@@ -345,7 +347,7 @@ export class RoleListItemComponent implements OnInit {
     });
 
 
-
+    this.modify = false;
 
     this.httpClient.get(this.role.getLinks()['self']+'/groups', {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
@@ -395,6 +397,8 @@ export class RoleListItemComponent implements OnInit {
       //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
 
+    this.modify = false;
+
     this.httpClient.get(this.role.getLinks()['self']+'/users', {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
@@ -429,7 +433,6 @@ export class RoleListItemComponent implements OnInit {
       this.loading = false;
     });
   }
-
 
   gotoUserToRemove(modalUserRemov){
     this.message = '';
@@ -818,6 +821,27 @@ export class RoleListItemComponent implements OnInit {
 
   removeGroupsDirectelly(value: any) {
     this.removeGroups(value);
+  }
+
+  resetGroups() {
+    this.modify = !this.modify;
+    if (this.modify === false) {
+      for (let g of this.groups) {
+        g.setChecked(false);
+      }
+    }
+  }
+
+  resetUsers() {
+    this.modify = !this.modify;
+    console.log("\nthis.modify: " + this.modify);
+    console.log("\nthis.users: Before: " + JSON.stringify(this.users));
+    if (this.modify === false) {
+      for (let u of this.users) {
+        u.setChecked(false);
+      }
+    }
+    console.log("\nthis.users: Before: " + JSON.stringify(this.users));
   }
 }
 
