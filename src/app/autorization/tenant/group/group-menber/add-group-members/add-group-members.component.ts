@@ -57,6 +57,12 @@ export class AddGroupMembersComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.success = false;
+    this.failiure = false;
+    this.loading = true;
+    this.message = '';
+
     let url: string =this.url;
     this.httpClient.get(url, {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
@@ -68,6 +74,16 @@ export class AddGroupMembersComponent implements OnInit {
       //groupMembers
 
       this.freeGroupMembers = data['groupMembers'];
+      if (this.freeGroupMembers.length === 0){
+
+      }
+
+      //setTimeout(()=>{
+        this.success = true;
+        this.failiure = false;
+        this.loading = false;
+     // }, 3000);
+
       /*let receivedData = data['groupMembers'];
       let index: number;
       this.groupMembers = [];
@@ -179,6 +195,13 @@ export class AddGroupMembersComponent implements OnInit {
 
       });*/
 
+    },(error)=>{
+      this.success = false;
+      this.failiure = true;
+      this.loading = false;
+      this.message = "Error";
+    },()=>{
+      this.loading = false;
     });
   }
 

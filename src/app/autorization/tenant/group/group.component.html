@@ -25,10 +25,10 @@
 
         <form id="createnewgroup" class="form-group-sm" role="form" [formGroup]="rFormNewGroup"
               (ngSubmit)="createGroup(rFormNewGroup.value)">
-          <div *ngIf="failiure"  class="alert alert-danger">
+          <div *ngIf="failiure && !(message == '')"  class="alert alert-danger">
             <span>{{message}}</span>
           </div>
-          <div *ngIf="success"  class="alert alert-success">
+          <div *ngIf="success  && !(message == '')"  class="alert alert-success">
             <span>{{message}}</span>
           </div>
 
@@ -137,6 +137,6 @@
 </div>
 
   <div class="row">
-    <app-group-list-item *ngFor="let group of groups" [group]="group" class="col-md-3 col-sm-12"></app-group-list-item>
+    <app-group-list-item *ngFor="let group of groups" [group]="group" (sendRefreshGroup)="refresh($event)" class="col-md-3 col-sm-12"></app-group-list-item>
   </div>
 

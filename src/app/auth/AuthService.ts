@@ -14,6 +14,7 @@ import {AccessToken} from "../domain/model/AccessToken";
 import {SAVE_TOKEN} from "../actions/TokenAction";
 import {Tenant} from "../domain/model/Tenant";
 import {LOAD_TENANT} from "../actions/TenantsAction";
+import {AuthComponent} from "./AuthComponent";
 
 @Injectable()
 export class AuthService {
@@ -24,8 +25,12 @@ export class AuthService {
 
   }
 
-  login(username: string, password: string) {
+  login(username: string, password: string, authComponent: AuthComponent) {
 
+    authComponent.loading = true;
+    authComponent.message = "";
+    authComponent.failiure = false;
+    authComponent.success = false;
     this.httpClient.get(BASE_API_URL + encodeURIComponent(appStore.getState().tenantState.tenant.getTenantId()) + "/users/" +
       encodeURIComponent(username) + "/autenticated-with/" + encodeURIComponent(password), {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
@@ -33,10 +38,16 @@ export class AuthService {
     }).subscribe((data)=>{
 
 
+
       this.httpClient.get(BASE_API_URL + appStore.getState().tenantState.tenant.getTenantId(), {
         headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
           .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
       }).subscribe((donnee)=>{
+
+        authComponent.loading = false;
+        authComponent.message = "Success...";
+        authComponent.failiure = false;
+        authComponent.success = true;
         console.log("Tenant Tenant Tenant Tenant: " + JSON.stringify(donnee));
 
         let tnt: Tenant = new Tenant(donnee["tenantId"], donnee["name"], donnee["description"],
@@ -62,10 +73,24 @@ export class AuthService {
 
         this.router.navigate(['/autorized']);
 
+      },(error) =>{
+        authComponent.loading = false;
+        authComponent.message = "Error";
+        authComponent.failiure = true;
+        authComponent.success = false;
+      },()=>{
+        authComponent.loading = false;
       });
 
     }, (data)=>{
 
+      authComponent.loading = false;
+      authComponent.message = "Error";
+      authComponent.failiure = true;
+      authComponent.success = false;
+
+    },()=>{
+      authComponent.loading = false;
     });
   }
 

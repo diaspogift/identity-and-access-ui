@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<!--<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand " href="#" (click)="gotoHome($event);"><img src="../assets/diaspogift.png"  height="40"
                                         width="40" style="margin-top: -20px;"/>IASPOGIFT</a>
 
@@ -27,25 +27,77 @@
         <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
       </li>
       <li class="nav-item dropdown" ngbDropdown>
-        <a class="nav-link dropdown-toggle" id="dropdown01" ngbDropdownToggle>
+        <button class="nav-link dropdown-toggle btn btn-link btn-sm" id="dropdown01" ngbDropdownToggle>
           <i class="fa fa-user"></i>
           <span class="caret"></span>
-        </a>
+        </button>
         <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
-          <a class="dropdown-item btn-link" (click)="openChangePasswordUI(content)">Change Password</a>
-          <a class="dropdown-item btn-link"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</a>
-          <!--<a class="dropdown-item" href="#">Angular</a>
-          <a class="dropdown-item" href="#">React</a>-->
-          <a class="dropdown-item btn-link" (click)="gotoHome($event)">User: {{cookies['username_token']}} </a>
+          <button class="dropdown-item btn-link btn-sm" (click)="openChangePasswordUI(content)">Change Password</button>
+          <button class="dropdown-item btn-link btn-sm"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</button>
+          <button class="dropdown-item btn-link btn-sm" (click)="gotoHome($event)">User: {{cookies['username_token']}} </button>
         </div>
       </li>
     </ul>
-    <!--<form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>-->
   </div>
-</nav>
+</nav>-->
+
+
+<div id='cssmenu' class="navbar fixed-top">
+  <ul id="menu_horizontal">
+    <li *ngIf="canManageTenant()" class="nav-item active" #tenants>
+      <a class="nav-link"  [routerLink]="['tenants']" (click)="manageActiveLink($event);">Partner</a>
+    </li>
+    <li class="nav-item" #users>
+      <a class="nav-link"  [routerLink]="['users']" (click)="manageActiveLink($event);">Users</a>
+    </li>
+    <li class="nav-item" #services>
+      <a class="nav-link"  [routerLink]="['services']" (click)="manageActiveLink($event);">Services</a>
+    </li>
+    <li class="nav-item" #roles>
+      <a class="nav-link"  [routerLink]="['roles']" (click)="manageActiveLink($event);">Roles</a>
+    </li>
+    <li class="nav-item" #groups>
+      <a class="nav-link"  [routerLink]="['groups']" (click)="manageActiveLink($event);">Groups</a>
+    </li>
+    <li class="nav-item" #groupmembers>
+      <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
+    </li>
+    <li class="nav-item dropdown" ngbDropdown>
+      <button class="nav-link dropdown-toggle btn btn-link btn-sm" id="dropdown01" ngbDropdownToggle>
+        <i class="fa fa-user"></i>
+        <span class="caret"></span>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
+        <button class="dropdown-item btn-link btn-sm" (click)="openChangePasswordUI(content)">Change Password</button>
+        <button class="dropdown-item btn-link btn-sm"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</button>
+        <button class="dropdown-item btn-link btn-sm" (click)="gotoHome($event)">User: {{cookies['username_token']}} </button>
+      </div>
+    </li>
+  </ul>
+  <script type="text/javascript">
+    /*function setActiveClass(){
+
+      var path = document.location.pathname ;
+      var vet = path.split("/");
+      var lastpath = vet[vet.length-1];
+      var menu_horizontal = document.getElementById('menu_horizontal');
+      var lis = menu_horizontal.getElementsByTagName('LI');
+      for(var i=0; i<lis.length; i++){
+        lis[i].classList.remove("active");
+        if(lis[i].id == lastpath){
+          lis[i].classList.add("active");
+        }else{
+          if(lastpath == 'conferma.php' || lastpath == 'finale.php'){
+            document.getElementById('acquista.php').classList.add("active");
+          }
+        }
+      }
+
+    }
+    setActiveClass();*/
+
+  </script>
+</div>
 
 
 <!--<bs-modal #modal>

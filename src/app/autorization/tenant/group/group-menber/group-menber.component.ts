@@ -60,7 +60,7 @@ export class GroupMemberComponent implements OnInit {
 
         this.success = true;
         this.failiure = false;
-        this.message = 'Success';
+        this.message = '';
 
         console.log("Groups Members Groups Members Groups Members : " + JSON.stringify(data));
         let receivedData = data['groupMembers'];
@@ -77,6 +77,9 @@ export class GroupMemberComponent implements OnInit {
 
         console.log("Groups Members Groups Members Groups Members : "+ JSON.stringify(this.groupMembers));
         this.failiure = false;
+
+        this.message = (this.groupMembers.length === 0)? "No Members found":"";
+        console.log("failiure: " + this.failiure + "  message: " + this.message);
         this.loading = true;
         this.success = false;
 
@@ -88,9 +91,17 @@ export class GroupMemberComponent implements OnInit {
 
           this.tenant = donnees;
 
+
+
+          console.log("Groups Members Groups Members Groups Members : "+ JSON.stringify(this.groupMembers));
+          this.failiure = (this.groupMembers.length === 0)? true:false;
+
+          this.message = (this.groupMembers.length === 0)? "No Members found":"";
+          console.log("failiure: " + this.failiure + "  message: " + this.message);
+          this.loading = false;
           this.success = true;
           this.failiure = false;
-          this.message = 'Success';
+
 
           /*
           {
@@ -128,8 +139,6 @@ export class GroupMemberComponent implements OnInit {
       this.success = false;
       this.message = 'You can only access group members througth Groups';
     }
-
-
 
   }
 

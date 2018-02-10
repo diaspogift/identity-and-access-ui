@@ -196,6 +196,10 @@ export class RoleComponent implements OnInit {
   }
 
   openAddRole(content) {
+    this.message = '';
+    this.success = false;
+    this.failiure = false;
+    this.loading = false;
     this.modalReference = this.modalService.open(content);
     this.modalReference.result.then((result) => {
       console.log("Opening modal...");

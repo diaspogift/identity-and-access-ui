@@ -20,14 +20,33 @@
   <div class="row">
     <div class="col-11 mx-auto">
       <div class="card-block">
+        <br>
         {{group.getDescription()}}
         <hr>
         <button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoMembers();">Members</button>
-        <hr>
-        <button class="btn btn-sm btn-outline-info"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();">
+        <div class="dropdown" ngbDropdown style="display: inline;">
+          <button class="btn btn-sm btn-info btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+            Commands
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2" ngbDropdownMenu>
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();"
+                    type="button">
+              <span class="fa fa-plus-circle"></span> Add Members
+            </button>
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoMembersToRemove(memberToremoveModal);" *ngIf="canAddMembers();"
+                    type="button">
+              <span class="fa fa-remove"></span> Remove Members
+            </button>
+          </div>
+        </div>
+        <!--<button class="btn btn-sm btn-outline-info"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();">
           <span class="fa fa-plus-circle"></span> Add Members
         </button>
-        <br>
+        <button class="btn btn-sm btn-outline-info"  (click)="gotoMembersToRemove(memberToremoveModal);" *ngIf="canAddMembers();">
+          <span class="fa fa-plus-circle"></span> Remove Members
+        </button>
+        <br>-->
 
         <ng-template  #content let-c="close" let-d="dismiss">
           <div class="modal-header">
@@ -75,6 +94,56 @@
               </div>
 
             </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+        <ng-template  #memberToremoveModal let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Group(s) to Remove From <strong>{{group.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="removegroup" class="form-group-sm" role="form" [formGroup]="rFormRemoveGroupMembers"
+                  (ngSubmit)="removeGroupsMembers(rFormRemoveGroupMembers.value)">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(groupMembers.length > 0)">No group plays the role <strong>{{group.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngFor="let groupmember of groupMembers">
+                <div class="form-group">
+                  <label for="{{groupmember.getName()+'_'}}" class="checkbox-inline">{{groupmember.getName()}}&nbsp;&nbsp;</label>
+                  <input type="checkbox"  name="{{groupmember.getName() + '_'}}"  id="{{groupmember.getName()+'_'}}"
+                         (click)="toggleCheckedGroupMembers(groupmember.getName());" style="height: 18px; width: 18px;"  class="pull-right"
+                  [checked]="groupmember.getIsChecked()" >
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="groupMembers.length>0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groupMembers)"><i class="fa fa-remove"></i>Remove</button>
+                </div>
+              </div>
+            </form>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>

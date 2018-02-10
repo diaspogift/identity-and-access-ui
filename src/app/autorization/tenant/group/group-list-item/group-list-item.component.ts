@@ -1,20 +1,17 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Group} from "../../../../domain/model/Group";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {GroupMember} from "../../../../domain/model/GroupMember";
-import {BASE_API_URL} from "../../../../Constante";
 import {appStore} from "../../../../store/AppStore";
 import {User} from "../../../../domain/model/User";
-import {appActionCreator} from "../../../../actions/Action";
-import {MyAction} from "../../../../common/MyAction";
-import {LOAD_USERS} from "../../../../actions/UserAction";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {element} from "protractor";
 import {AuthService} from "../../../../auth/AuthService";
-
-declare var $: any;
+import {BASE_API_URL} from "../../../../Constante";
 
 @Component({
   selector: 'app-group-list-item',
@@ -24,12 +21,14 @@ declare var $: any;
 export class GroupListItemComponent implements OnInit , OnChanges/*, AfterViewInit*/{
 
 
+  @Output('sendRefreshGroup') sendRefreshGroup: EventEmitter<string>;
   @Input('group')group:Group;
-  groupMembers: any;
+  groupMembers: LocalGroupMember[];
   users: User[];
   groups: Group[];
   freeGroupMembers: any;
   rFormAddMembers: FormGroup;
+  rFormRemoveGroupMembers: FormGroup;
   modalReference: any;
   loading: boolean;
 
@@ -56,11 +55,17 @@ export class GroupListItemComponent implements OnInit , OnChanges/*, AfterViewIn
     this.rFormAddMembers = fb.group({
     });
 
+    this.rFormRemoveGroupMembers = fb.group({
+
+    });
+
     this.loading = false;
     this.success = false;
     this.failiure = false;
     this.message = '';
     this.membersToAdd = [];
+    this.sendRefreshGroup = new EventEmitter<string>();
+    this.groupMembers = [];
   }
 
   ngOnInit() {
@@ -187,6 +192,8 @@ export class GroupListItemComponent implements OnInit , OnChanges/*, AfterViewIn
 
   ngOnChanges(changes: SimpleChanges): void {
   }
+
+
 
   gotoMembers(){
     this.router.navigate(['/autorized/groupmembers/', this.group.getLinks()['members'], this.group.getLinks()['notMembers'],
@@ -330,4 +337,157 @@ export class GroupListItemComponent implements OnInit , OnChanges/*, AfterViewIn
     return thisTenant === connectedTenant;
   }
 
+  gotoMembersToRemove(memberToremoveModal) {
+
+    this.openAddMemberModal(memberToremoveModal);
+
+    this.message = '';
+    this.failiure = false;
+    this.loading = true;
+    this.success = false;
+
+    this.httpClient.get(this.group.getLinks()['members'], {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+    }).subscribe((data)=>{
+
+      this.success = true;
+      this.failiure = false;
+      this.message = '';
+
+      console.log("Groups Members Groups Members Groups Members : " + JSON.stringify(data));
+      let receivedData = data['groupMembers'];
+      let index: number;
+      this.groupMembers = [];
+      console.log("LENGTH LENGTH LENGTH: " + receivedData.length);
+      for (index=0; index < receivedData.length; index++){
+        let links: any = receivedData[index]['_links'];
+        let aMember: LocalGroupMember = new LocalGroupMember(receivedData[index]['name'],
+          receivedData[index]['type'],links, false);
+        console.log(index + " - adding: " + JSON.stringify(aMember));
+        this.groupMembers.push(aMember);
+      }
+
+      console.log("Groups Members Groups Members Groups Members : "+ JSON.stringify(this.groupMembers));
+      this.failiure = (this.groupMembers.length === 0)? true:false;
+      this.message = (this.groupMembers.length === 0)? "No Members found":"";
+      console.log("failiure: " + this.failiure + "  message: " + this.message);
+      this.loading = false;
+      this.success = !this.failiure;
+      //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    },(data)=>{
+      this.loading = false;
+      this.failiure = true;
+      this.success = false;
+      this.message = 'Error occured';
+    }, ()=>{
+      this.loading = false;
+    });
+
+    //this.router.navigate(['/autorized/groupmembers/', this.group.getLinks()['members'], this.group.getLinks()['notMembers'], this.group.getName()]);
+  }
+
+  noCheched(groups: LocalGroupMember[]):boolean {
+    let numChecked: number = 0;
+    for (let g of this.groupMembers){
+      if(g.getIsChecked()){
+        return false;
+      }
+    }
+    return true;
+  }
+
+toggleCheckedGroupMembers(name: string) {
+  for (let g of this.groupMembers){
+    if (g.getName() == name){
+      g.setIsChecked(!g.getIsChecked());
+      //g.setChecked(!g.isChecked());
+      break;
+    }
+  }
+  console.log("groupMembers: " + JSON.stringify(this.groupMembers));
+}
+
+  removeGroupsMembers(from) {
+
+    let numChecked: number = 0;
+    let groupsMembersChecked: LocalGroupMember[] = [];
+    for (let g of this.groupMembers){
+      if(g.getIsChecked()){
+        numChecked ++;
+        groupsMembersChecked.push(g);
+      }
+    }
+
+    if(numChecked == 0){
+      this.message = 'No group selected...';
+      this.success = false;
+      this.failiure = true;
+      return;
+    }
+
+
+    this.loading = true;
+    this.success = false;
+    this.failiure = false;
+    this.message = '';
+
+    this.httpClient.request('delete', this.group.getLinks()['members'] ,
+      {
+        body: { groupMembers:  groupsMembersChecked} ,
+        headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/json')
+          .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+      }
+    ).subscribe((data)=>{
+
+      console.log("Removed member from group: " + " \n\n" + JSON.stringify(data));
+
+
+
+      this.message = 'The operation was executed successfully';
+
+
+      this.message += '\n\n';
+
+      this.success = true;
+      this.failiure = false;
+      this.ngOnInit();
+      setTimeout(()=>{
+        this.modalReference.close();
+        this.emitRefreshGroup();
+      }, 2500);
+
+    }, (data) => {
+      this.failiure = true;
+      this.success = false;
+      this.message = 'Failed';
+      this.message += '';
+      //this.message += 'Failed: for Member  ' + JSON.stringify(data);
+      console.log("REMOVE FROM Group: " + JSON.stringify(data));
+      this.loading = false;
+    },()=>{
+      this.loading = false;
+    });
+
+  }
+
+  emitRefreshGroup(){
+    this.sendRefreshGroup.emit(BASE_API_URL + this.authService.extractTenantFromUrl(this.group.getLinks()['members']) + "/groups");
+  }
+}
+
+class LocalGroupMember extends GroupMember{
+  isChecked:boolean;
+  constructor(name: string, type: string, link:any, isChecked: boolean){
+    super(name, type, link);
+    this.isChecked = isChecked;
+  }
+
+  getIsChecked():boolean{
+    return this.isChecked;
+  }
+
+  setIsChecked(isChecked:boolean){
+    this.isChecked = isChecked;
+  }
 }

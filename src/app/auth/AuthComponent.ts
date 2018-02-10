@@ -26,10 +26,10 @@ export class AuthComponent implements OnInit{
   username:string = '';
   password:string = '';
   tenantId:string;
-  failiure: boolean;
-  success: boolean;
-  loading: boolean;
-  message: string;
+  public failiure: boolean;
+  public success: boolean;
+  public loading: boolean;
+  public  message: string;
 
   constructor(private fb: FormBuilder, private http:HttpClient,  private _router: Router, private authService: AuthService ,private r:ActivatedRoute) {
     this.rForm = fb.group({
@@ -136,13 +136,13 @@ export class AuthComponent implements OnInit{
 
       this.saveToken(token);
 
-      this.authService.login(this.username, this.password);
+      this.authService.login(this.username, this.password, this);
 
     }, (data) => {
       console.log("Errorrrrrrr0000", data);
 
       this.failiure = false;
-      this.loading = true;
+      this.loading = false;
       this.failiure = false;
       this.success = false;
       if (Cookie.check('access_token')){
@@ -170,7 +170,7 @@ export class AuthComponent implements OnInit{
 
           this.saveToken(token);
 
-          this.authService.login(this.username, this.password);
+          this.authService.login(this.username, this.password, this);
 
           /*
           {"access_token":"2a2fdb06-cfd8-413a-9dd9-76bed0e2db21",

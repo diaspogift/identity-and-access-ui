@@ -35,6 +35,7 @@ export class RoleListItemComponent implements OnInit {
   rFormRemoveGroup: FormGroup;
   rFormRemoveUser: FormGroup;
   rFormAddUser: FormGroup;
+  rFormRemoveGroupDirectlly: FormGroup;
 
   modify:boolean;
 
@@ -57,6 +58,11 @@ export class RoleListItemComponent implements OnInit {
     this.rFormAddUser = fb.group({
 
     });
+
+    this.rFormRemoveGroupDirectlly = fb.group({
+
+    });
+
 
 
 
@@ -221,6 +227,7 @@ export class RoleListItemComponent implements OnInit {
   gotoGroupToadd(content) {
     this.message = '';
     this.failiure = false;
+    this.loading = true;
     this.success = false;
     this.modify = false;
     this.modalReference = this.modalService.open(content);
@@ -235,6 +242,11 @@ export class RoleListItemComponent implements OnInit {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
+
+      this.loading = false;
+      this.success = true;
+      this.failiure = false;
+      this.message = "";
 
       console.log("not-groups not-groups not-groups not-groups: " + JSON.stringify(data));
       let receivedData = data['groups'];
@@ -252,6 +264,13 @@ export class RoleListItemComponent implements OnInit {
 
       console.log("not-groups not-groups not-groups not-groups: " + JSON.stringify(this.groupNotPlayingThisRole));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
     });
 
   }
@@ -260,6 +279,7 @@ export class RoleListItemComponent implements OnInit {
     this.message = '';
     this.failiure = false;
     this.success = false;
+    this.loading = true;
     this.modify = false;
     this.modalReference = this.modalService.open(contentAddUser);
 
@@ -273,6 +293,11 @@ export class RoleListItemComponent implements OnInit {
       headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
+
+      this.loading = false;
+      this.success = true;
+      this.failiure = false;
+      this.message = "";
 
       console.log("not-users not-users not-users not-users: " + JSON.stringify(data));
       let receivedData = data['users'];
@@ -291,6 +316,13 @@ export class RoleListItemComponent implements OnInit {
 
       console.log("not-users not-users not-users not-users: " + JSON.stringify(this.userNotPlayingThisRole));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
     });
 
 
@@ -304,6 +336,7 @@ export class RoleListItemComponent implements OnInit {
     this.message = '';
     this.failiure = false;
     this.success = false;
+    this.loading = true;
     this.modalReference = this.modalService.open(modalGroup);
     this.modalReference.result.then((result) => {
 
@@ -319,6 +352,10 @@ export class RoleListItemComponent implements OnInit {
         .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
     }).subscribe((data)=>{
 
+      this.loading = false;
+      this.success = true;
+      this.failiure = false;
+      this.message = "";
       console.log("groups groups groups groups: " + JSON.stringify(data));
       let receivedData = data['groups'];
       let index: number;
@@ -335,6 +372,13 @@ export class RoleListItemComponent implements OnInit {
 
       console.log("Groups Groups Groups Groups: " + JSON.stringify(this.groups));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
     });
 
   }
@@ -343,6 +387,7 @@ export class RoleListItemComponent implements OnInit {
     this.message = '';
     this.failiure = false;
     this.success = false;
+    this.loading = true;
     this.modalReference = this.modalService.open(modalUser);
     this.modalReference.result.then((result) => {
 
@@ -369,9 +414,116 @@ export class RoleListItemComponent implements OnInit {
         this.users.push(aLocaluser);
       }
 
+      this.success = true;
+      this.loading = false;
+      this.failiure = false;
+      this.message = "";
       console.log("users users users users: " + JSON.stringify(this.users));
       //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
     });
+  }
+
+
+  gotoUserToRemove(modalUserRemov){
+    this.message = '';
+    this.failiure = false;
+    this.success = false;
+    this.loading = true;
+    this.modalReference = this.modalService.open(modalUserRemov);
+    this.modalReference.result.then((result) => {
+
+    }, (reason) => {
+      //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+    this.httpClient.get(this.role.getLinks()['self']+'/users', {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+    }).subscribe((data)=>{
+      console.log("users users users users: " + JSON.stringify(data));
+      let receivedData = data['users'];
+      let index: number;
+      this.users = [];
+      console.log("LENGTH LENGTH LENGTH: " + receivedData.length);
+      for (index=0; index < receivedData.length; index++){
+        let links: any = receivedData[index]['_links'];
+        let aLocaluser: LocalUser = new LocalUser(receivedData[index]['tenantId'],
+          receivedData[index]['username'], receivedData[index]['emailAddress'], receivedData[index]['enabled'],
+          links, [this.role.getName()], receivedData[index]['firstName'], receivedData[index]['lastName'],
+          false);
+        console.log(index + " - adding: " + JSON.stringify(aLocaluser));
+        this.users.push(aLocaluser);
+      }
+
+      this.success = true;
+      this.loading = false;
+      this.failiure = false;
+      this.message = "";
+      console.log("users users users users: " + JSON.stringify(this.users));
+      //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
+    });
+  }
+
+  gotoGroupToRemove(m){
+    this.message = '';
+    this.failiure = false;
+    this.success = false;
+    this.loading = true;
+    this.modalReference = this.modalService.open(m);
+    this.modalReference.result.then((result) => {
+
+    }, (reason) => {
+      //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+    this.httpClient.get(this.role.getLinks()['self']+'/groups', {
+      headers: new HttpHeaders().set('Accept', 'application/json').set('Content-type', 'application/x-www-form-urlencoded; charset=utf-8')
+        .set('Authorization', 'Bearer '+ appStore.getState().tokenState.token.accessToken)
+    }).subscribe((data)=>{
+
+      this.loading = false;
+      this.success = true;
+      this.failiure = false;
+      this.message = "";
+      console.log("groups groups groups groups: " + JSON.stringify(data));
+      let receivedData = data['groups'];
+      let index: number;
+      this.groups = [];
+      console.log("LENGTH LENGTH LENGTH: " + receivedData.length);
+      for (index=0; index < receivedData.length; index++){
+        let links: any = receivedData[index]['_links'];
+        let aLocalgroup: LocalGroup = new LocalGroup(receivedData[index]['name'],
+          receivedData[index]['description'], true,{
+          }, false);
+        console.log(index + " - adding: " + JSON.stringify(aLocalgroup));
+        this.groups.push(aLocalgroup);
+      }
+
+      console.log("Groups Groups Groups Groups: " + JSON.stringify(this.groups));
+      //constructor(tenantId: string, name: string, description: string, isActive: boolean, links: any){
+    }, (data)=>{
+      this.loading = false;
+      this.success = false;
+      this.failiure = true;
+      this.message = "Failed...";
+    },()=>{
+      this.loading = false;
+    });
+
   }
 
   abandonne() {
@@ -664,6 +816,9 @@ export class RoleListItemComponent implements OnInit {
     console.log("checked user: " + JSON.stringify(this.userNotPlayingThisRole));
   }
 
+  removeGroupsDirectelly(value: any) {
+    this.removeGroups(value);
+  }
 }
 
 

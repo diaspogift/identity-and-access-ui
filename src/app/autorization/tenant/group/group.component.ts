@@ -58,6 +58,11 @@ export class GroupComponent implements OnInit {
 
   }
 
+  refresh(event){
+    this.url = event;
+    this.ngOnInit();
+  }
+
   ngOnInit() {
 
     this.failiure = false;
@@ -191,9 +196,13 @@ export class GroupComponent implements OnInit {
   }
 
   openAddGroup(content) {
+    this.message = '';
+    this.success =false;
+    this.failiure = false;
+    this.loading = false;
     this.modalReference = this.modalService.open(content);
     this.modalReference.result.then((result) => {
-      console.log("Opening modal...");
+      //console.log("Opening modal...");
       //this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;

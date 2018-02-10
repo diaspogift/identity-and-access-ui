@@ -1,21 +1,22 @@
 
-const  HOST = "localhost";
+const  HOST = "34.210.56.148";
 const  PROTOCOLE = "http://";
-const  PORT = "8081";
+const  PORT = ":8090";
+
 const  AUTH_PATH = "/oauth/token";
 const  LOGOUT_PATH = "/oauth/revoke-token";
 const  API_PATH = "/api/v1/";
 const  CLIENT_ID = "sysadmin";
 const  SECRET = "ManagingMembers@@2017";
-export const ACCESSTOKEN_LINK = PROTOCOLE+HOST+":" + PORT+AUTH_PATH;
-export const LOGOUT_LINK = PROTOCOLE+HOST+":" + PORT+LOGOUT_PATH;
+export const ACCESSTOKEN_LINK = PROTOCOLE + HOST + PORT+AUTH_PATH;
+export const LOGOUT_LINK = PROTOCOLE + HOST + PORT+LOGOUT_PATH;
 //"http://localhost/v1/oauth/token?client_id=CLIENT_ID&client_secret=CLIENT_SECRET&grant_type=authorization_code&code=AUTHORIZATION_CODE&redirect_uri=CALLBACK_URL";
 
 export const ACCESSTOKEN = "4ca00fc8-d52c-4135-850d-28dc5e53f1dd";
 
 export const DGTENANTID = "FB06037B-B1B5-4C71-8C69-E630036B9DFF";
 
-export const BASE_API_URL = PROTOCOLE + HOST + ":" + PORT + "/api/v1/tenants/";
+export const BASE_API_URL = PROTOCOLE + HOST  + PORT + "/api/v1/tenants/";
 
 export const CLIENT_APP_ID = 'identity-and-access-ui';
 

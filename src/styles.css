@@ -13,10 +13,11 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
 body {
-  padding-top: 60px;
-  font-size: medium;
+  padding-top: 10pt;
+  font-size: small;
 
-  background:#e8e8e8;
+  /*background:#e8e8e8;*/
+  background:#ffffff;
   font-family: 'Arial';
 }
 
@@ -28,4 +29,60 @@ body {
   height: 50px;
   /*-webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;*/
+}
+
+.btn-info {
+  background: #ff813a;
+  color: #ffffff;
+  border-color: #ff813a;
+}
+
+.btn-info:hover {
+  background: #ffffff;
+  color: #ff813a;
+  border-color: #ff813a;
+}
+
+
+.btn-outline-info {
+  background: #ffffff;
+  color: #ff813a;
+  border-color: #ff813a;
+}
+
+.btn-outline-info:hover {
+  background: #ff813a;
+  color: #ffffff;
+  border-color: #ff813a;
+}
+
+.btn-link{
+  color: #ff813a;
+}
+
+.btn-link:hover{
+  color: #ff5733;
+}
+
+.alert-success{
+  background: #ffffff;
+  color: #ff5733;
+  border-bottom:  .5px solid #ff5733;
+}
+
+.card-outline-primary{
+
+  border:  1px solid #ff5733;
+}
+
+.btn-outline-info, .dropdown-toggle:active{
+  background: #ffffff;
+  color: #ff813a;
+  border-color: #ff813a;
+}
+
+.open>.dropdown-toggle.btn-outline-info {
+  color: #ff813a;
+  background-color: #ffffff;
+  border-color: #ff813a;
 }

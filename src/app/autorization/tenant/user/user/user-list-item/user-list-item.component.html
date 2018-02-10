@@ -51,9 +51,9 @@
     <button class="btn btn-sm btn-outline-info pull-right" (click)="openModal(editContent)">
       <span class="fa fa-edit"></span> Edit
     </button>
-    <button class="btn btn-sm btn-outline-info" (click)="openDetailsModal(detailsContent)">
-      <span class="fa fa-info"></span> Details <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="20" height="30">
-    </button>
+    <button class="btn btn-sm btn-link" (click)="openDetailsModal(detailsContent)">
+       Details
+    </button> <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="30" height="25">
     <ng-template  #editContent let-c="close" let-d="dismiss">
       <div class="modal-header">
         <h4 class="modal-title">{{user.getUsername()}}</h4>
@@ -79,7 +79,7 @@
           <div class="col-md-12" *ngIf="loading">
             <div class="row">
               <div class="col-2 mx-auto">
-                <img src="../../../../../assets/img/loader/loader1.gif" width="30" height="30" />
+                <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="60" height="50">
               </div>
             </div>
           </div>
@@ -153,6 +153,18 @@
           {{message}}
           <img src="../../../../../assets/img/loader/loader.gif" height="40" width="55"/>
         </div>-->
+
+        <div class="col-md-12" *ngIf="loading">
+          <div class="row">
+            <div class="col-2 mx-auto">
+              <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="60" height="50">
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="failiure" class="alert alert-danger">
+          {{message}}
+        </div>
 
         <ul class="list-group list-group-flush">
           <li class="list-group-item  list-group-item-info">Personal Informations Details<br></li>

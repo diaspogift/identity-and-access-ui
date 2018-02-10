@@ -23,10 +23,10 @@
 
         <form id="createnewgroup" class="form-group-sm" role="form" [formGroup]="rFormNewRole"
               (ngSubmit)="createRoles(rFormNewRole.value)">
-          <div *ngIf="failiure"  class="alert alert-danger">
+          <div *ngIf="failiure  && !(message == '')"  class="alert alert-danger">
             <span>{{message}}</span>
           </div>
-          <div *ngIf="success"  class="alert alert-success">
+          <div *ngIf="success  && !(message == '')"  class="alert alert-success">
             <span>{{message}}</span>
           </div>
 

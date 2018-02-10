@@ -284,6 +284,7 @@ export class UserListItemComponent implements OnInit {
   getDetails(detailsContent: any) {
 
     if (!this.user.getEnabled()){
+      console.log("bla bla bla bla");
       this.success = false;
       this.failiure = true;
       this.message = 'Disabled user... Data are not accessible';

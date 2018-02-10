@@ -192,6 +192,7 @@ export class UserComponent implements OnInit , AfterViewInit{
 
   createRegistrationInvitation(form){
 
+    this.message = '';
     this.description = form.description;
     this.email = form.email;
     this.startingOn = form.startingOn;
@@ -324,6 +325,7 @@ AutorizationComponent.ts:68 {"year":2020,"month":1,"day":26}
   }
 
   openInvitePeople(content) {
+    this.message = '';
     this.modalReference = this.modalService.open(content);
     this.modalReference.result.then((result) => {
       console.log("Opening modal...");

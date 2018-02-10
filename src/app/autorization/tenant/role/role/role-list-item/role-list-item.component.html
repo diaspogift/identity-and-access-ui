@@ -20,17 +20,40 @@
   <div class="row">
     <div class="col-11 mx-auto">
       <div class="card-block">
-        {{role.getDescription()}}<br /><!--{{role.getLinks()['self']}}-->
+        <br />
+        {{role.getDescription()}}
         <hr>
-        <button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;|
-        &nbsp;<button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoUsers(modalUser);">Users</button>
-        <hr />
-        <button class="btn btn-sm btn-outline-info"  (click)="gotoGroupToadd(content);" *ngIf="canAddGroups();">
-          <span class="fa fa-plus-circle"></span> Add Groups
-        </button>
-        <button class="btn btn-sm btn-outline-info"  (click)="gotoUserToadd(contentAddUser);" *ngIf="canAddGroups();">
-          <span class="fa fa-plus-circle"></span> Add Users
-        </button>
+        <button  class="btn btn-sm  btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;|
+        &nbsp;<button  class="btn btn-sm  btn-link"  (click)="gotoUsers(modalUser);">Users</button>
+        <div class="dropdown" ngbDropdown style="display: inline;">
+          <button class="btn btn-sm btn-info btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+            Commands
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2" ngbDropdownMenu>
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoGroupToadd(content);" *ngIf="canAddGroups();"
+                    type="button">
+              <span class="fa fa-plus-circle"></span> Add Groups
+            </button>
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoUserToadd(contentAddUser);" *ngIf="canAddGroups();"
+                    type="button">
+              <span class="fa fa-plus-circle"></span> Add Users
+            </button>
+
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoGroupToRemove(contentRmoveGroups);" *ngIf="canAddGroups();"
+                    type="button">
+              <span class="fa fa-remove"></span> Remove Groups
+            </button>
+            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoUserToRemove(contentRmoveUsers);" *ngIf="canAddGroups();"
+                    type="button">
+              <span class="fa fa-remove"></span> Remove Users
+            </button>
+            <!--<button class="dropdown-item" type="button">Action</button>
+            <button class="dropdown-item" type="button">Another action</button>
+            <button class="dropdown-item" type="button">Something else here</button>-->
+          </div>
+        </div>
+
         <br>
 
 
@@ -44,16 +67,16 @@
           <div class="modal-body">
             <form id="removegroup" class="form-group-sm" role="form" [formGroup]="rFormRemoveGroup"
                   (ngSubmit)="removeGroups(rFormAddGroup.value)">
-              <div *ngIf="failiure"  class="alert alert-danger">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
                 <span>{{message}}</span>
               </div>
-              <div *ngIf="success"  class="alert alert-success">
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
                 <span>{{message}}</span>
               </div>
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../assets/img/loader/loader1.gif">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
                 </div>
               </div>
               <div class="row">
@@ -64,12 +87,14 @@
 
               <ul class="list-group" *ngIf="groups.length>0">
                 <li class="list-group-item">
+
                   <span class="badge pull-right badge-info">
-                    <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
+                    Modify: <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
                   </span>
                 </li>
               </ul>
 
+              <br>
               <div class="col-md-12" *ngFor="let group of groups">
                 <div class="form-group">
                   <label for="{{group.getName()+'_'}}" class="checkbox-inline">{{group.getName()}}&nbsp;&nbsp;</label>
@@ -105,16 +130,16 @@
 
             <form id="addgroups" class="form-group-sm" role="form" [formGroup]="rFormAddGroup"
                   (ngSubmit)="addGroups(rFormAddGroup.value)">
-              <div *ngIf="failiure"  class="alert alert-danger">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
                 <span>{{message}}</span>
               </div>
-              <div *ngIf="success"  class="alert alert-success">
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
                 <span>{{message}}</span>
               </div>
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../assets/img/loader/loader1.gif">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
                 </div>
               </div>
 
@@ -147,7 +172,7 @@
 
         <ng-template  #contentAddUser let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Users(s) Not In Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">Users(s) Not Playing <strong>{{role.getName()}}</strong></h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -156,16 +181,16 @@
 
             <form id="addusers" class="form-group-sm" role="form" [formGroup]="rFormAddUser"
                   (ngSubmit)="addUsers(rFormAddUser.value)">
-              <div *ngIf="failiure"  class="alert alert-danger">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
                 <span>{{message}}</span>
               </div>
-              <div *ngIf="success"  class="alert alert-success">
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
                 <span>{{message}}</span>
               </div>
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../assets/img/loader/loader1.gif">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
                 </div>
               </div>
 
@@ -207,16 +232,16 @@
 
             <form id="removeuser" class="form-group-sm" role="form" [formGroup]="rFormRemoveUser"
                   (ngSubmit)="removeUsers(rFormRemoveUser.value)">
-              <div *ngIf="failiure"  class="alert alert-danger">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
                 <span>{{message}}</span>
               </div>
-              <div *ngIf="success"  class="alert alert-success">
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
                 <span>{{message}}</span>
               </div>
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../assets/img/loader/loader1.gif">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
                 </div>
               </div>
 
@@ -228,18 +253,126 @@
 
               <ul class="list-group list-group-flush" *ngIf="users.length>0">
                 <li class="list-group-item">
+
                   <span class="badge pull-right badge-info">
-                    <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
+                     Modify:  <input type="checkbox" [checked]="modify" (change)="modify = !modify" class="pull-right" />
                   </span>
                 </li>
               </ul>
 
+              <br>
               <div class="col-md-12" *ngFor="let u of users">
                 <div class="form-group">
                   <label for="{{u.getUsername()}}" class="checkbox-inline ">{{u.getUsername()}}</label>
                   <input type="checkbox"  name="{{u.getUsername()}}"  id="{{u.getUsername()}}"
                          (click)="toggleCheckedUser(u.getUsername());" style="height: 18px; width: 18px;" *ngIf="modify"
                   class="pull-right">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="users.length > 0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(users)"><i class="fa fa-remove"></i>Remove</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+
+
+        <ng-template  #contentRmoveGroups let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Group(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="removegroups" class="form-group-sm" role="form" [formGroup]="rFormRemoveGroupDirectlly"
+                  (ngSubmit)="removeGroupsDirectelly(rFormRemoveGroupDirectlly.value)">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(groups.length > 0)">No group plays the role <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+
+
+              <div class="col-md-12" *ngFor="let group of groups">
+                <div class="form-group">
+                  <label for="{{group.getName()+'__'}}" class="checkbox-inline">{{group.getName()}}&nbsp;&nbsp;</label>
+                  <input type="checkbox"  name="{{group.getName() + '__'}}"  id="{{group.getName()+'__'}}"
+                         (click)="toggleCheckedGroups(group.getName());" style="height: 18px; width: 18px;"
+                          class="pull-right" [checked]="group.isChecked()">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="groups.length>0">
+                <div class="col-md-offset-3 col-md-9">
+                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+          </div>
+        </ng-template>
+
+        <ng-template  #contentRmoveUsers let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h6 class="modal-title">Users(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form id="removeuserdirectlly" class="form-group-sm" role="form" [formGroup]="rFormRemoveUser"
+                  (ngSubmit)="removeUsers(rFormRemoveUser.value)">
+              <div *ngIf="failiure && !(message === '')"  class="alert alert-danger">
+                <span>{{message}}</span>
+              </div>
+              <div *ngIf="success && !(message === '')"  class="alert alert-success">
+                <span>{{message}}</span>
+              </div>
+
+              <div class="row">
+                <div  class="col-md-3  mx-auto" *ngIf="loading">
+                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <span *ngIf="!(users.length > 0)">No users plays the role <strong>{{role.getName()}}</strong></span>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngFor="let u of users">
+                <div class="form-group">
+                  <label for="{{u.getUsername() + '_'}}" class="checkbox-inline ">{{u.getUsername()}}</label>
+                  <input type="checkbox"  name="{{u.getUsername()}}"  id="{{u.getUsername() + '_'}}"
+                         (click)="toggleCheckedUser(u.getUsername());" style="height: 18px; width: 18px;"
+                         [checked]="u.isChecked()" class="pull-right">
                 </div>
               </div>
 
