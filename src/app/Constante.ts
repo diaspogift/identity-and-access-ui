@@ -1,7 +1,7 @@
 
 const  HOST = "34.210.56.148";
 const  PROTOCOLE = "http://";
-const  PORT = "";
+const  PORT = ":8080";
 const  AUTH_PATH = "/oauth/token";
 const  LOGOUT_PATH = "/oauth/revoke-token";
 const  API_PATH = "/api/v1/";

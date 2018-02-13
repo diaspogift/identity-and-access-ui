@@ -98,5 +98,5 @@ import { HeaderComponent } from './header/header.component';
 })
 export class AppModule { }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch((err: any) => console.error(err));
+//platformBrowserDynamic().bootstrapModule(AppModule)
+ // .catch((err: any) => console.error(err));
