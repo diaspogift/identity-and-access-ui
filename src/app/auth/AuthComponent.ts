@@ -31,6 +31,7 @@ export class AuthComponent implements OnInit{
   public loading: boolean;
   public  message: string;
 
+
   constructor(private fb: FormBuilder, private http:HttpClient,  private _router: Router, private authService: AuthService ,private r:ActivatedRoute) {
     this.rForm = fb.group({
       //'tenantId' : [null, Validators.required],
@@ -47,6 +48,7 @@ export class AuthComponent implements OnInit{
     this.success = false;
     this.loading = false;
     this.message = '';
+
 
   }
 

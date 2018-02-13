@@ -8,8 +8,8 @@
           <div class="col-2">
             <img class="card-img-top user-img" src="../../../../../assets/img/default-user.png" alt="{{group.getName()}}">
           </div>
-          <div class="col-10" style="font-size: small">
-            <span>&#9733; <b>{{group.getName()}}</b>  &#9733;</span>
+          <div class="col-10" style="font-weight: lighter;">
+            <h6><span>&#9733; {{group.getName()}}  &#9733;</span></h6>
           </div>
         </div>
       </div>
@@ -23,18 +23,18 @@
         <hr>
         {{group.getDescription()}}
         <hr>
-        <button  class="btn btn-sm btn-outline-info btn-link"  (click)="gotoMembers();">Members</button>
+        <button  class="btn btn-sm  btn-link"  (click)="gotoMembers();">Members</button>
         <div class="dropdown" ngbDropdown style="display: inline;">
           <button class="btn btn-sm btn-info btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
-            Commands
+            <span class="fa fa-edit"></span> Edit
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu2" ngbDropdownMenu>
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoMembersToadd();" *ngIf="canAddMembers();"
                     type="button">
               <span class="fa fa-plus-circle"></span> Add Members
             </button>
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoMembersToRemove(memberToremoveModal);" *ngIf="canAddMembers();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoMembersToRemove(memberToremoveModal);" *ngIf="canAddMembers();"
                     type="button">
               <span class="fa fa-remove"></span> Remove Members
             </button>
@@ -61,7 +61,7 @@
               <div class="col-md-12" *ngIf="loading">
                 <div class="row">
                   <div class="col-2 mx-auto">
-                    <img src="../../../../../assets/img/loader/loader1.gif" width="20" height="30" />
+                    <img src="../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                   </div>
                 </div>
               </div>
@@ -88,15 +88,16 @@
               </div>
 
               <div class="col-md-12">
-                <div class="form-group">
-                  <button type="submit" class="btn btn-info btn-sm">Save changes</button>
-                </div>
+
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>
+                  <button type="submit" class="btn btn-info btn-sm pull-right" style="margin-right: 10px;">Save</button>
+
               </div>
 
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+
           </div>
         </ng-template>
 
@@ -119,7 +120,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
               <div class="row">
@@ -138,16 +139,17 @@
               </div>
 
               <div class="form-group" *ngIf="groupMembers.length>0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groupMembers)"><i class="fa fa-remove"></i>Remove</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right"  style="margin-right: 10px;"
+                           [disabled]="noCheched(groupMembers)"><i class="fa fa-remove"></i>Remove</button>
+
                 </div>
               </div>
             </form>
 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
-          </div>
+
         </ng-template>
 
       </div>
@@ -206,7 +208,7 @@
 
                 <div class="col-md-12">
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
                   </div>
                 </div>
 

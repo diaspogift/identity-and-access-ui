@@ -7,8 +7,8 @@
           <div class="col-2">
             <img class="card-img-top user-img" src="../../../../../assets/img/default-user.png" alt="{{tenant.getName()}}">
           </div>
-          <div class="col-10" style="font-size: small">
-            <span>&#9733; <b>{{tenant.getName()}}</b>  &#9733;</span><br/>
+          <div class="col-10" style="font-weight: lighter;">
+            <h6><span>&#9733; {{tenant.getName()}} &#9733;</span><br/></h6>
           </div>
         </div>
 
@@ -39,7 +39,7 @@
           </div>
           <div class="modal-body">
             <div *ngIf="loading">
-              <img src="../../../../../assets/img/loader/loader1.gif" height="40" width="55"/>
+              <img src="../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
             </div>
             <div *ngIf="success" class="alert-success">
               {{message}}
@@ -58,8 +58,9 @@
             </form>
           </div>
           <div class="modal-footer">
+
+            <button type="button" class="btn btn-info btn-sm" (click)="saveChanges(content);" data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
-            <button type="button" class="btn btn-info btn-sm" (click)="saveChanges(content);" data-dismiss="modal">Save changes</button>
           </div>
         </ng-template>
 

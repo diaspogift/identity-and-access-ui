@@ -7,8 +7,8 @@
         <div class="col-2">
           <img class="card-img-top user-img" src="../../../../../../assets/img/default-user.png" alt="{{user.getUsername()}}">
         </div>
-        <div class="col-10" style="font-size: small">
-          <span>&#9733; <b>{{user.getUsername()}}</b>  &#9733;</span>
+        <div class="col-10" style="font-weight: lighter;">
+          <h6><span>&#9733; {{user.getUsername()}} &#9733;</span></h6>
         </div>
       </div>
 
@@ -30,10 +30,10 @@
     <div class="col-11 mx-auto">
       <div class="card-block">
         <hr>
-        <span class="">Username: </span><span class="">{{user.getUsername()}}</span><br>
-        <span class="">E-Mail: </span><span class="">{{user.getEmailAddress()}}</span><br>
-        <span class="">First Name: </span><span class="">{{user.getFirstName()}}</span><br>
-        <span class="">Last Name: </span><span class="">{{user.getLastNane()}}</span>
+        <span class=""><label>Username:</label> </span><span class="">{{user.getUsername()}}</span><br>
+        <span class=""><label>E-Mail:</label> </span><span class="">{{user.getEmailAddress()}}</span><br>
+        <span class=""><label>First Name:</label> </span><span class="">{{user.getFirstName()}}</span><br>
+        <span class=""><label>Last Name:</label> </span><span class="">{{user.getLastNane()}}</span>
         <hr>
       </div>
     </div>
@@ -53,7 +53,7 @@
     </button>
     <button class="btn btn-sm btn-link" (click)="openDetailsModal(detailsContent)">
        <strong>Details</strong>
-    </button> <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="30" height="25">
+    </button> <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" class="loader1-gif">
     <ng-template  #editContent let-c="close" let-d="dismiss">
       <div class="modal-header">
         <h4 class="modal-title">{{user.getUsername()}}</h4>
@@ -79,7 +79,7 @@
           <div class="col-md-12" *ngIf="loading">
             <div class="row">
               <div class="col-2 mx-auto">
-                <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="60" height="50">
+                <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" class="loader1-gif"/>
               </div>
             </div>
           </div>
@@ -129,19 +129,19 @@
             </div>
           </div>
           <div class="col-md-12">
-            <div class="form-group">
-              <button type="submit" class="btn btn-info btn-sm">Save changes</button>
-            </div>
+              <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>
+              <button type="submit" class="btn btn-info btn-sm pull-right" style="margin-right: 10px;">Save</button>
+
           </div>
 
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
+
       </div>
     </ng-template>
 
-    <ng-template  #detailsContent let-c="close" let-d="dismiss">
+    <ng-template  #detailsContent let-c="close" let-d="dismiss" size="lg">
       <div class="modal-header">
         <h4 class="modal-title">{{user.getUsername()}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -157,7 +157,7 @@
         <div class="col-md-12" *ngIf="loading">
           <div class="row">
             <div class="col-2 mx-auto">
-              <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif" width="60" height="50">
+              <img *ngIf="loading" src="../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
             </div>
           </div>
         </div>
@@ -167,30 +167,30 @@
         </div>
 
         <ul class="list-group list-group-flush">
-          <li class="list-group-item  list-group-item-info">Personal Informations Details<br></li>
-          <li class="list-group-item ">Username: {{user.getUsername()}}</li>
-          <li class="list-group-item ">Tenant:{{user.getTenant().getName()}}</li>
-          <li class="list-group-item ">E-Mail: {{userDetails['emailAddress']?userDetails['emailAddress']:''}}</li>
-          <li class="list-group-item ">Phone Number 1:({{userDetails['primaryCountryDialingCode']?userDetails['primaryCountryDialingCode']:''}}) {{userDetails['primaryNumber']?userDetails['primaryNumber']:''}}</li>
-          <li class="list-group-item ">Phone Number 2: ({{userDetails['secondaryCountryDialingCode']?userDetails['secondaryCountryDialingCode']:''}}) {{userDetails['secondaryNumber']?userDetails['secondaryNumber']:''}}</li>
-          <li class="list-group-item ">Street: {{userDetails['streetAddress']?userDetails['streetAddress']:''}}</li>
-          <li class="list-group-item ">City: {{userDetails['city']?userDetails['city']:''}}</li>
-          <li class="list-group-item ">State/Province: {{userDetails['stateProvince']?userDetails['stateProvince']:''}}</li>
-          <li class="list-group-item ">Postal Code:{{userDetails['postalCode']?userDetails['postalCode']:''}}</li>
-          <li class="list-group-item ">Country: {{userDetails['countryCode']?userDetails['countryCode']:''}}</li>
+          <li class="list-group-item  list-group-item-info"><strong>Personal Informations Details</strong><br></li>
+          <li class="list-group-item "><label class="label">Username:</label> {{user.getUsername()}}</li>
+          <li class="list-group-item "><label class="label">Tenant:</label> {{user.getTenant().getName()}}</li>
+          <li class="list-group-item "><label class="label">E-Mail:</label> {{userDetails['emailAddress']?userDetails['emailAddress']:''}}</li>
+          <li class="list-group-item "><label class="label">Phone Number 1:</label> ({{userDetails['primaryCountryDialingCode']?userDetails['primaryCountryDialingCode']:''}}) {{userDetails['primaryNumber']?userDetails['primaryNumber']:''}}</li>
+          <li class="list-group-item "><label class="label">Phone Number 2:</label> ({{userDetails['secondaryCountryDialingCode']?userDetails['secondaryCountryDialingCode']:''}}) {{userDetails['secondaryNumber']?userDetails['secondaryNumber']:''}}</li>
+          <li class="list-group-item "><label class="label">Street:</label> {{userDetails['streetAddress']?userDetails['streetAddress']:''}}</li>
+          <li class="list-group-item "><label class="label">City:</label> {{userDetails['city']?userDetails['city']:''}}</li>
+          <li class="list-group-item "><label class="label">State/Province:</label> {{userDetails['stateProvince']?userDetails['stateProvince']:''}}</li>
+          <li class="list-group-item "><label class="label">Postal Code:</label> {{userDetails['postalCode']?userDetails['postalCode']:''}}</li>
+          <li class="list-group-item "><label class="label">Country:</label> {{userDetails['countryCode']?userDetails['countryCode']:''}}</li>
 
-          <li class="list-group-item  list-group-item-info">Roles Details<br></li>
+          <li class="list-group-item  list-group-item-info"><strong>Roles Details</strong><br></li>
 
           <li *ngFor="let role of roles" class="list-group-item ">
-            Role Name: {{role['roleName']}}<br>
-            authority: {{role['authority']}}<br>
+            <label class="label">Role Name:</label> {{role['roleName']}}<br>
+            <label class="label">authority:</label> {{role['authority']}}<br>
           </li>
 
-          <li class="list-group-item  list-group-item-info">Groups Details<br></li>
+          <li class="list-group-item  list-group-item-info"><strong>Groups Details</strong><br></li>
 
           <li *ngFor="let group of groups" class="list-group-item ">
-            Group Name: {{group['name']}}<br>
-            Description: {{group['description']}}<br>
+            <label class="label">Group Name:</label> {{group['name']}}<br>
+              <label class="label">Description:</label> {{group['description']}}<br>
           </li>
         </ul>
       </div>
@@ -302,7 +302,7 @@
                 <div class="col-md-12">
 
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
                   </div>
                 </div>
 

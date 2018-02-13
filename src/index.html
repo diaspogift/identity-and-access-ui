@@ -11,16 +11,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     .loader {
-      border: 5px solid #f3f3f3;
+      border: 10px solid #f3f3f3;
       border-radius: 50%;
-      border-top: 5px solid #5fbdb0;
-      width: 30px;
-      height: 30px;
-      -webkit-animation: spin 2s linear infinite; /* Safari */
+      border-top: 10px solid #f0c14b;
+      border-bottom: 10px solid #f0c14b;
+      width: 100px;
+      height: 100px;
+      -webkit-animation: spin 2s linear infinite;
       animation: spin 2s linear infinite;
     }
 
-    /* Safari */
     @-webkit-keyframes spin {
       0% { -webkit-transform: rotate(0deg); }
       100% { -webkit-transform: rotate(360deg); }
@@ -32,18 +32,14 @@
     }
   </style>
 
-  <!--<link href="../node_modules/intl-tel-input/build/css/intlTelInput.css">-->
-  <!--<link rel="stylesheet" href="./assets/css/foundation.min.css">-->
- <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
- --> <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">-->
 </head>
 <body>
 <div class="row">
   <div class="col-11 mx-auto">
   <app-root>
 
-    <div class="row">
-      <div class="col-2 mx-auto">
+    <div  style="margin: 0 auto;">
+      <div class="col-1 mx-auto">
         <div class="loader "></div>
       </div>
     </div>
@@ -51,14 +47,6 @@
   </div>
 </div>
 
-<!--<script type="text/javascript" src="../node_modules/popper.js/dist/popper.min.js"></script>-->
-<!--<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>-->
-<!--<script type="text/javascript" src="../node_modules/systemjs/dist/system-production.js"></script>-->
-<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
---><!--<script src="../node_modules/ng2-bs3-modal/bundles/ng2-bs3-modal.system.js"></script>-->
-<!--<script src="../node_modules/ng2-bs3-modal/bundles/ng2-bs3-modal.system.js"></script>-->
-<!--<script type="text/javascript" src="../node_modules/intl-tel-input/build/js/intlTelInput.min.js"></script>-->
 <script type="text/javascript"
         src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyDu1xdoYHGqPuCvXtbpQn5H4n-De16rrIk&libraries=places&language=en-US"></script>
 <script>

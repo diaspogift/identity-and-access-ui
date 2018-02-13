@@ -8,8 +8,9 @@
         <div class="col-2">
           <img class="card-img-top user-img" src="../../../../../../assets/img/default-user.png" alt="{{role.getName()}}">
         </div>
-        <div class="col-10" style="font-size: small">
-          <span>&#9733; <b>{{role.getName()}}</b>  &#9733;</span>
+
+        <div class="col-10" style="font-weight: lighter;">
+          <h6><span>&#9733; {{role.getName()}} &#9733;</span></h6>
         </div>
       </div>
     </div>
@@ -26,25 +27,25 @@
         <button  class="btn btn-sm  btn-link"  (click)="gotoGroups(modalGroup);">Groups</button>&nbsp;
         &nbsp;<button  class="btn btn-sm  btn-link"  (click)="gotoUsers(modalUser);">Users</button>
         <div class="dropdown" ngbDropdown style="display: inline;">
-          <button class="btn btn-sm btn-info btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
+          <button class="btn btn-sm btn-outline-info dropdown-toggle pull-right" type="button" id="dropdownMenu2"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
-            Commands
+            <span class="fa fa-edit"></span> Edit
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenu2" ngbDropdownMenu>
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoGroupToadd(content);" *ngIf="canAddGroups();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoGroupToadd(content);" *ngIf="canAddGroups();"
                     type="button">
               <span class="fa fa-plus-circle"></span> Add Groups
             </button>
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoUserToadd(contentAddUser);" *ngIf="canAddGroups();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoUserToadd(contentAddUser);" *ngIf="canAddGroups();"
                     type="button">
               <span class="fa fa-plus-circle"></span> Add Users
             </button>
 
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoGroupToRemove(contentRmoveGroups);" *ngIf="canAddGroups();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoGroupToRemove(contentRmoveGroups);" *ngIf="canAddGroups();"
                     type="button">
               <span class="fa fa-remove"></span> Remove Groups
             </button>
-            <button class="btn btn-sm btn-outline-info dropdown-item"  (click)="gotoUserToRemove(contentRmoveUsers);" *ngIf="canAddGroups();"
+            <button class="btn btn-sm btn-link dropdown-item"  (click)="gotoUserToRemove(contentRmoveUsers);" *ngIf="canAddGroups();"
                     type="button">
               <span class="fa fa-remove"></span> Remove Users
             </button>
@@ -59,7 +60,7 @@
 
         <ng-template  #modalGroup let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Group(s) Playing the role: <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">Group(s) Playing the <strong>{{role.getName()}}</strong> role </h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -76,7 +77,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
               <div class="row">
@@ -88,7 +89,7 @@
               <ul class="list-group" *ngIf="groups.length>0">
                 <li class="list-group-item">
 
-                  Modify: <input type="checkbox" [checked]="modify" (change)="resetGroups()" class="pull-right" />
+                  <label>Modify: </label> <input type="checkbox" [checked]="modify" (change)="resetGroups()" class="pull-right" />
                 </li>
               </ul>
 
@@ -105,7 +106,8 @@
               <div class="form-group" *ngIf="groups.length>0">
                 <div class="col-md-12">
                   <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>&nbsp;
-                  <button  type="submit" class="btn btn-sm btn-info pull-right" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" [disabled]="noCheched(groups)" style="margin-right: 10px;">
+                    <i class="fa fa-remove"></i>Remove</button>
                 </div>
               </div>
             </form>
@@ -115,7 +117,7 @@
 
         <ng-template  #content let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Group(s) Not In <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">Group(s) Not In the <strong>{{role.getName()}}</strong> role</h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -135,7 +137,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
 
@@ -154,21 +156,20 @@
               </div>
 
               <div class="form-group" *ngIf="groupNotPlayingThisRole.length > 0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groupNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" style="margin-right: 10px;"
+                           [disabled]="noCheched(groupNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
                 </div>
               </div>
             </form>
 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
-          </div>
         </ng-template>
 
         <ng-template  #contentAddUser let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Users(s) Not Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">User(s) Not Playing the <strong>{{role.getName()}}</strong> role</h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -186,7 +187,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
 
@@ -205,21 +206,21 @@
               </div>
 
               <div class="form-group" *ngIf="userNotPlayingThisRole.length > 0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(userNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()" >Close</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" style="margin-right: 10px;"
+                           [disabled]="noChechedUsers(userNotPlayingThisRole)"><i class="fa fa-plus"></i>Add</button>
                 </div>
               </div>
             </form>
 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
-          </div>
+
         </ng-template>
 
         <ng-template  #modalUser let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">User(s) Playing the role: <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">User(s) Playing the <strong>{{role.getName()}}</strong> role</h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -237,7 +238,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
 
@@ -251,7 +252,7 @@
                 <li class="list-group-item">
 
 
-                     Modify:  <input type="checkbox" [checked]="modify" (change)="resetUsers()" class="pull-right" />
+                     <label>Modify: </label>  <input type="checkbox" [checked]="modify" (change)="resetUsers()" class="pull-right" />
 
                 </li>
               </ul>
@@ -284,7 +285,7 @@
 
         <ng-template  #contentRmoveGroups let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Group(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">Group(s) Playing the <strong>{{role.getName()}}</strong> role</h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -301,7 +302,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
               <div class="row">
@@ -322,21 +323,20 @@
               </div>
 
               <div class="form-group" *ngIf="groups.length>0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()" >Close</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right" style="margin-right: 10px;"
+                           [disabled]="noCheched(groups)"><i class="fa fa-remove"></i>Remove</button>
                 </div>
               </div>
             </form>
 
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
-          </div>
         </ng-template>
 
         <ng-template  #contentRmoveUsers let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h6 class="modal-title">Users(s) Playing <strong>{{role.getName()}}</strong></h6>
+            <h6 class="modal-title">User(s) not Playing the <strong>{{role.getName()}}</strong> role</h6>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -354,7 +354,7 @@
 
               <div class="row">
                 <div  class="col-md-3  mx-auto" *ngIf="loading">
-                  <img src="../../../../../../assets/img/loader/loader1.gif" height="60" width="50">
+                  <img src="../../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                 </div>
               </div>
 
@@ -374,15 +374,14 @@
               </div>
 
               <div class="form-group" *ngIf="users.length > 0">
-                <div class="col-md-offset-3 col-md-9">
-                  <button  type="submit" class="btn btn-sm btn-info" [disabled]="noChechedUsers(users)"><i class="fa fa-remove"></i>Remove</button>
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()" >Close</button>
+                  <button  type="submit" class="btn btn-sm btn-info pull-right"  style="margin-right: 10px;"
+                           [disabled]="noChechedUsers(users)"><i class="fa fa-remove"></i>Remove</button>
                 </div>
               </div>
             </form>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
           </div>
         </ng-template>
 
@@ -442,7 +441,7 @@
 
                 <div class="col-md-12">
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
                   </div>
                 </div>
 

@@ -19,7 +19,7 @@
                 <div class="col-md-12" *ngIf="loading">
                   <div class="row">
                     <div class="col-2 mx-auto">
-                      <img src="../../../../../assets/img/loader/loader1.gif" width="20" height="30" />
+                      <img src="../../../../../assets/img/loader/loader1.gif"  class="loader1-gif"/>
                     </div>
                   </div>
                 </div>
@@ -54,7 +54,7 @@
 
                 <div class="col-md-12">
                   <div class="form-group" *ngIf="freeGroupMembers.length > 0">
-                    <button type="submit" class="btn btn-sm btn-info" [disabled]="membersToAdd.length === 0">Save changes</button>
+                    <button type="submit" class="btn btn-sm btn-info" [disabled]="membersToAdd.length === 0">Save</button>
                   </div>
                 </div>
 

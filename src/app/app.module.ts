@@ -48,6 +48,8 @@ import {NgxPhoneSelectModule} from "ngx-phone-select";
 import {BsDropdownModule} from "ngx-bootstrap";
 import { RoleComponent } from './autorization/tenant/role/role/role.component';
 import { RoleListItemComponent } from './autorization/tenant/role/role/role-list-item/role-list-item.component';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
 //import * as $ from 'jquery';
 //import {BsModalModule} from "ng2-bs3-modal/ng2-bs3-modal";
 
@@ -64,7 +66,9 @@ import { RoleListItemComponent } from './autorization/tenant/role/role/role-list
     ChangePasswordComponent, LogoutComponent, NotautorizedComponent, GroupMemberComponent, GroupMemberListItemComponent,
     AddGroupMembersComponent,
     RoleComponent,
-    RoleListItemComponent
+    RoleListItemComponent,
+    FooterComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

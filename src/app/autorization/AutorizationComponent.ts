@@ -144,6 +144,8 @@ export class AutorizationComponent implements OnInit, AfterViewInit{
     this.failiure = false;
 
     this.success = false;
+    //let date = new Date();
+    //this.copyrightDate = new Date();//(date.getMonth() + 1) + "/" + date.getFullYear();
 
 
     if (appStore.getState().tokenState == null || appStore.getState().userState.user == null

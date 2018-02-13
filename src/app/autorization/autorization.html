@@ -39,65 +39,74 @@
       </li>
     </ul>
   </div>
-</nav>-->
+</nav>
+-->
 
 
-<div id='cssmenu' class="navbar fixed-top">
-  <ul id="menu_horizontal">
-    <li *ngIf="canManageTenant()" class="nav-item active" #tenants>
-      <a class="nav-link"  [routerLink]="['tenants']" (click)="manageActiveLink($event);">Partner</a>
-    </li>
-    <li class="nav-item" #users>
-      <a class="nav-link"  [routerLink]="['users']" (click)="manageActiveLink($event);">Users</a>
-    </li>
-    <li class="nav-item" #services>
-      <a class="nav-link"  [routerLink]="['services']" (click)="manageActiveLink($event);">Services</a>
-    </li>
-    <li class="nav-item" #roles>
-      <a class="nav-link"  [routerLink]="['roles']" (click)="manageActiveLink($event);">Roles</a>
-    </li>
-    <li class="nav-item" #groups>
-      <a class="nav-link"  [routerLink]="['groups']" (click)="manageActiveLink($event);">Groups</a>
-    </li>
-    <li class="nav-item" #groupmembers>
-      <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
-    </li>
-    <li class="nav-item dropdown" ngbDropdown>
-      <button class="nav-link dropdown-toggle btn btn-link btn-sm" id="dropdown01" ngbDropdownToggle>
-        <i class="fa fa-user"></i>
-        <span class="caret"></span>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
-        <button class="dropdown-item btn-link btn-sm" (click)="openChangePasswordUI(content)">Change Password</button>
-        <button class="dropdown-item btn-link btn-sm"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</button>
-        <button class="dropdown-item btn-link btn-sm" (click)="gotoHome($event)">User: {{cookies['username_token']}} </button>
-      </div>
-    </li>
-  </ul>
-  <script type="text/javascript">
-    /*function setActiveClass(){
+<div class="row">
+  <div class="col-md-2" id="dg_logo" style="border: red 0px solid; padding: 0px; padding-top: 20px;"><ul style="border: blue 0px solid; padding: 0px;"><li><app-header></app-header></li></ul></div>
+  <div class="col-md-10">
+    <div id='cssmenu' class="navbar fixed-top">
 
-      var path = document.location.pathname ;
-      var vet = path.split("/");
-      var lastpath = vet[vet.length-1];
-      var menu_horizontal = document.getElementById('menu_horizontal');
-      var lis = menu_horizontal.getElementsByTagName('LI');
-      for(var i=0; i<lis.length; i++){
-        lis[i].classList.remove("active");
-        if(lis[i].id == lastpath){
-          lis[i].classList.add("active");
-        }else{
-          if(lastpath == 'conferma.php' || lastpath == 'finale.php'){
-            document.getElementById('acquista.php').classList.add("active");
+      <ul id="menu_horizontal">
+        <li *ngIf="canManageTenant()" class="nav-item active" #tenants>
+          <a class="nav-link"  [routerLink]="['tenants']" (click)="manageActiveLink($event);">Partners</a>
+        </li>
+        <li class="nav-item" #users>
+          <a class="nav-link"  [routerLink]="['users']" (click)="manageActiveLink($event);">Users</a>
+        </li>
+        <li class="nav-item" #services>
+          <a class="nav-link"  [routerLink]="['services']" (click)="manageActiveLink($event);">Services</a>
+        </li>
+        <li class="nav-item" #roles>
+          <a class="nav-link"  [routerLink]="['roles']" (click)="manageActiveLink($event);">Roles</a>
+        </li>
+        <li class="nav-item" #groups>
+          <a class="nav-link"  [routerLink]="['groups']" (click)="manageActiveLink($event);">Groups</a>
+        </li>
+        <li class="nav-item" #groupmembers>
+          <a class="nav-link"  [routerLink]="['groupmembers']" (click)="manageActiveLink($event);">Group Members</a>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown>
+          <button class="nav-link dropdown-toggle btn btn-link btn-sm" id="dropdown01" ngbDropdownToggle>
+            <i class="fa fa-user"></i> {{cookies['username_token']}}
+            <span class="caret"></span>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdown01" ngbDropdownMenu>
+            <button class="btn btn-sm  btn-link dropdown-item" (click)="openChangePasswordUI(content)">Change Password</button>
+            <button class="btn btn-sm  btn-link dropdown-item"  (click)="gotoLogout($event)"> <i class="fa fa-power-off"></i> Logout</button>
+            <button class="btn btn-sm btn-link dropdown-item" (click)="gotoHome($event)">User: {{cookies['username_token']}} </button>
+          </div>
+        </li>
+      </ul>
+      <script type="text/javascript">
+        /*function setActiveClass(){
+
+          var path = document.location.pathname ;
+          var vet = path.split("/");
+          var lastpath = vet[vet.length-1];
+          var menu_horizontal = document.getElementById('menu_horizontal');
+          var lis = menu_horizontal.getElementsByTagName('LI');
+          for(var i=0; i<lis.length; i++){
+            lis[i].classList.remove("active");
+            if(lis[i].id == lastpath){
+              lis[i].classList.add("active");
+            }else{
+              if(lastpath == 'conferma.php' || lastpath == 'finale.php'){
+                document.getElementById('acquista.php').classList.add("active");
+              }
+            }
           }
+
         }
-      }
+        setActiveClass();*/
 
-    }
-    setActiveClass();*/
-
-  </script>
+      </script>
+    </div>
+  </div>
 </div>
+
+
 
 
 <!--<bs-modal #modal>
@@ -154,17 +163,16 @@
 
         <div class="form-group">
           <!-- Button -->
-          <div class="col-md-offset-3 col-md-9">
-            <button id="btn-changepassword" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Change</button>
+          <div class="col-md-12">
+            <button type="button" class="btn btn-danger btn-sm pull-right" (click)="abandonne()">Close</button>
+            <button id="btn-changepassword" type="submit" class="btn btn-info btn-sm pull-right"
+            style="margin-right: 10px;"><i class="icon-hand-right"></i>Change</button>
           </div>
         </div>
 
       </form>
     </div>
 
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger btn-sm" (click)="abandonne()">Close</button>
   </div>
 </ng-template>
 <!--
@@ -227,6 +235,10 @@
 </div>-->
 
 <router-outlet></router-outlet>
+
+
+
+<app-footer></app-footer>
 
 
 
