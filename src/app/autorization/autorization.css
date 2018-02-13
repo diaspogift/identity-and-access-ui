@@ -40,7 +40,7 @@
 #cssmenu {
   margin: auto;
   width: 100%;
-  border-bottom: 0px solid #846a29;
+  border-bottom: 1px solid #846a29;
   font-family: "DejaVu Serif";
   line-height: 1;
   margin-bottom: 5px;
